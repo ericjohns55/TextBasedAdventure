@@ -33,7 +33,7 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("userInput", text);
 		req.setAttribute("output", "You inputted: " + text);
 		req.setAttribute("action", "Your Action: " + userInput.getAction());
-		req.setAttribute("noun", "Your Subject: " + userInput.getNoun());
+		req.setAttribute("noun", "Your Subject: " + userInput.getSubject());
 		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
 		
 	}

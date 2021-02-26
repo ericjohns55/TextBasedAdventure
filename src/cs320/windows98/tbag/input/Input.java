@@ -20,8 +20,10 @@ public class Input {
 		return words;
 	}
 	
-	public void removeArticles() {
-		for (String word : words) {
+	public void removeArticles(ArrayList<String> words) {
+		for (int i = 0; i < words.size(); i++) {
+			String word = words.get(i);
+			
 			if (word.equals("the") || word.equals("a") || word.equals("an")) {
 				words.remove(word);
 			}
@@ -29,25 +31,36 @@ public class Input {
 	}	
 	
 	public String getAction() {
-		return words.get(0);
+		String action = words.get(0);
+		
+		String[] articles = {" the ", " an ", " a "};
+		
+		for (String article : articles) {
+			if (userInput.contains(article)) {
+				return userInput.substring(0, userInput.indexOf(article));
+			}
+		}
+		
+		return action;
 	}
 	
 	public boolean containsNoun() {
 		return userInput.contains("the") || userInput.contains("an") || userInput.contains("a");
 	}
 	
-	public String getNoun() {
-		if (userInput.contains("the")) {
-			int index = words.indexOf("the");
-			return words.get(index + 1);
-		} else if (userInput.contains("an")) {
-			int index = words.indexOf("an");
-			return words.get(index + 1);
-		} else if (userInput.contains("a")) {
-			int index = words.indexOf("a");
-			return words.get(index + 1);
-		} else {
-			return null;
+	public String getSubject() {
+		if (words.size() == 1) {
+			return "<none>";
 		}
+		
+		String[] articles = {" the ", " an ", " a "};
+		
+		for (String article : articles) {
+			if (userInput.contains(article)) {
+				return userInput.substring(userInput.indexOf(article) + article.length());
+			}
+		}
+		
+		return words.get(words.size() - 1);
 	}
 }
