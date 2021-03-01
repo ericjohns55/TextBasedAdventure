@@ -45,7 +45,7 @@ public class Input {
 	}
 	
 	public boolean containsNoun() {
-		return userInput.contains("the") || userInput.contains("an") || userInput.contains("a");
+		return userInput.contains(" the ") || userInput.contains(" an ") || userInput.contains(" a ");
 	}
 	
 	public String getSubject() {
