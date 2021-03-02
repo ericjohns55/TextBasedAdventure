@@ -19,6 +19,12 @@
 				<tr>
 					<td><p name="output">${output}</p></td>
 				</tr>
+				<tr>
+					<td><p name="action">${action}</p></td>
+				</tr>
+				<tr>
+					<td><p name="noun">${noun}</p></td>
+				</tr>
 			</table>
 		</form>
 	</body>
