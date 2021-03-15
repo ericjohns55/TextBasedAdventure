@@ -2,6 +2,7 @@ package cs320.windows98.tbag.junit;
 
 import static org.junit.Assert.*;
 
+
 import org.junit.Before;
 import org.junit.Test;
 
