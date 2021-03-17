@@ -8,6 +8,8 @@ public class Room {
 	
 	// Each room has to have a set items in the room
 	private HashMap<String, Item> items;
+	private HashMap<String, Room> exits;
+	private String description; 
 	
 	// Each room has to have a puzzle as well
 	
@@ -15,10 +17,11 @@ public class Room {
 	
 	
 	
-	public Room() {
+	public Room(String description) {
 		
 		items = new HashMap<String, Item>();
-	
+		exits = new HashMap<String, Room>();
+		this.description = description;
 	}
 	
 	
@@ -27,7 +30,24 @@ public class Room {
 	{
 		items.put(identifier, item);
 	}
+
+	//Returns the rooms descritpion
+	public String getDescription() 
+	{
+		return description;
+	}
+
+	//sets the rooms exit
+	public void setExit(String direction, Room neighbor)
+	{
+		exits.put(direction, neighbor);
+	}
 	
+	//gets the rooms exit
+	public Room getExit(String direction)
+	{
+		return exits.get(direction);
+	}
 	
 	
 	// This is seeing if the item is in the room
