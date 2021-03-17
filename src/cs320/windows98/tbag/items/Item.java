@@ -5,12 +5,14 @@ public class Item {
 	private double weight;
 	private boolean isInteractable;
 	private boolean canBePickedUp;
+	private boolean canBeConsumed; 
 	
 	public Item(String name, double weight) {
 		this.name = name;
 		this.weight = weight;
 		this.isInteractable = false;
 		this.canBePickedUp = true;
+		this.canBeConsumed = false; 
 	}
 	
 	public Item(String name) {
@@ -43,6 +45,14 @@ public class Item {
 	
 	public void setInteractable(boolean isInteractable) {
 		this.isInteractable = isInteractable;
+	}
+
+	public boolean isConsumable() {
+		return canBeConsumed;
+	}
+	
+	public void setConsumable(boolean canBeConsumed) {
+		this.canBeConsumed = canBeConsumed;
 	}
 	
 	public boolean canBePickedUp() {
