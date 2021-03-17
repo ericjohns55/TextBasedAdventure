@@ -11,19 +11,16 @@
 			
 			<table>
 				<tr>
+					<td><textarea readonly id="story" name="story" rows="16" cols="108">${story}</textarea></td>
+				</tr>
+				<tr>
 					<td><input type="text" name="userInput" size="120" value="${userInput}" /></td>
 				</tr>
 				<tr>
 					<td><input type="Submit" name="submit" value="Tell me what the fuck I just submitted"></td>
 				</tr>
 				<tr>
-					<td><p name="output">${output}</p></td>
-				</tr>
-				<tr>
-					<td><p name="action">${action}</p></td>
-				</tr>
-				<tr>
-					<td><p name="noun">${noun}</p></td>
+					<td><input type="Submit" name="submit" value="Clear Game"></td>
 				</tr>
 			</table>
 		</form>
