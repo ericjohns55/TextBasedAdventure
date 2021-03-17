@@ -7,12 +7,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cs320.windows98.tbag.input.Command;
-import cs320.windows98.tbag.input.Input;
+
 
 public class TBAGServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	// Game game = new Game();
+	 Game game = new Game();
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)

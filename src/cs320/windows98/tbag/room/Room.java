@@ -14,14 +14,8 @@ public class Room {
 	
 	// Each room has to have a puzzle as well
 	
-	
-	
-	
-	
 
 	public Room(String description, int roomID) {
-
-
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
 		this.description = description;
@@ -40,7 +34,7 @@ public class Room {
 	{
 		return roomID;
   }
-	//Returns the rooms descritpion
+	//Returns the rooms description
 	public String getDescription() 
 	{
 		return description;
@@ -58,11 +52,6 @@ public class Room {
 		return exits.get(direction);
 	}
 	
-	//Returns the rooms descritpion
-	public String getDescription() 
-	{
-		return description;
-
 	
 	// This is seeing if the item is in the room
 	public boolean contains(String identifier) {

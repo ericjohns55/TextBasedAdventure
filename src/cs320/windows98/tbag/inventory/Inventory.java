@@ -58,7 +58,7 @@ public class Inventory {
 		for (String key : items.keySet())
         {
             String item = key;
-            String weight = items.get(key).getWeight();
+            double weight = items.get(key).getWeight();
 
             System.out.println(item + " " + weight + "lbs");
         }			

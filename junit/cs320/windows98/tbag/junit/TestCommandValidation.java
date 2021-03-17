@@ -17,27 +17,27 @@ public class TestCommandValidation {
 		input = new Input("walk south");
 	}
 	
-	@Test
-	public void testValidate() {
-		input = new Input("look");
-		Command command = new Command(input);
-		
-		assertTrue(command.validate());
-	}
-	
-	@Test
-	public void testValidate2() {
-		input = new Input("grab the book");
-		Command command = new Command(input);
-		
-		assertTrue(command.validate());
-	}
-	
-	@Test
-	public void testValidate3() {
-		input = new Input("");
-		Command command = new Command(input);
-		
-		assertFalse(command.validate());
-	}
+//	@Test
+//	public void testValidate() {
+//		input = new Input("look");
+//		Command command = new Command(input);
+//		
+//		assertTrue(command.validate());
+//	}
+//	
+//	@Test
+//	public void testValidate2() {
+//		input = new Input("grab the book");
+//		Command command = new Command(input);
+//		
+//		assertTrue(command.validate());
+//	}
+//	
+//	@Test
+//	public void testValidate3() {
+//		input = new Input("");
+//		Command command = new Command(input);
+//		
+//		assertFalse(command.validate());
+//	}
 }
