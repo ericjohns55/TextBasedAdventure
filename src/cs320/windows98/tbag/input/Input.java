@@ -50,7 +50,7 @@ public class Input {
 	
 	public String getSubject() {
 		if (words.size() == 1) {
-			return "<none>";
+			return "";
 		}
 		
 		String[] articles = {" the ", " an ", " a "};
@@ -62,5 +62,9 @@ public class Input {
 		}
 		
 		return words.get(words.size() - 1);
+	}
+	
+	public String getInput() {
+		return userInput;
 	}
 }

@@ -12,15 +12,16 @@ public class Room {
 	private String description; 
 	private int roomID;
 	
-	
 	// Each room has to have a puzzle as well
 	
 	
 	
 	
 	
+
 	public Room(String description, int roomID) {
-		
+
+
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
 		this.description = description;
@@ -34,14 +35,11 @@ public class Room {
 		items.put(identifier, item);
 	}
 
-	
 	// Returns roomID
 	public int getRoomID()
 	{
 		return roomID;
-	}
-	
-	
+  }
 	//Returns the rooms descritpion
 	public String getDescription() 
 	{
@@ -60,23 +58,17 @@ public class Room {
 		return exits.get(direction);
 	}
 	
+	//Returns the rooms descritpion
+	public String getDescription() 
+	{
+		return description;
+
 	
 	// This is seeing if the item is in the room
 	public boolean contains(String identifier) {
-		
 		// See if the "identifier" coming in is present in the items map
-		if (items.containsKey(identifier))
-		{
-			return true;
-		}
-		
-		else
-		{
-			return false;
-		}
+		return items.containsKey(identifier);
 		
 	}
-	
-	
-	
+
 }

@@ -3,6 +3,7 @@ package cs320.windows98.tbag.inventory;
 import java.util.HashMap;
 
 import cs320.windows98.tbag.items.Item;
+import cs320.windows98.tbag.player.Player;
 
 public class Inventory {
 	static double MAX_WEIGHT = 50;
@@ -51,5 +52,36 @@ public class Inventory {
 	
 	public void emptyInventory() {
 		items.clear();
+	}
+
+	public void openInventory() {
+		for (String key : items.keySet())
+        {
+            String item = key;
+            String weight = items.get(key).getWeight();
+
+            System.out.println(item + " " + weight + "lbs");
+        }			
+		
+	}
+
+	public void dropItem(String identifier) {
+		if (items.contains(identifier)) {
+			items.remove(identifier);
+			Player.getRoom.addItem(identifier);
+		}
+		else {
+			System.out.println("I don't got that in my bag.");
+		}
+	}
+
+	public void consumeItem(String identifier){
+		if (items.contains(identifier) == true) {
+			items.remove(identifier);
+			//add in what it does later
+		}
+		else {
+			System.out.println("I don't got that in my bag.");
+		}
 	}
 }
