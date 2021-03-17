@@ -54,7 +54,7 @@ public class Inventory {
 		items.clear();
 	}
 
-	public void openIventory() {
+	public void openInventory() {
 		for (String key : items.keySet())
         {
             String item = key;
@@ -66,7 +66,7 @@ public class Inventory {
 	}
 
 	public void dropItem(String identifier) {
-		if (items.contains(identifier) == true) {
+		if (items.contains(identifier)) {
 			items.remove(identifier);
 			Player.getRoom.addItem(identifier);
 		}
@@ -81,7 +81,7 @@ public class Inventory {
 			//add in what it does later
 		}
 		else {
-		System.out.println("I don't got that in my bag.");
+			System.out.println("I don't got that in my bag.");
 		}
 	}
 }
