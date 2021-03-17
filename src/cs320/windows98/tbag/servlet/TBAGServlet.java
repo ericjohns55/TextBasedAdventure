@@ -12,6 +12,7 @@ import cs320.windows98.tbag.input.Input;
 
 public class TBAGServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	// Game game = new Game();
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -34,21 +35,24 @@ public class TBAGServlet extends HttpServlet {
 			
 			String story = req.getParameter("story");
 			
-			Input userInput = new Input(text);
-			Command command = new Command(userInput);
+			//String output = game.runCommand(text);
+			//story += game.runCommand(text);
 			
-			if (command.validate()) {
-				command.execute();
-				
-				String output = command.getOutput();
-				
-				story += output + "\n";
-			} else {
-				story += "=== INVALID COMMAND ===\n";
-				story += "You inputted: " + text + "\n";
-				story += "Your Action: " + userInput.getAction() + "\n";
-				story += "Your Subject: " + userInput.getSubject() + "\n";
-			}
+//			Input userInput = new Input(text);
+//			Command command = new Command(userInput);
+//			
+//			if (command.validate()) {
+//				command.execute();
+//				
+//				String output = command.getOutput();
+//				
+//				story += output + "\n";
+//			} else {
+//				story += "=== INVALID COMMAND ===\n";
+//				story += "You inputted: " + text + "\n";
+//				story += "Your Action: " + userInput.getAction() + "\n";
+//				story += "Your Subject: " + userInput.getSubject() + "\n";
+//			}
 			
 			
 			req.setAttribute("userInput", text);

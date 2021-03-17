@@ -1,35 +1,53 @@
 package cs320.windows98.tbag.input;
 
+import java.util.ArrayList;
+
 public class Command {
-	private Input input;
-	private String output;
+	final static String invalidCommand = "I do not understand that command";
+	private String input;
 	
-	public Command(Input input) {
+	private String verb;
+	private String noun;
+	
+	public Command(String input) {
 		this.input = input;
+		parseCommands();
 	}
 	
-	public Input getUserInput() {
-		return input;
-	}
-	
-	public boolean validate() {
-		String action = input.getAction().toLowerCase().trim();
-		String subject = input.getSubject().toLowerCase().trim();
+	private void parseCommands() {
+		String[] individualWords = input.split(" ");
 		
-		if ((action != null && action != "") && (subject != null && subject != "")) {
-			if (!action.equals(subject)) {
-				return true;
+		ArrayList<String> breakdown = new ArrayList<String>();
+		
+		// REMOVE ARTICLES
+		
+		for (String word : individualWords) {
+			if (!word.equalsIgnoreCase("the") && !word.equalsIgnoreCase("a") && !word.equalsIgnoreCase("an")) {
+				breakdown.add(word);
 			}
 		}
 		
-		return false;
+		verb = breakdown.get(0);
+		noun = breakdown.get(breakdown.size() - 1);
 	}
-	
-	public void execute() {
-		this.output = "Successfully ran command \"" + input.getInput() + "\"";
-	}
-	
-	public String getOutput() {
-		return this.output;
+		
+	public String execute() {
+		String output = null;
+		
+		if (verb.equals("look")) {
+			
+		} else if (verb.equals("open")) {
+			if (noun.equals("inventory")) {
+				
+			}
+		} else if (verb.equals("grab")) {
+			// check if item is in room with second arg name
+		} else if (verb.equals("drop")) {
+			// check if item is in inventory
+		} else if (verb.equals("move")) {
+			// get room connections and check if 2nd arg is in there
+		}
+		
+		return output != null ? output : invalidCommand;
 	}
 }
