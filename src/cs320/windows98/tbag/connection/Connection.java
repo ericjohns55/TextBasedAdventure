@@ -15,6 +15,10 @@ public class Connection{
 	Room room;
 	
 	
+//	connection constructor = Connection(String direction, Room connectingRoom)
+//			3) room has addConnection(Connection connection) method
+//			when instantiating the room we manually program in the connections
+	
 	
 	public Connection(String string, Room room){
 		
@@ -22,10 +26,20 @@ public class Connection{
 		this.string = string;
 		
 		
-		ConnectionMap.put(this.string, this.room);
+		
 		
 	}
 	
+	public void setConnection(String direction, Room connectingRoom)
+	{
+		ConnectionMap.put(direction, connectingRoom);
+	}
+	
+	
+	public String getDirection()
+	{
+		return string;
+	}
 	
 	public HashMap<String, Room> getConnections() {
 		
