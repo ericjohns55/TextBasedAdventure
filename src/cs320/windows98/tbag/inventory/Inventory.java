@@ -3,7 +3,6 @@ package cs320.windows98.tbag.inventory;
 import java.util.HashMap;
 
 import cs320.windows98.tbag.items.Item;
-import cs320.windows98.tbag.player.Player;
 
 public class Inventory {
 	static double MAX_WEIGHT = 50;
@@ -21,6 +20,14 @@ public class Inventory {
 	public void addItem(String identifier, Item toAdd) {
 		if (canAddItem(toAdd)) {
 			items.put(identifier, toAdd);
+		}
+	}
+	
+	public Item removeItem(String identifier) {
+		if (contains(identifier)) {
+			return items.remove(identifier);
+		} else {
+			return null;
 		}
 	}
 	
@@ -54,29 +61,29 @@ public class Inventory {
 		items.clear();
 	}
 
-	public void openInventory() {
+	public String openInventory() {
+		String inventory = "";
+		
 		for (String key : items.keySet())
         {
             String item = key;
             double weight = items.get(key).getWeight();
 
-            System.out.println(item + " " + weight + "lbs");
-        }			
+            inventory += item + " (" + weight + "lbs), ";
+        }		
 		
-	}
-
-	public void dropItem(String identifier) {
-		if (items.contains(identifier)) {
-			items.remove(identifier);
-			Player.getRoom.addItem(identifier);
+		if (!items.isEmpty()) {
+			inventory = "You have " + inventory.substring(0, inventory.length() - 2);
+		} else {
+			inventory = "Your inventory is empty!";
 		}
-		else {
-			System.out.println("I don't got that in my bag.");
-		}
+		
+		// length -2 removes the extra ", " at the end
+		return inventory;
 	}
 
 	public void consumeItem(String identifier){
-		if (items.contains(identifier) == true) {
+		if (items.containsKey(identifier)) {
 			items.remove(identifier);
 			//add in what it does later
 		}

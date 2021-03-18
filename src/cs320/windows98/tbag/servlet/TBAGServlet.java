@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cs320.windows98.tbag.game.Game;
+
 
 
 public class TBAGServlet extends HttpServlet {
@@ -33,6 +35,8 @@ public class TBAGServlet extends HttpServlet {
 			String text = req.getParameter("userInput");
 			
 			String story = req.getParameter("story");
+			
+			story += game.runCommand(text);
 			
 			//String output = game.runCommand(text);
 			//story += game.runCommand(text);

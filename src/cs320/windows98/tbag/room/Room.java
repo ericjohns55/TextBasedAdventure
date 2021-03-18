@@ -52,6 +52,39 @@ public class Room {
 		return exits.get(direction);
 	}
 	
+	public boolean hasExit(String direction) {
+		return exits.containsKey(direction);
+	}
+	
+	public String listItems() {
+		String itemString = "\n";
+		
+		if (!items.isEmpty()) {
+			for (Item item : items.values()) {
+				itemString += "This room has " + item.getName() + ", ";
+			}
+			
+			itemString = itemString.substring(0, itemString.length() - 2);
+		} else {
+			itemString = "\nThere does not appear to be any items in this room...";
+		}
+		
+		return itemString;
+	}
+	
+	public Item getItem(String identifier) {
+		if (contains(identifier)) {
+			return items.get(identifier);
+		}  else {
+			return null;
+		}
+	}
+	
+	public void removeItem(String identifier) {
+		if (contains(identifier)) {
+			items.remove(identifier);
+		}
+	}
 	
 	// This is seeing if the item is in the room
 	public boolean contains(String identifier) {
