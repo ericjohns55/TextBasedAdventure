@@ -2,10 +2,12 @@ package cs320.windows98.tbag.items;
 
 public class Item {
 	private String name;
+	private String description;
 	private double weight;
 	private boolean isInteractable;
 	private boolean canBePickedUp;
 	private boolean canBeConsumed; 
+	private boolean inInventory;
 	
 	public Item(String name, double weight) {
 		this.name = name;
@@ -13,6 +15,8 @@ public class Item {
 		this.isInteractable = false;
 		this.canBePickedUp = true;
 		this.canBeConsumed = false; 
+		this.inInventory = false;
+		this.description = "";
 	}
 	
 	public Item(String name) {
@@ -21,6 +25,14 @@ public class Item {
 	
 	public Item() {
 		this("Item");
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	public String getName() {
@@ -61,6 +73,14 @@ public class Item {
 	
 	public void setCanBePickedUp(boolean canBePickedUp) {
 		this.canBePickedUp = canBePickedUp;
+	}
+	
+	public boolean inInventory() {
+		return inInventory;
+	}
+	
+	public void setInInventory(boolean inInventory) {
+		this.inInventory = inInventory;
 	}
 	
 	@Override

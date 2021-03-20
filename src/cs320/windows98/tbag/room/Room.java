@@ -14,7 +14,6 @@ public class Room {
 	
 	// Each room has to have a puzzle as well
 	
-
 	public Room(String description, int roomID) {
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
@@ -33,15 +32,22 @@ public class Room {
 	public int getRoomID()
 	{
 		return roomID;
-  }
+	}
 	//Returns the rooms description
 	public String getDescription() 
 	{
-		return description;
+		String output = description;
+		String items = listItems();
+		
+		if (items != "\n") {
+			output += items;
+		}
+		
+		return output;
 	}
 
 	//sets the rooms exit
-	public void setExit(String direction, Room neighbor)
+	public void addExit(String direction, Room neighbor)
 	{
 		exits.put(direction, neighbor);
 	}
@@ -64,7 +70,7 @@ public class Room {
 				itemString += "This room has " + item.getName() + ", ";
 			}
 			
-			itemString = itemString.substring(0, itemString.length() - 2);
+			itemString = itemString.substring(0, itemString.length() - 2) + "\n";
 		} else {
 			itemString = "\nThere does not appear to be any items in this room...";
 		}

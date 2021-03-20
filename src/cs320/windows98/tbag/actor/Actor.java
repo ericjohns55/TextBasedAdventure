@@ -1,17 +1,17 @@
-package cs320.windows98.tbag.player;
+package cs320.windows98.tbag.actor;
 
 import cs320.windows98.tbag.game.Game;
 import cs320.windows98.tbag.inventory.Inventory;
 import cs320.windows98.tbag.items.Item;
 import cs320.windows98.tbag.room.Room;
 
-public class Player {
+public class Actor {
 	private Inventory inventory;
 	private Game game;
 
 	private int roomID;
 
-	public Player(Game game, int roomID) {
+	public Actor(Game game, int roomID) {
 		inventory = new Inventory();
 		
 		this.roomID = roomID;

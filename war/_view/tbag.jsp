@@ -17,7 +17,7 @@
 					<td><input type="text" name="userInput" size="120" value="${userInput}" /></td>
 				</tr>
 				<tr>
-					<td><input type="Submit" name="submit" value="Tell me what the fuck I just submitted"></td>
+					<td><input type="Submit" name="submit" value="Submit Text"></td>
 				</tr>
 				<tr>
 					<td><input type="Submit" name="submit" value="Clear Game"></td>

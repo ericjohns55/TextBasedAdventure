@@ -45,4 +45,17 @@ public class TestItem {
 		item.setCanBePickedUp(true);
 		assertTrue(item.canBePickedUp());
 	}
+	
+	@Test
+	public void testConsumeable() {
+		item.setConsumable(true);
+		assertTrue(item.isConsumable());
+	}
+	
+	@Test
+	public void testDescription() {
+		String description = "bruh";
+		item.setDescription(description);
+		assertEquals(description, item.getDescription());
+	}
 }

@@ -2,14 +2,14 @@ package cs320.windows98.tbag.input;
 
 import java.util.ArrayList;
 
+import cs320.windows98.tbag.actor.Player;
 import cs320.windows98.tbag.game.Game;
 import cs320.windows98.tbag.inventory.Inventory;
 import cs320.windows98.tbag.items.Item;
-import cs320.windows98.tbag.player.Player;
 import cs320.windows98.tbag.room.Room;
 
 public class Command {
-	final static String invalidCommand = "I do not understand that command";
+	public final static String invalidCommand = "I do not understand that command";
 	private String input;
 	private Game game;
 	
@@ -38,29 +38,26 @@ public class Command {
 		verb = breakdown.get(0);
 		noun = breakdown.get(breakdown.size() - 1);
 	}
-		
+	
 	public String execute() {
 		String output = null;
 		
 		Player player = game.getPlayer();
 		Room room = player.getRoom();
 		Inventory inventory = player.getInventory();
-
-		System.out.println("VERB: " + verb);
-		System.out.println("NOUN: " + noun);
 		
 		if (verb.equals("look")) {
 			output = room.getDescription();
-			output += room.listItems();
 		} else if (verb.equals("open")) {
 			if (noun.equals("inventory")) {
 				output = inventory.openInventory();
 			}
-		} else if (verb.equals("grab")) {
+		} else if (verb.equals("grab") || verb.equals("take")) {
 			if (room.contains(noun)) {
 				Item toGrab = room.getItem(noun);
 				
 				if (toGrab != null) {
+					toGrab.setInInventory(true);
 					inventory.addItem(noun, toGrab);
 					room.removeItem(noun);
 					
@@ -74,6 +71,7 @@ public class Command {
 		} else if (verb.equals("drop")) {
 			if (inventory.contains(noun)) {
 				Item removed = inventory.removeItem(noun);
+				removed.setInInventory(false);
 				room.addItem(noun, removed);
 				output = "You dropped " + noun + " on the table.";
 			} else {

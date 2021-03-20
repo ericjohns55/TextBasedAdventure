@@ -14,6 +14,7 @@ import cs320.windows98.tbag.game.Game;
 public class TBAGServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	 Game game = new Game();
+	 boolean firstRun = true;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -29,39 +30,25 @@ public class TBAGServlet extends HttpServlet {
 			throws ServletException, IOException {
 		System.out.println("TBAG Servlet: doPost");
 		
-		if (req.getParameter("submit").equals("Clear Game")) {
-			req.setAttribute("story", "");
+		if (firstRun) {
+			System.out.println("AAA");
+			firstRun = !firstRun;
+			
+			req.setAttribute("story", game.getPlayer().getRoom().getDescription());
 		} else {
-			String text = req.getParameter("userInput");
-			
-			String story = req.getParameter("story");
-			
-			story += game.runCommand(text);
-			
-			//String output = game.runCommand(text);
-			//story += game.runCommand(text);
-			
-//			Input userInput = new Input(text);
-//			Command command = new Command(userInput);
-//			
-//			if (command.validate()) {
-//				command.execute();
-//				
-//				String output = command.getOutput();
-//				
-//				story += output + "\n";
-//			} else {
-//				story += "=== INVALID COMMAND ===\n";
-//				story += "You inputted: " + text + "\n";
-//				story += "Your Action: " + userInput.getAction() + "\n";
-//				story += "Your Subject: " + userInput.getSubject() + "\n";
-//			}
-			
-			
-			req.setAttribute("userInput", text);
-			req.setAttribute("story", story + "\n");
+			if (req.getParameter("submit").equals("Clear Game")) {
+				req.setAttribute("story", "");
+			} else {
+				String text = req.getParameter("userInput");
+				
+				String story = req.getParameter("story");
+				
+				story += game.runCommand(text);
+							
+				req.setAttribute("userInput", text);
+				req.setAttribute("story", story + "\n");
+			}
 		}
-		
 
 		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
 		
