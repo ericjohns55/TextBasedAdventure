@@ -14,14 +14,7 @@ public class Room {
 	
 	// Each room has to have a puzzle as well
 	
-	
-	
-	
-	
-
 	public Room(String description, int roomID) {
-
-
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
 		this.description = description;
@@ -39,15 +32,22 @@ public class Room {
 	public int getRoomID()
 	{
 		return roomID;
-  }
-	//Returns the rooms descritpion
+	}
+	//Returns the rooms description
 	public String getDescription() 
 	{
-		return description;
+		String output = description;
+		String items = listItems();
+		
+		if (items != "\n") {
+			output += items;
+		}
+		
+		return output;
 	}
 
 	//sets the rooms exit
-	public void setExit(String direction, Room neighbor)
+	public void addExit(String direction, Room neighbor)
 	{
 		exits.put(direction, neighbor);
 	}
@@ -58,11 +58,39 @@ public class Room {
 		return exits.get(direction);
 	}
 	
-	//Returns the rooms descritpion
-	public String getDescription() 
-	{
-		return description;
-
+	public boolean hasExit(String direction) {
+		return exits.containsKey(direction);
+	}
+	
+	public String listItems() {
+		String itemString = "\n";
+		
+		if (!items.isEmpty()) {
+			for (Item item : items.values()) {
+				itemString += "This room has " + item.getName() + ", ";
+			}
+			
+			itemString = itemString.substring(0, itemString.length() - 2) + "\n";
+		} else {
+			itemString = "\nThere does not appear to be any items in this room...";
+		}
+		
+		return itemString;
+	}
+	
+	public Item getItem(String identifier) {
+		if (contains(identifier)) {
+			return items.get(identifier);
+		}  else {
+			return null;
+		}
+	}
+	
+	public void removeItem(String identifier) {
+		if (contains(identifier)) {
+			items.remove(identifier);
+		}
+	}
 	
 	// This is seeing if the item is in the room
 	public boolean contains(String identifier) {
