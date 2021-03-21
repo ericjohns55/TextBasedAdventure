@@ -17,37 +17,28 @@ public class TBAGServlet extends HttpServlet {
 	 boolean firstRun = true;
 	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		System.out.println("TBAG Servlet: doGet");
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
+		if (firstRun) {
+			firstRun = !firstRun;
+			
+			req.setAttribute("story", game.getPlayer().getRoom().getDescription());
+		}
 		
 		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
 	}
 	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		System.out.println("TBAG Servlet: doPost");
-		
-		if (firstRun) {
-			System.out.println("AAA");
-			firstRun = !firstRun;
-			
-			req.setAttribute("story", game.getPlayer().getRoom().getDescription());
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
+		if (req.getParameter("submit").equals("Clear Game")) {
+			req.setAttribute("story", "");
 		} else {
-			if (req.getParameter("submit").equals("Clear Game")) {
-				req.setAttribute("story", "");
-			} else {
-				String text = req.getParameter("userInput");
-				
-				String story = req.getParameter("story");
-				
-				story += game.runCommand(text);
-							
-				req.setAttribute("userInput", text);
-				req.setAttribute("story", story + "\n");
-			}
+			String text = req.getParameter("userInput");
+			
+			String story = req.getParameter("story");
+			
+			story += game.runCommand(text);
+			
+			req.setAttribute("story", story + "\n");
 		}
 
 		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
