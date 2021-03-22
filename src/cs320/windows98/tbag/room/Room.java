@@ -19,6 +19,7 @@ public class Room {
 		exits = new HashMap<String, Room>();
 		this.description = description;
 		this.roomID = roomID;
+		
 	}
 	
 	
