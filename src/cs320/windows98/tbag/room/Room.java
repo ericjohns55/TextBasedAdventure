@@ -14,6 +14,8 @@ public class Room {
 	
 	// Each room has to have a puzzle as well
 	
+	// Test
+	
 	public Room(String description, int roomID) {
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
