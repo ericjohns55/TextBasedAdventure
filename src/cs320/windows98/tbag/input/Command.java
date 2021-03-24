@@ -61,7 +61,7 @@ public class Command {
 					inventory.addItem(noun, toGrab);
 					room.removeItem(noun);
 					
-					output = "You picked up " + noun;
+					output = "You picked up the " + noun;
 				} else {
 					output = "This item does not exist in your current room.";
 				}
@@ -73,7 +73,7 @@ public class Command {
 				Item removed = inventory.removeItem(noun);
 				removed.setInInventory(false);
 				room.addItem(noun, removed);
-				output = "You dropped " + noun + " on the table.";
+				output = "You dropped " + noun + " on the floor.";
 			} else {
 				output = "You do not possess this item.";
 			}
