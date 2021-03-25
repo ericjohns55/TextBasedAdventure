@@ -3,10 +3,12 @@ package cs320.windows98.tbag.room;
 import java.util.HashMap;
 
 import cs320.windows98.tbag.items.Item;
+import cs320.windows98.tbag.obstacles.Obstacle;
 
 public class Room {
 	
 	// Each room has to have a set items in the room
+	private HashMap<String, Obstacle> obstacles;
 	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;
 	private String description; 
@@ -15,12 +17,28 @@ public class Room {
 	// Each room has to have a puzzle as well
 	
 	public Room(String description, int roomID) {
+		obstacles = new HashMap<String, Obstacle>();
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
 		this.description = description;
 		this.roomID = roomID;
 	}
 	
+	public HashMap<String, Obstacle> getAllObstacles() {
+		return obstacles;
+	}
+	
+	public void addObstacle(String name, Obstacle obstacle) {
+		obstacles.put(name, obstacle);
+	}
+	
+	public boolean hasObstacle(String name) {
+		return obstacles.containsKey(name);
+	}
+	
+	public Obstacle getObstacle(String name) {
+		return obstacles.get(name);
+	}
 	
 	// How should the items be 
 	public void addItem(String identifier, Item item)
@@ -66,8 +84,9 @@ public class Room {
 		String itemString = "\n";
 		
 		if (!items.isEmpty()) {
+			itemString += "This room has ";
 			for (Item item : items.values()) {
-				itemString += "This room has " + item.getName() + ", ";
+				itemString += item.getName() + ", ";
 			}
 			
 			itemString = itemString.substring(0, itemString.length() - 2) + "\n";
