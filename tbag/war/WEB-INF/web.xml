@@ -8,7 +8,7 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>TBAGServlet</servlet-name>
-    <servlet-class>cs320.windows98.tbag.servlet.TBAGServlet</servlet-class>
+    <servlet-class>servlet.TBAGServlet</servlet-class>
   </servlet>
 
   <!-- Servlet mappings -->
