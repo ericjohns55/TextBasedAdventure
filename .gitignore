@@ -2,3 +2,5 @@ bin/
 *.class
 *.classpath
 *.project
+*.DS_Store
+*.metadata/
