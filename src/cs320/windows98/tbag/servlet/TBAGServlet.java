@@ -13,8 +13,8 @@ import cs320.windows98.tbag.game.Game;
 
 public class TBAGServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	 Game game = new Game();
-	 boolean firstRun = true;
+	private Game game = new Game();
+	private boolean firstRun = true;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
@@ -22,6 +22,9 @@ public class TBAGServlet extends HttpServlet {
 			firstRun = !firstRun;
 			
 			req.setAttribute("story", game.getPlayer().getRoom().getDescription());
+			req.setAttribute("moves", "Moves: 0");
+			req.setAttribute("score", "Score: 0");
+			req.setAttribute("time", "Time Left: 15:00");
 		}
 		
 		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
@@ -30,16 +33,24 @@ public class TBAGServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
 		if (req.getParameter("submit").equals("Clear Game")) {
-			req.setAttribute("story", "");
+			req.setAttribute("story", game.getPlayer().getRoom().getDescription());
+			
+			game.resetMoves();
 		} else {
 			String text = req.getParameter("userInput");
 			
-			String story = req.getParameter("story");
-			
-			story += game.runCommand(text);
-			
-			req.setAttribute("story", story + "\n");
+			if (text.length() != 0) {
+				String story = req.getParameter("story");
+				
+				story += game.runCommand(text);
+				
+				req.setAttribute("story", story + "\n");
+			}
 		}
+		
+		req.setAttribute("moves", "Moves: " + game.getMoves());
+		req.setAttribute("score", "Score: 0");
+		req.setAttribute("time", "Time Left: 11:52");
 
 		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
 		

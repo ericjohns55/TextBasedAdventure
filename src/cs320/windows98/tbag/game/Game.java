@@ -13,7 +13,7 @@ public class Game {
 	private Player player;
 
 	public Game() {
-		this.moves = -1;
+		this.moves = 0;
 		this.player = new Player(this, 1);
 		this.rooms = new HashMap<Integer, Room>();
 
@@ -114,6 +114,10 @@ public class Game {
 	
 	public int getMoves() {
 		return moves;
+	}
+	
+	public void resetMoves() {
+		moves = 0;
 	}
 
 	public void updateGameState() { }
