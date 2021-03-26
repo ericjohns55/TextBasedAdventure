@@ -6,6 +6,8 @@ import actor.Player;
 import game.Game;
 import items.Inventory;
 import items.Item;
+import obstacles.Door;
+import obstacles.Obstacle;
 import map.Room;
 
 public class Command {
@@ -38,6 +40,17 @@ public class Command {
 		if (breakdown.size() >= 1) {
 			verb = breakdown.get(0);
 			noun = breakdown.get(breakdown.size() - 1);
+			
+			// account for items with names multiple words long
+			if (verb.equals("grab") || verb.equals("take") || verb.equals("drop") || verb.equals("examine") || verb.equals("look")) {
+				String fullNoun = "";
+				
+				for (int i = 1; i < individualWords.length; i++) {
+					fullNoun += individualWords[i] + " ";
+				}
+				
+				noun = fullNoun.trim();
+			}
 		} else {
 			noun = null;
 		}
@@ -50,10 +63,25 @@ public class Command {
 		Room room = player.getRoom();
 		Inventory inventory = player.getInventory();
 		
+		System.out.println("VERB: " + verb);
+		System.out.println("NOUN: " + noun);
+		
 		if (verb != null) {
 			switch (verb) {
+				case "examine":
 				case "look":
-					output = room.getDescription();
+					if (noun == "" || noun.equals("room")) {
+						output = room.getDescription();
+					} else {
+						if (room.contains(noun)) {
+							output = room.getItem(noun).getDescription();
+						} else if (inventory.contains(noun)) {
+							output = inventory.getItem(noun).getDescription();							
+						} else {
+							output = "That item doesn't exist!";
+						}
+					}
+					
 					break;
 				case "open":
 					if (noun.equals("inventory")) {
@@ -94,19 +122,78 @@ public class Command {
 				case "move":
 				case "walk":
 					if (room.hasExit(noun)) {
-						int roomID = room.getExit(noun).getRoomID();
-						player.setRoomID(roomID);
-						output = "You walk " + noun + "\n";
-						output += player.getRoom().getDescription();
+						if (room.getAllObstacles().size() == 0) {
+							output = moveRooms(player, room, noun);
+						} else {
+							for (Obstacle obstacle : room.getAllObstacles().values()) {
+								if (obstacle.getDirection().equals(noun)) {
+									if (obstacle.isBlockingExit()) {
+										if (obstacle instanceof Door) {
+											Door door = (Door) obstacle;
+											
+											if (door.isLocked()) {
+												output = "This door appears to be locked... perhaps there is something in the room that can help you.";
+											} else {
+												output = moveRooms(player, room, noun);
+											}
+										} else {
+											// IMPLEMENT OTHERS LATER
+										}
+									} else {
+										output = moveRooms(player, room, noun);
+									}									
+								} else {
+									output = moveRooms(player, room, noun);
+								}
+							}
+						}
 					} else {
 						output = "You cannot move this direction.";
+					}
+					
+					break;
+				case "unlock":
+					if (room.hasObstacle(noun)) {
+						Obstacle obstacle = room.getObstacle(noun);
+						
+						if (obstacle.isUnlockable()) {
+							if (obstacle.isLocked()) {
+								if (obstacle instanceof Door) {
+									Door door = (Door) obstacle;
+									
+									if (inventory.contains(door.getUnlockItem())) {
+										door.setLocked(false);
+										output = "You successfully unlocked the door.";
+									} else {
+										output = "You do not have the required item to unlock this door.";
+									}
+								} else {
+									output = "Not implemented";
+								}
+							} else {
+								output = "This is already unlocked";
+							}
+						} else {
+							output = "You cannot unlock that!";
+						}
+					} else {
+						output = "This obstacle does not exist...";
 					}
 					
 					break;
 			}
 		}
 		
-		
 		return output != null ? output : invalidCommand;
+	}
+	
+	private String moveRooms(Player player, Room room, String direction) {
+		int roomID = room.getExit(noun).getRoomID();
+		player.setRoomID(roomID);
+		
+		String output = "You walk " + noun + "\n";
+		output += player.getRoom().getDescription();
+		
+		return output;
 	}
 }
