@@ -34,12 +34,109 @@ public class Game {
 	// public void play()
 
 	public void createRooms() {
-		Room room1 = new Room(
-				"You enter into room with a table and a door in the westward direction.", 1);
-		Room room2 = new Room("You enter into an empty room with a door to the east.", 2);
-
+		// 24 rooms and an exit 
+		Room room1 = new Room("You wake up in a room with a table and a door in the west direction.", 1);
+		Room room2 = new Room("You enter into a room with a chair and a door in the west direction.", 2);
+		Room room3 = new Room("You enter into room with a table and a door to the south.", 3);
+		Room room4 = new Room("You enter into an empty room with a door to the east.", 4);
+		Room room5 = new Room("You enter into room with a table and a door in the westward direction.", 5);
+		Room room6 = new Room("You enter into an empty room with a door to the east.", 6);
+		Room room7 = new Room("You enter into room with a table and a door in the westward direction.", 7);
+		Room room8 = new Room("You enter into an empty room with a door to the east.", 8);
+		Room room9 = new Room("You enter into room with a table and a door in the westward direction.", 9);
+		Room room10 = new Room("You enter into an empty room with a door to the east.", 10);
+		Room room11 = new Room("You enter into room with a table and a door in the westward direction.", 11);
+		Room room12 = new Room("You enter into an empty room with a door to the east.", 12);
+		Room room13 = new Room("You enter into room with a table and a door in the westward direction.", 13);
+		Room room14 = new Room("You enter into an empty room with a door to the east.", 14);
+		Room room15 = new Room("You enter into room with a table and a door in the westward direction.", 15);
+		Room room16 = new Room("You enter into an empty room with a door to the east.", 16);
+		Room room17 = new Room("You enter into room with a table and a door in the westward direction.", 17);
+		Room room18 = new Room("You enter into an empty room with a door to the east.", 18);
+		Room room19 = new Room("You enter into room with a table and a door in the westward direction.", 19);
+		Room room20 = new Room("You enter into an empty room with a door to the east.", 20);
+		Room room21 = new Room("You enter into room with a table and a door in the westward direction.", 21);
+		Room room22 = new Room("You enter into an empty room with a door to the east.", 22);
+		Room room23 = new Room("You enter into room with a table and a door in the westward direction.", 23);
+		Room room24 = new Room("You enter into an empty room with a door to the east.", 24);
+		Room outsideRoom = new Room("You win!", 25);
+		
+		
 		room1.addExit("west", room2);
+		
 		room2.addExit("east", room1);
+		room2.addExit("west", room3);
+		
+		room3.addExit("east", room2);
+		room3.addExit("south", room4);
+		
+		room4.addExit("north", room3);
+		room4.addExit("south", room5);
+		
+		room5.addExit("north", room4);
+		room5.addExit("east", room6);
+		
+		room6.addExit("west", room5);
+		room6.addExit("east", room7);
+		
+		room7.addExit("west", room6);
+		room7.addExit("north", room8);
+		
+		room8.addExit("south", room7);
+		room8.addExit("west", room9);
+		
+		room9.addExit("east", room8);
+		room9.addExit("north", room10);
+		
+		room10.addExit("south", room9);
+		room10.addExit("west", room11);
+		
+		room11.addExit("west", room10);
+		room11.addExit("east", room12);
+		
+		room12.addExit("west", room11);
+		room12.addExit("south", room13);
+		
+		room13.addExit("north", room12);
+		room13.addExit("south", room14);
+		
+		room14.addExit("north", room13);
+		room14.addExit("west", room15);
+		
+		room15.addExit("east", room14);
+		room15.addExit("west", room16);
+		
+		// From here
+		room16.addExit("east", room15);
+		room16.addExit("west", room17);
+		
+		
+		room17.addExit("east", room16);
+		room17.addExit("east", room18);
+		
+		// To here
+		
+		room18.addExit("west", room17);
+		room18.addExit("east", room19);
+		
+		room19.addExit("west", room18);
+		room19.addExit("north", room20);
+		
+		room20.addExit("south", room19);
+		room20.addExit("north", room21);
+		
+		room21.addExit("south", room20);
+		room21.addExit("west", room22);
+		
+		room22.addExit("east", room21);
+		room22.addExit("west", room23);
+		
+		room23.addExit("east", room22);
+		room23.addExit("south", room24);
+		
+		room24.addExit("north", room23);
+		room24.addExit("west", outsideRoom);
+
 
 		Item key = new Item("key");
 		key.setWeight(0.1);
@@ -103,6 +200,29 @@ public class Game {
 
 		rooms.put(1, room1);
 		rooms.put(2, room2);
+		rooms.put(3, room3);
+		rooms.put(4, room4);
+		rooms.put(5, room5);
+		rooms.put(6, room6);
+		rooms.put(7, room7);
+		rooms.put(8, room8);
+		rooms.put(9, room9);
+		rooms.put(10, room10);
+		rooms.put(11, room11);
+		rooms.put(12, room12);
+		rooms.put(13, room13);
+		rooms.put(14, room14);
+		rooms.put(15, room15);
+		rooms.put(16, room16);
+		rooms.put(17, room17);
+		rooms.put(18, room18);
+		rooms.put(19, room19);
+		rooms.put(20, room20);
+		rooms.put(21, room21);
+		rooms.put(22, room22);
+		rooms.put(23, room23);
+		rooms.put(24, room24);
+		
 	}
 	
 	public void addRoom(Room room) {
