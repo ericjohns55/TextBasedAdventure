@@ -17,6 +17,7 @@ public class Command {
 	
 	private String verb;
 	private String noun;
+	private String location;
 	
 	public Command(String input, Game game) {
 		this.input = input;
@@ -34,25 +35,41 @@ public class Command {
 		for (String word : individualWords) {
 			if (!word.equalsIgnoreCase("the") && !word.equalsIgnoreCase("a") && !word.equalsIgnoreCase("an")) {
 				breakdown.add(word);
-			}
+			} 
 		}
 		
-		if (breakdown.size() >= 1) {
+		if (breakdown.size() > 1) {
 			verb = breakdown.get(0);
 			noun = breakdown.get(breakdown.size() - 1);
 			
 			// account for items with names multiple words long
+			// also account for locations
 			if (verb.equals("grab") || verb.equals("take") || verb.equals("drop") || verb.equals("examine") || verb.equals("look")) {
 				String fullNoun = "";
+				String fullLocation = "";
 				
-				for (int i = 1; i < individualWords.length; i++) {
-					fullNoun += individualWords[i] + " ";
+				boolean addLocation = false;
+
+				for (int i = 1; i < breakdown.size(); i++) {					
+					if (breakdown.get(i).equalsIgnoreCase("on")) {
+						addLocation = true;
+					} else {
+						if (addLocation) {
+							fullLocation += breakdown.get(i) + " ";
+						} else {
+							fullNoun += breakdown.get(i) + " ";
+						}
+					}
 				}
 				
 				noun = fullNoun.trim();
+				
+				if (fullLocation != "") {
+					location = fullLocation.trim();
+				}
 			}
-		} else {
-			noun = null;
+		} else if (breakdown.size() == 1) {
+			verb = breakdown.get(0);
 		}
 	}
 	
@@ -65,6 +82,7 @@ public class Command {
 		
 		System.out.println("VERB: " + verb);
 		System.out.println("NOUN: " + noun);
+		System.out.println("LOCATION: " + location);
 		
 		if (verb != null) {
 			switch (verb) {
@@ -103,6 +121,8 @@ public class Command {
 						} else {
 							output = "This item does not exist in your current room.";
 						}
+					} else if (noun == null) {
+						output = "Please specify an item.";
 					} else {
 						output = "This item does not exist in your current room.";
 					}
@@ -114,6 +134,8 @@ public class Command {
 						removed.setInInventory(false);
 						room.addItem(noun, removed);
 						output = "You dropped " + noun + " on the floor.";
+					} else if (noun == null) {
+						output = "Please specify an item.";
 					} else {
 						output = "You do not possess this item.";
 					}
@@ -195,5 +217,23 @@ public class Command {
 		output += player.getRoom().getDescription();
 		
 		return output;
+	}
+	
+	public String getBreakdown() {
+		String breakdown = "";
+		
+		if (verb != null) {
+			breakdown += verb;
+			
+			if (noun != null) {
+				breakdown += "/" + noun;
+				
+				if (location != null) {
+					breakdown += "/" + location;
+				}
+			}
+		}
+		
+		return breakdown;
 	}
 }
