@@ -3,10 +3,12 @@ package map;
 import java.util.HashMap;
 
 import items.Item;
+import object.Object;
 
 public class Room {
 	
 	// Each room has to have a set items in the room
+	private HashMap<String, Object> objects;
 	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;
 	private String description; 
@@ -15,12 +17,28 @@ public class Room {
 	// Each room has to have a puzzle as well
 	
 	public Room(String description, int roomID) {
+		objects = new HashMap<String, Object>(); 
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
 		this.description = description;
 		this.roomID = roomID;
 	}
 	
+	public HashMap<String, Object> getAllObjects() { 
+		return objects; 
+	} 
+	 
+	public void addObject(String name, Object object) { 
+		objects.put(name, object); 
+	} 
+	 
+	public boolean hasObject(String name) { 
+		return objects.containsKey(name); 
+	} 
+	 
+	public Object getObject(String name) { 
+		return objects.get(name); 
+	}	
 	
 	// How should the items be 
 	public void addItem(String identifier, Item item)

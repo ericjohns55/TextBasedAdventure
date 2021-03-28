@@ -2,6 +2,7 @@ package game;
 
 import items.Item;
 import map.Room;
+import object.Box;
 
 import java.util.HashMap;
 
@@ -41,6 +42,10 @@ public class Game {
 		room1.addExit("west", room2);
 		room2.addExit("east", room1);
 
+		Box box = new Box("A large wooden box", true, true); 
+		room1.addObject("Box", box); 
+		
+		
 		Item key = new Item("key");
 		key.setWeight(0.1);
 		key.setDescription("This key seems to be able to unlock a door.");
