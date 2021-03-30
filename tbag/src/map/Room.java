@@ -42,6 +42,7 @@ public class Room {
 	 
 	public Object getObject(String name) { 
 		return objects.get(name); 
+	}
 
 	public HashMap<String, Obstacle> getAllObstacles() {
 		return obstacles;

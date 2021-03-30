@@ -1,9 +1,6 @@
 package object;
 
-import java.util.HashMap;
-
 import items.Inventory;
-import items.Item;
 
 public class Object {
 	private String name;
