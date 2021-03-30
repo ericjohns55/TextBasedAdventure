@@ -3,6 +3,7 @@ package game;
 import items.Item;
 import map.Room;
 import object.Object;
+import obstacles.Door;
 
 import java.util.HashMap;
 
@@ -40,8 +41,13 @@ public class Game {
 		Room room2 = new Room("You enter into an empty room with a door to the east.", 2);
 
 		room1.addExit("west", room2);
-		room2.addExit("east", room1);		
 		
+		room2.addExit("east", room1);
+		
+		Door door = new Door("Probably leads to another room...", "west", true, "key");
+		door.setLocked(true);
+		room1.addObstacle("door", door);
+
 		Item key = new Item("key");
 		key.setWeight(0.1);
 		key.setDescription("This key seems to be able to unlock a door.");
@@ -61,44 +67,44 @@ public class Game {
 		room2.addItem("note", note);
 		
 		Item vile = new Item("vile");
-		note.setWeight(1.2);
-		note.setDescription("A vile filled with someones blood");
+		vile.setWeight(1.2);
+		vile.setDescription("A vile filled with someones blood");
 		
 		room1.addItem("vile", vile);
 		
 		Item record = new Item("record");
-		note.setWeight(0.1);
-		note.setDescription("A vinyl record that says play me.");
+		record.setWeight(0.1);
+		record.setDescription("A vinyl record that says play me.");
 		
 		room1.addItem("record", record);
 		
 		Item jar = new Item("jar of eyes");
-		note.setWeight(5.0);
-		note.setDescription("Each eye is staring at you.");
+		jar.setWeight(5.0);
+		jar.setDescription("Each eye is staring at you.");
 		
 		room1.addItem("jar of eyes", jar);
 		
 		Item shovel = new Item("shovel");
-		note.setWeight(6.5);
-		note.setDescription("A dirty shovel, good for digging.");
+		shovel.setWeight(6.5);
+		shovel.setDescription("A dirty shovel, good for digging.");
 		
 		room1.addItem("shovel", shovel);
 		
 		Item ax = new Item("ax");
-		note.setWeight(6.0);
-		note.setDescription("An ax, good for chopping wood.");
+		ax.setWeight(6.0);
+		ax.setDescription("An ax, good for chopping wood.");
 		
 		room1.addItem("ax", ax);
 		
 		Item doll = new Item("doll");
-		note.setWeight(4.0);
-		note.setDescription("A raggedy doll.");
+		doll.setWeight(4.0);
+		doll.setDescription("A raggedy doll.");
 		
 		room1.addItem("doll", doll);
 		
 		Item mask = new Item("mask");
-		note.setWeight(1.1);
-		note.setDescription("A classic WW1 gas mask.");
+		mask.setWeight(1.1);
+		mask.setDescription("A classic WW1 gas mask.");
 		
 		room1.addItem("mask", mask);
 
