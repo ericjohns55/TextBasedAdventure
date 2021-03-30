@@ -2,6 +2,7 @@ package game;
 
 import items.Item;
 import map.Room;
+import object.Object;
 import obstacles.Door;
 
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class Game {
 		Room room2 = new Room("You enter into an empty room with a door to the east.", 2);
 
 		room1.addExit("west", room2);
+		
 		room2.addExit("east", room1);
 		
 		Door door = new Door("Probably leads to another room...", "west", true, "key");
