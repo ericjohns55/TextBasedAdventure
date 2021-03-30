@@ -1,32 +1,31 @@
 package object;
 
 import java.util.HashMap;
+
+import items.Inventory;
 import items.Item;
 
 public class Object {
 	private String name;
 	private String description;
 	private boolean isInteractable;
-	private boolean movable;
-	private boolean moved;
-	private HashMap<String, Item> items;
+	private Inventory inventory;
+	public boolean canHoldItems;
 	
-	public Object(String name, String description, boolean movable, boolean interactable) {
+	
+	public Object(String name, String description, boolean canHoldItems, boolean interactable) {
 		this.name = name;
 		this.isInteractable = interactable;
-		this.movable = movable;
-		this.moved = false;
 		this.description = description;
-		items = new HashMap<String, Item>();
-		
+		this.canHoldItems = canHoldItems;
 	}
 	
-	public boolean isMoved() {
-		return moved && movable;
+	public boolean getHoldItems() {
+		return canHoldItems;
 	}
 	
-	public void setMoved(boolean moved) {
-		this.moved = moved;
+	public void setCanHoldItems(boolean canHoldItems) {
+		this.canHoldItems = canHoldItems; 
 	}
 	
 	public String getDescription() {
@@ -52,53 +51,9 @@ public class Object {
 	public void setInteractable(boolean isInteractable) {
 		this.isInteractable = isInteractable;
 	}
-	
-	public boolean canBeMoved() {
-		return movable;
+
+	public Inventory getInventory() {
+		return inventory;
 	}
-	
-	public void setMovable(boolean movable) {
-		this.movable = movable;
-	}
-	
-	public void addItem(String identifier, Item item)
-	{
-		items.put(identifier, item);
-	}
-	
-	public Item getItem(String identifier) {
-		if (contains(identifier)) {
-			return items.get(identifier);
-		}  else {
-			return null;
-		}
-	}
-	
-	public String listItems() {
-		String objString = "\n";
-		
-		if (!items.isEmpty()) {
-			for (Item item : items.values()) {
-				objString += "The " + name + " has a" + item.getName() + "on it. ";
-			}
-			
-			objString = objString.substring(0, objString.length() - 2) + "\n";
-		} else {
-			objString = "\nThere is nothing on the " + name + ".";
-		}
-		
-		return objString;
-	}
-	
-	public void removeItem(String identifier) {
-		if (contains(identifier)) {
-			items.remove(identifier);
-		}
-	}
-	
-	public boolean contains(String identifier) {
-		return items.containsKey(identifier);
-	}
-	
-	
+
 }

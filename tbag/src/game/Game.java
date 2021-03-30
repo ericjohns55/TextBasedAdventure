@@ -2,7 +2,7 @@ package game;
 
 import items.Item;
 import map.Room;
-import object.Box;
+import object.Object;
 
 import java.util.HashMap;
 
@@ -40,11 +40,7 @@ public class Game {
 		Room room2 = new Room("You enter into an empty room with a door to the east.", 2);
 
 		room1.addExit("west", room2);
-		room2.addExit("east", room1);
-
-		Box box = new Box("A large wooden box", true, true); 
-		room1.addObject("Box", box); 
-		
+		room2.addExit("east", room1);		
 		
 		Item key = new Item("key");
 		key.setWeight(0.1);
