@@ -36,10 +36,18 @@ public class Game {
 	// public void play()
 
 	public void createRooms() {
-		Room room1 = new Room(
-				"You enter into room with a table and a door in the westward direction.", 1);
-		Room room2 = new Room("You enter into an empty room with a door to the east.", 2);
+		// 24 rooms and an exit 
+		Room room1 = new Room("You wake up in a room with a set of keys on a table and a door to the west.", 1);
+		Room room2 = new Room("You advance into a dimly lit kitchen with a key hanging on a wall and an apple, banana, phonebook, "
+				+ "cookbook, and a plate on a countertop.", 2);
+		Room room3 = new Room("You move into a room with a keypad on the door and a chest on the other side of the room.", 3);
+		Room room4 = new Room("You walk into a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
+		Room room5 = new Room("You enter into a cold room with a wooden table in the center. On the"
+				+ " table lies a record player, and a complete set of records for Pink Floyd's songs next to a doll "
+				+ "with a locked door to the east that reads Free to play along with time Evening never comes ", 5);
 
+		
+		
 		room1.addExit("west", room2);
 		
 		room2.addExit("east", room1);
@@ -50,69 +58,89 @@ public class Game {
 		
 		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true);
 		room1.addObject("table", table);
+		room2.addExit("west", room3);
+		
+		room3.addExit("east", room2);
+		room3.addExit("south", room4);
+		
+		room4.addExit("north", room3);
+		room4.addExit("south", room5);
+		
+		room5.addExit("north", room4);
+	//	room5.addExit("east", room6);
+		
 
+
+		// Room 1
 		Item key = new Item("key");
 		key.setWeight(0.1);
 		key.setDescription("This key seems to be able to unlock a door.");
 		
 		room1.addItem("key", key);
 		
-		Item knife = new Item("knife");
-		knife.setWeight(1.0);
-		knife.setDescription("A knife, good for cutting and stabbing. ");
+		// Room 2
+		Item banana = new Item("banana");
+		banana.setWeight(0.3);
+		banana.setDescription("Fruit.");
 		
-		room2.addItem("knife", knife);
+		room2.addItem("banana", banana);
 		
-		Item note = new Item("note");
-		note.setWeight(0.1);
-		note.setDescription("this will be a clue to a puzzle");
+		Item apple = new Item("apple");
+		apple.setWeight(0.5);
+		apple.setDescription("Fruit.");
 		
-		room2.addItem("note", note);
+		room2.addItem("apple", apple);
+
+		Item phonebook = new Item("phonebook");
+		phonebook.setWeight(2.5);
+		phonebook.setDescription("Full of numbers.");
 		
-		Item vile = new Item("vile");
-		vile.setWeight(1.2);
-		vile.setDescription("A vile filled with someones blood");
+		room2.addItem("phonebook", phonebook);
 		
-		room1.addItem("vile", vile);
+		Item cookbook = new Item("cookbook");
+		cookbook.setWeight(0.5);
+		cookbook.setDescription("Full of recipes.");
 		
-		Item record = new Item("record");
-		record.setWeight(0.1);
-		record.setDescription("A vinyl record that says play me.");
+		room2.addItem("cookbook", cookbook);
 		
-		room1.addItem("record", record);
+		Item plate = new Item("plate");
+		plate.setWeight(1.0);
+		plate.setDescription("Can hold food.");
 		
-		Item jar = new Item("jar of eyes");
-		jar.setWeight(5.0);
-		jar.setDescription("Each eye is staring at you.");
+		room2.addItem("plate", plate);
 		
-		room1.addItem("jar of eyes", jar);
 		
-		Item shovel = new Item("shovel");
-		shovel.setWeight(6.5);
-		shovel.setDescription("A dirty shovel, good for digging.");
+		Item smallKey = new Item("small key");
+		smallKey.setWeight(0.1);
+		smallKey.setDescription("This small key seems to be able to unlocks something...");
 		
-		room1.addItem("shovel", shovel);
+		room2.addItem("small key", smallKey);
 		
 		Item ax = new Item("ax");
-		ax.setWeight(6.0);
-		ax.setDescription("An ax, good for chopping wood.");
+		note.setWeight(6.0);
+		note.setDescription("An ax, good for chopping wood.");
 		
-		room1.addItem("ax", ax);
+		// Room 3
 		
 		Item doll = new Item("doll");
-		doll.setWeight(4.0);
-		doll.setDescription("A raggedy doll.");
+		note.setWeight(4.0);
+		note.setDescription("A raggedy doll.");
 		
 		room1.addItem("doll", doll);
 		
 		Item mask = new Item("mask");
-		mask.setWeight(1.1);
-		mask.setDescription("A classic WW1 gas mask.");
+		note.setWeight(1.1);
+		note.setDescription("A classic WW1 gas mask.");
 		
 		room1.addItem("mask", mask);
 
 		rooms.put(1, room1);
 		rooms.put(2, room2);
+		rooms.put(3, room3);
+		rooms.put(4, room4);
+		rooms.put(5, room5);
+
+		
 	}
 	
 	public void addRoom(Room room) {
