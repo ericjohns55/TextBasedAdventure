@@ -2,22 +2,22 @@ package object;
 
 import items.Inventory;
 
-public class Object {
+public class RoomObject {
 	private String name;
 	private String description;
 	private boolean isInteractable;
 	private Inventory inventory;
-	public boolean canHoldItems;
+	private boolean canHoldItems;
 	
-	
-	public Object(String name, String description, boolean canHoldItems, boolean interactable) {
+	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable) {
 		this.name = name;
 		this.isInteractable = interactable;
 		this.description = description;
 		this.canHoldItems = canHoldItems;
+		this.inventory = new Inventory();
 	}
 	
-	public boolean getHoldItems() {
+	public boolean canHoldItems() {
 		return canHoldItems;
 	}
 	
@@ -26,7 +26,13 @@ public class Object {
 	}
 	
 	public String getDescription() {
-		return description;
+		String desc = description;
+		
+		if (!inventory.isEmpty()) { 
+			desc += "\n" + inventory.listItems();
+		}
+		
+		return desc;
 	}
 	
 	public void setDescription(String description) {

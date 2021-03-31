@@ -2,7 +2,7 @@ package game;
 
 import items.Item;
 import map.Room;
-import object.Object;
+import object.RoomObject;
 import obstacles.Door;
 
 import java.util.HashMap;
@@ -47,6 +47,9 @@ public class Game {
 		Door door = new Door("Probably leads to another room...", "west", true, "key");
 		door.setLocked(true);
 		room1.addObstacle("door", door);
+		
+		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true);
+		room1.addObject("table", table);
 
 		Item key = new Item("key");
 		key.setWeight(0.1);
