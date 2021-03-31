@@ -37,9 +37,13 @@ public class Game {
 		// 24 rooms and an exit 
 		Room room1 = new Room("You wake up in a room with a set of keys on a table and a door to the west.", 1);
 		Room room2 = new Room("You advance into a dimly lit kitchen with a knife on the counter that has a door to the west.", 2);
-		Room room3 = new Room("You walk into a living room area with a couch, candles on the walls, a coffee table with neatly stacked books, and a blood vial on display next to the books with a locked door to the south.", 3);
-		Room room4 = new Room("You move into an empty room with a locked door to the south.", 4);
-		Room room5 = new Room("You enter into room with a table and a locked door to the east.", 5);
+		Room room3 = new Room("You move into a room with marked envelopes scattered across the floor, there is a locked door to "
+				+ "the south with a scanner the size of piece of paper that reads A4.", 3);
+		Room room4 = new Room("You walk into a living room area with a couch, candles on the walls, a "
+				+ "coffee table with neatly stacked books, and a blood vial on display next to the books with a locked door to the south.", 4);
+		Room room5 = new Room("You enter into a cold room with a wooden table in the center. On the"
+				+ " table lies a record player, and a complete set of records for Pink Floyd's songs next to a doll "
+				+ "with a locked door to the east that reads Free to play along with time Evening never comes ", 5);
 		Room room6 = new Room("You enter into an empty room with a locked door to the east.", 6);
 		Room room7 = new Room("You enter into room with a table and a locked door to the north.", 7);
 		Room room8 = new Room("You enter into an empty room with a locked door to the west.", 8);
@@ -153,7 +157,7 @@ public class Game {
 		
 		Item note = new Item("note");
 		note.setWeight(0.1);
-		note.setDescription("this will be a clue to a puzzle");
+		note.setDescription("A note, that has a barcode on the bottom end");
 		
 		room3.addItem("note", note);
 		
@@ -163,7 +167,7 @@ public class Game {
 		
 		room4.addItem("vile", vile);
 		
-		Item record = new Item("record");
+		Item record = new Item("Remember A Day record");
 		note.setWeight(0.1);
 		note.setDescription("A vinyl record that says play me.");
 		
@@ -173,6 +177,7 @@ public class Game {
 		note.setWeight(5.0);
 		note.setDescription("Each eye is staring at you.");
 		
+		
 		room6.addItem("jar of eyes", jar);
 		
 		Item shovel = new Item("shovel");
@@ -180,18 +185,34 @@ public class Game {
 		note.setDescription("A dirty shovel, good for digging.");
 		
 		room7.addItem("shovel", shovel);
-		
-		Item ax = new Item("ax");
-		note.setWeight(6.0);
-		note.setDescription("An ax, good for chopping wood.");
-		
-		room8.addItem("ax", ax);
+
 		
 		Item doll = new Item("doll");
 		note.setWeight(4.0);
 		note.setDescription("A raggedy doll.");
 		
-		room9.addItem("doll", doll);
+		room8.addItem("doll", doll);
+		
+		
+		
+		Item ax = new Item("ax");
+		note.setWeight(6.0);
+		note.setDescription("An ax, good for chopping wood.");
+		
+		room9.addItem("ax", ax);
+		
+
+		Item mask = new Item("mask");
+		note.setWeight(1.1);
+		note.setDescription("A classic WW1 gas mask.");
+		
+		room10.addItem("mask", mask);
+		
+		Item mask = new Item("mask");
+		note.setWeight(1.1);
+		note.setDescription("A classic WW1 gas mask.");
+		
+		room10.addItem("mask", mask);
 		
 		Item mask = new Item("mask");
 		note.setWeight(1.1);
