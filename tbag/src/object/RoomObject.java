@@ -8,13 +8,15 @@ public class RoomObject {
 	private boolean isInteractable;
 	private Inventory inventory;
 	private boolean canHoldItems;
+	private boolean locked;
 	
-	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable) {
+	
+	public Object(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
 		this.name = name;
 		this.isInteractable = interactable;
 		this.description = description;
 		this.canHoldItems = canHoldItems;
-		this.inventory = new Inventory();
+		this.locked = locked;
 	}
 	
 	public boolean canHoldItems() {
@@ -57,6 +59,14 @@ public class RoomObject {
 
 	public Inventory getInventory() {
 		return inventory;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 
 }

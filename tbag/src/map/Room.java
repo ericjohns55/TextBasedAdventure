@@ -9,7 +9,8 @@ import obstacles.Obstacle;
 public class Room {
 	
 	// Each room has to have a set items in the room
-	private HashMap<String, RoomObject> objects;
+	private Puzzle puzzle;
+	private HashMap<String, Object> objects;
 	private HashMap<String, Obstacle> obstacles;
 	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;
@@ -151,6 +152,16 @@ public class Room {
 		// See if the "identifier" coming in is present in the items map
 		return items.containsKey(identifier);
 		
+	}
+
+
+	public Puzzle getPuzzle() {
+		return puzzle;
+	}
+
+
+	public void setPuzzle(Puzzle puzzle) {
+		this.puzzle = puzzle;
 	}
 
 }
