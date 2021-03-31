@@ -56,7 +56,7 @@ public class Game {
 		door.setLocked(true);
 		room1.addObstacle("door", door);
 		
-		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true);
+		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true, false);
 		room1.addObject("table", table);
 		room2.addExit("west", room3);
 		
@@ -116,23 +116,6 @@ public class Game {
 		
 		room2.addItem("small key", smallKey);
 		
-		Item ax = new Item("ax");
-		note.setWeight(6.0);
-		note.setDescription("An ax, good for chopping wood.");
-		
-		// Room 3
-		
-		Item doll = new Item("doll");
-		note.setWeight(4.0);
-		note.setDescription("A raggedy doll.");
-		
-		room1.addItem("doll", doll);
-		
-		Item mask = new Item("mask");
-		note.setWeight(1.1);
-		note.setDescription("A classic WW1 gas mask.");
-		
-		room1.addItem("mask", mask);
 
 		rooms.put(1, room1);
 		rooms.put(2, room2);
