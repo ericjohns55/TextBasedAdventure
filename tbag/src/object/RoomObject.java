@@ -10,8 +10,7 @@ public class RoomObject {
 	private boolean canHoldItems;
 	private boolean locked;
 	
-	
-	public Object(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
+	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
 		this.name = name;
 		this.isInteractable = interactable;
 		this.description = description;
