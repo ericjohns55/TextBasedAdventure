@@ -36,34 +36,14 @@ public class Game {
 	public void createRooms() {
 		// 24 rooms and an exit 
 		Room room1 = new Room("You wake up in a room with a set of keys on a table and a door to the west.", 1);
-		Room room2 = new Room("You advance into a dimly lit kitchen with a knife on the counter that has a door to the west.", 2);
-		Room room3 = new Room("You move into a room with marked envelopes scattered across the floor, there is a locked door to "
-				+ "the south with a scanner the size of piece of paper that reads A4.", 3);
-		Room room4 = new Room("You walk into a living room area with a couch, candles on the walls, a "
-				+ "coffee table with neatly stacked books, and a blood vial on display next to the books with a locked door to the south.", 4);
+		Room room2 = new Room("You advance into a dimly lit kitchen with a key hanging on a wall and an apple, banana, phonebook, "
+				+ "cookbook, and a plate on a countertop.", 2);
+		Room room3 = new Room("You move into a room with a keypad on the door and a chest on the other side of the room.", 3);
+		Room room4 = new Room("You walk into a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
 		Room room5 = new Room("You enter into a cold room with a wooden table in the center. On the"
 				+ " table lies a record player, and a complete set of records for Pink Floyd's songs next to a doll "
 				+ "with a locked door to the east that reads Free to play along with time Evening never comes ", 5);
-		Room room6 = new Room("You enter into an empty room with a locked door to the east.", 6);
-		Room room7 = new Room("You enter into room with a table and a locked door to the north.", 7);
-		Room room8 = new Room("You enter into an empty room with a locked door to the west.", 8);
-		Room room9 = new Room("You enter into room with a table and a locked door to the north.", 9);
-		Room room10 = new Room("You enter into an empty room with a locked door to the east.", 10);
-		Room room11 = new Room("You enter into room with a table and a locked door to the east.", 11);
-		Room room12 = new Room("You enter into an empty room with a locked door to the south.", 12);
-		Room room13 = new Room("You enter into room with a table and a locked door to the south.", 13);
-		Room room14 = new Room("You enter into an empty room with a locked door to the west.", 14);
-		Room room15 = new Room("You enter into room with a table and a locked door to the west.", 15);
-		Room room16 = new Room("You enter into a closet with a ladder on the west wall.", 16);
-		Room room17 = new Room("You climb up the ladder and a door to the east.", 17);
-		Room room18 = new Room("You enter into an empty room with a locked door to the east.", 18);
-		Room room19 = new Room("You enter into a room with a table in it and a locked door to the north.", 19);
-		Room room20 = new Room("You enter into an empty room with a locked door to the north.", 20);
-		Room room21 = new Room("You enter into room with a table and a locked door to the west.", 21);
-		Room room22 = new Room("You enter into an empty room with a locked door to the west.", 22);
-		Room room23 = new Room("You enter into room with a table and a locked door to the south.", 23);
-		Room room24 = new Room("You enter into an empty room with a locked door to the west.", 24);
-		Room outsideRoom = new Room("You win!", 25);
+
 		
 		
 		room1.addExit("west", room2);
@@ -78,148 +58,57 @@ public class Game {
 		room4.addExit("south", room5);
 		
 		room5.addExit("north", room4);
-		room5.addExit("east", room6);
+	//	room5.addExit("east", room6);
 		
-		room6.addExit("west", room5);
-		room6.addExit("east", room7);
-		
-		room7.addExit("west", room6);
-		room7.addExit("north", room8);
-		
-		room8.addExit("south", room7);
-		room8.addExit("west", room9);
-		
-		room9.addExit("east", room8);
-		room9.addExit("north", room10);
-		
-		room10.addExit("south", room9);
-		room10.addExit("west", room11);
-		
-		room11.addExit("west", room10);
-		room11.addExit("east", room12);
-		
-		room12.addExit("west", room11);
-		room12.addExit("south", room13);
-		
-		room13.addExit("north", room12);
-		room13.addExit("south", room14);
-		
-		room14.addExit("north", room13);
-		room14.addExit("west", room15);
-		
-		room15.addExit("east", room14);
-		room15.addExit("west", room16);
-		
-		
-		room16.addExit("east", room15);
-		room16.addExit("up", room17);
-		
-		
-		room17.addExit("down", room16);
-		room17.addExit("east", room18);
-		
-		
-		
-		
-		room18.addExit("west", room17);
-		room18.addExit("east", room19);
-		
-		room19.addExit("west", room18);
-		room19.addExit("north", room20);
-		
-		room20.addExit("south", room19);
-		room20.addExit("north", room21);
-		
-		room21.addExit("south", room20);
-		room21.addExit("west", room22);
-		
-		room22.addExit("east", room21);
-		room22.addExit("west", room23);
-		
-		room23.addExit("east", room22);
-		room23.addExit("south", room24);
-		
-		room24.addExit("north", room23);
-		room24.addExit("west", outsideRoom);
 
 
+		// Room 1
 		Item key = new Item("key");
 		key.setWeight(0.1);
 		key.setDescription("This key seems to be able to unlock a door.");
 		
 		room1.addItem("key", key);
 		
-		Item knife = new Item("knife");
-		knife.setWeight(1.0);
-		knife.setDescription("A knife, good for cutting and stabbing. ");
+		// Room 2
+		Item banana = new Item("banana");
+		banana.setWeight(0.3);
+		banana.setDescription("Fruit.");
 		
-		room2.addItem("knife", knife);
+		room2.addItem("banana", banana);
 		
-		Item note = new Item("note");
-		note.setWeight(0.1);
-		note.setDescription("A note, that has a barcode on the bottom end");
+		Item apple = new Item("apple");
+		apple.setWeight(0.5);
+		apple.setDescription("Fruit.");
 		
-		room3.addItem("note", note);
-		
-		Item vile = new Item("vile");
-		note.setWeight(1.2);
-		note.setDescription("A vile filled with someones blood");
-		
-		room4.addItem("vile", vile);
-		
-		Item record = new Item("Remember A Day record");
-		note.setWeight(0.1);
-		note.setDescription("A vinyl record that says play me.");
-		
-		room5.addItem("record", record);
-		
-		Item jar = new Item("jar of eyes");
-		note.setWeight(5.0);
-		note.setDescription("Each eye is staring at you.");
-		
-		
-		room6.addItem("jar of eyes", jar);
-		
-		Item shovel = new Item("shovel");
-		note.setWeight(6.5);
-		note.setDescription("A dirty shovel, good for digging.");
-		
-		room7.addItem("shovel", shovel);
+		room2.addItem("apple", apple);
 
+		Item phonebook = new Item("phonebook");
+		phonebook.setWeight(2.5);
+		phonebook.setDescription("Full of numbers.");
 		
-		Item doll = new Item("doll");
-		note.setWeight(4.0);
-		note.setDescription("A raggedy doll.");
+		room2.addItem("phonebook", phonebook);
 		
-		room8.addItem("doll", doll);
+		Item cookbook = new Item("cookbook");
+		cookbook.setWeight(0.5);
+		cookbook.setDescription("Full of recipes.");
+		
+		room2.addItem("cookbook", cookbook);
+		
+		Item plate = new Item("plate");
+		plate.setWeight(1.0);
+		plate.setDescription("Can hold food.");
+		
+		room2.addItem("plate", plate);
 		
 		
+		Item smallKey = new Item("small key");
+		smallKey.setWeight(0.1);
+		smallKey.setDescription("This small key seems to be able to unlocks something...");
 		
-		Item ax = new Item("ax");
-		note.setWeight(6.0);
-		note.setDescription("An ax, good for chopping wood.");
+		room2.addItem("small key", smallKey);
 		
-		room9.addItem("ax", ax);
 		
-
-		Item mask = new Item("mask");
-		note.setWeight(1.1);
-		note.setDescription("A classic WW1 gas mask.");
-		
-		room10.addItem("mask", mask);
-		
-		Item mask = new Item("mask");
-		note.setWeight(1.1);
-		note.setDescription("A classic WW1 gas mask.");
-		
-		room10.addItem("mask", mask);
-		
-		Item mask = new Item("mask");
-		note.setWeight(1.1);
-		note.setDescription("A classic WW1 gas mask.");
-		
-		room10.addItem("mask", mask);
-		
+		// Room 3
 		
 
 		rooms.put(1, room1);
@@ -227,25 +116,7 @@ public class Game {
 		rooms.put(3, room3);
 		rooms.put(4, room4);
 		rooms.put(5, room5);
-		rooms.put(6, room6);
-		rooms.put(7, room7);
-		rooms.put(8, room8);
-		rooms.put(9, room9);
-		rooms.put(10, room10);
-		rooms.put(11, room11);
-		rooms.put(12, room12);
-		rooms.put(13, room13);
-		rooms.put(14, room14);
-		rooms.put(15, room15);
-		rooms.put(16, room16);
-		rooms.put(17, room17);
-		rooms.put(18, room18);
-		rooms.put(19, room19);
-		rooms.put(20, room20);
-		rooms.put(21, room21);
-		rooms.put(22, room22);
-		rooms.put(23, room23);
-		rooms.put(24, room24);
+
 		
 	}
 	
