@@ -47,6 +47,10 @@ public class Inventory {
 		return weight;
 	}
 	
+	public boolean isEmpty() {
+		return items.size() == 0;
+	}
+	
 	public boolean contains(String identifier) {
 		return items.containsKey(identifier);
 	}
@@ -78,6 +82,22 @@ public class Inventory {
 		
 		// length -2 removes the extra ", " at the end
 		return inventory;
+	}
+	
+	public String listItems() {
+		String itemList = "";
+		
+		for (String key : items.keySet()) {
+			itemList += key + ", ";
+		}
+		
+		if (!itemList.isEmpty()) {
+			itemList = "This object has a " + itemList.substring(0, itemList.length() - 2);
+		} else {
+			itemList = "This does not contain any items.";
+		}
+		
+		return itemList;
 	}
 
 	public void consumeItem(String identifier){

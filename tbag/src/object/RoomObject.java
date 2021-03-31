@@ -1,26 +1,24 @@
 package object;
 
-import java.util.HashMap;
-
 import items.Inventory;
-import items.Item;
 
-public class Object {
+public class RoomObject {
 	private String name;
 	private String description;
 	private boolean isInteractable;
 	private Inventory inventory;
-	public boolean canHoldItems;
+	private boolean canHoldItems;
+	private boolean locked;
 	
-	
-	public Object(String name, String description, boolean canHoldItems, boolean interactable) {
+	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
 		this.name = name;
 		this.isInteractable = interactable;
 		this.description = description;
 		this.canHoldItems = canHoldItems;
+		this.locked = locked;
 	}
 	
-	public boolean getHoldItems() {
+	public boolean canHoldItems() {
 		return canHoldItems;
 	}
 	
@@ -29,7 +27,13 @@ public class Object {
 	}
 	
 	public String getDescription() {
-		return description;
+		String desc = description;
+		
+		if (!inventory.isEmpty()) { 
+			desc += "\n" + inventory.listItems();
+		}
+		
+		return desc;
 	}
 	
 	public void setDescription(String description) {
@@ -54,6 +58,14 @@ public class Object {
 
 	public Inventory getInventory() {
 		return inventory;
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 
 }

@@ -9,6 +9,7 @@ import items.Item;
 import obstacles.Door;
 import obstacles.Obstacle;
 import map.Room;
+import object.RoomObject;
 
 public class Command {
 	public final static String invalidCommand = "I do not understand that command";
@@ -34,7 +35,7 @@ public class Command {
 		
 		for (String word : individualWords) {
 			if (!word.equalsIgnoreCase("the") && !word.equalsIgnoreCase("a") && !word.equalsIgnoreCase("an")) {
-				breakdown.add(word);
+				breakdown.add(word.toLowerCase());
 			} 
 		}
 		
@@ -51,7 +52,7 @@ public class Command {
 				boolean addLocation = false;
 
 				for (int i = 1; i < breakdown.size(); i++) {					
-					if (breakdown.get(i).equalsIgnoreCase("on")) {
+					if (breakdown.get(i).equals("on") || breakdown.get(i).equals("from")) {
 						addLocation = true;
 					} else {
 						if (addLocation) {
@@ -88,14 +89,20 @@ public class Command {
 			switch (verb) {
 				case "examine":
 				case "look":
-					if (noun == "" || noun.equals("room")) {
+					if (noun == null || noun == "" || noun.equals("room")) {
 						output = room.getDescription();
 					} else {
 						if (room.contains(noun)) {
 							output = room.getItem(noun).getDescription();
 						} else if (inventory.contains(noun)) {
-							output = inventory.getItem(noun).getDescription();							
-						} else {
+							output = inventory.getItem(noun).getDescription();
+						} else if (room.hasObject(noun)) {
+							output = room.getObject(noun).getDescription();
+						} else if (room.hasObstacle(noun)) {
+							output = room.getObstacle(noun).getDescription();
+						}
+						
+						else {
 							output = "That item doesn't exist!";
 						}
 					}
@@ -107,33 +114,85 @@ public class Command {
 					}
 					
 					break;
+				case "list":
+					if (noun == null || noun.equals("room")) {
+						output = "This room has a " + room.listItems();
+					} else if (noun.equals("inventory")) {
+						output = inventory.openInventory();
+					} else if (noun.equals("objects")) {
+						output = room.listObjects();
+					}
+					
+					break;
 				case "grab":
 				case "take":
-					if (room.contains(noun)) {
-						Item toGrab = room.getItem(noun);
-						
-						if (toGrab != null) {
-							toGrab.setInInventory(true);
-							inventory.addItem(noun, toGrab);
-							room.removeItem(noun);
+					if (location == null) {
+						if (room.contains(noun)) {
+							Item toGrab = room.getItem(noun);
 							
-							output = "You picked up " + noun;
+							if (toGrab != null) {
+								toGrab.setInInventory(true);
+								inventory.addItem(noun, toGrab);
+								room.removeItem(noun);
+								
+								output = "You picked up " + noun;
+							} else {
+								output = "This item does not exist in your current room.";
+							}
+						} else if (noun == null) {
+							output = "Please specify an item.";
 						} else {
 							output = "This item does not exist in your current room.";
 						}
-					} else if (noun == null) {
-						output = "Please specify an item.";
 					} else {
-						output = "This item does not exist in your current room.";
+						if (room.hasObject(location)) {
+							RoomObject roomObject = room.getObject(location);
+							
+							if (roomObject.canHoldItems()) {
+								Inventory objectInventory = roomObject.getInventory();
+								
+								if (objectInventory.contains(noun)) {
+									Item toGrab = objectInventory.removeItem(noun);
+									inventory.addItem(noun, toGrab);
+									toGrab.setInInventory(true);
+									
+									output = "You picked up " + noun;
+								} else {
+									output = "This object does not have that item.";
+								}
+							} else {
+								output = "This object does not possess any items.";
+							}
+						} else {
+							output = "Could not find that object.";
+						}
 					}
 					
 					break;
 				case "drop":
 					if (inventory.contains(noun)) {
-						Item removed = inventory.removeItem(noun);
-						removed.setInInventory(false);
-						room.addItem(noun, removed);
-						output = "You dropped " + noun + " on the floor.";
+						if (location == null) {
+							Item removed = inventory.removeItem(noun);
+							removed.setInInventory(false);
+							room.addItem(noun, removed);
+							output = "You dropped " + noun + " on the floor.";
+						} else {
+							if (room.hasObject(location)) {
+								RoomObject roomObject = room.getObject(location);
+								
+								if (roomObject.canHoldItems()) {
+									Inventory objectInventory = roomObject.getInventory();
+									
+									Item toRemove = inventory.removeItem(noun);
+									objectInventory.addItem(noun, toRemove);
+									output = "You placed the " + noun + " on the " + location + "."; 
+								} else {
+									output = "This object cannot hold that...";
+								}
+							} else {
+								output = "Could not find that object.";
+							}
+						}
 					} else if (noun == null) {
 						output = "Please specify an item.";
 					} else {

@@ -3,13 +3,15 @@ package map;
 import java.util.HashMap;
 
 import items.Item;
-import object.Object;
+import object.Puzzle;
+import object.RoomObject;
 import obstacles.Obstacle;
 
 public class Room {
 	
 	// Each room has to have a set items in the room
-	private HashMap<String, Object> objects;
+	private Puzzle puzzle;
+	private HashMap<String, RoomObject> objects;
 	private HashMap<String, Obstacle> obstacles;
 	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;
@@ -19,7 +21,7 @@ public class Room {
 	// Each room has to have a puzzle as well
 	
 	public Room(String description, int roomID) {
-		objects = new HashMap<String, Object>(); 
+		objects = new HashMap<String, RoomObject>(); 
 		obstacles = new HashMap<String, Obstacle>();
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
@@ -28,11 +30,11 @@ public class Room {
 	}
 	
 
-	public HashMap<String, Object> getAllObjects() { 
+	public HashMap<String, RoomObject> getAllObjects() { 
 		return objects; 
 	} 
 	 
-	public void addObject(String name, Object object) { 
+	public void addObject(String name, RoomObject object) { 
 		objects.put(name, object); 
 	} 
 	 
@@ -40,8 +42,9 @@ public class Room {
 		return objects.containsKey(name); 
 	} 
 	 
-	public Object getObject(String name) { 
+	public RoomObject getObject(String name) { 
 		return objects.get(name); 
+	}
 
 	public HashMap<String, Obstacle> getAllObstacles() {
 		return obstacles;
@@ -76,8 +79,8 @@ public class Room {
 		String output = description;
 		String items = listItems();
 		
-		if (items != "\n") {
-			output += items;
+		if (items != "") {
+			output += "\nThis room has " + items;
 		}
 		
 		return output;
@@ -100,19 +103,35 @@ public class Room {
 	}
 	
 	public String listItems() {
-		String itemString = "\n";
+		String itemString = "";
 		
 		if (!items.isEmpty()) {
 			for (Item item : items.values()) {
-				itemString += "This room has " + item.getName() + ", ";
+				itemString += item.getName() + ", ";
 			}
 			
 			itemString = itemString.substring(0, itemString.length() - 2) + "\n";
 		} else {
-			itemString = "\nThere does not appear to be any items in this room...";
+			itemString = "There does not appear to be any items in this room...";
 		}
 		
 		return itemString;
+	}
+	
+	public String listObjects() {
+		String objects = "";
+		
+		if (!objects.isEmpty()) {
+			for (RoomObject object : this.objects.values()) {
+				objects += object.getName().toLowerCase() + ", ";
+			}
+			
+			objects = objects.substring(0, objects.length() - 2);
+		} else {
+			objects = "There do not appear to be any major objects in this room...";
+		}
+		
+		return objects;
 	}
 	
 	public Item getItem(String identifier) {
@@ -134,6 +153,16 @@ public class Room {
 		// See if the "identifier" coming in is present in the items map
 		return items.containsKey(identifier);
 		
+	}
+
+
+	public Puzzle getPuzzle() {
+		return puzzle;
+	}
+
+
+	public void setPuzzle(Puzzle puzzle) {
+		this.puzzle = puzzle;
 	}
 
 }
