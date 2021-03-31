@@ -3,6 +3,7 @@ package map;
 import java.util.HashMap;
 
 import items.Item;
+import object.Puzzle;
 import object.RoomObject;
 import obstacles.Obstacle;
 
@@ -10,7 +11,7 @@ public class Room {
 	
 	// Each room has to have a set items in the room
 	private Puzzle puzzle;
-	private HashMap<String, Object> objects;
+	private HashMap<String, RoomObject> objects;
 	private HashMap<String, Obstacle> obstacles;
 	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;

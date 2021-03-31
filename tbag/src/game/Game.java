@@ -2,8 +2,10 @@ package game;
 
 import items.Item;
 import map.Room;
+import object.Puzzle;
 import object.RoomObject;
 import obstacles.Door;
+import obstacles.Obstacle;
 
 import java.util.HashMap;
 
@@ -52,12 +54,7 @@ public class Game {
 		
 		room2.addExit("east", room1);
 		
-		Door door = new Door("Probably leads to another room...", "west", true, "key");
-		door.setLocked(true);
-		room1.addObstacle("door", door);
 		
-		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true, false);
-		room1.addObject("table", table);
 		room2.addExit("west", room3);
 		
 		room3.addExit("east", room2);
@@ -77,6 +74,14 @@ public class Game {
 		key.setDescription("This key seems to be able to unlock a door.");
 		
 		room1.addItem("key", key);
+		
+		Door door = new Door("Probably leads to another room...", "west", true, "key");
+		door.setLocked(true);
+		room1.addObstacle("door", door);
+		
+		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		room1.addObject("table", table);
+		
 		
 		// Room 2
 		Item banana = new Item("banana");
@@ -116,7 +121,36 @@ public class Game {
 		
 		room2.addItem("small key", smallKey);
 		
+		// Room 3
+		RoomObject chest = new RoomObject("chest", "Holds items.", true, true, true);
+		
+		Item note = new Item("note");
+		note.setWeight(0.1);
+		note.setDescription("(8/2(2+2)) + 1000");
+		
+		chest.getInventory().addItem("note", note);
+		
+		room3.addObject("chest", chest);
 
+		Puzzle math = new Puzzle("Math problem.", "1016", "PEMDAS", true);
+		
+		room3.setPuzzle(math);
+		
+		
+		// Room 4
+		// public Obstacle(String name, String description, String direction, boolean blockingExit, boolean unlockable)
+		// dresser, , desk and chair
+		Obstacle dresser = new Obstacle("dresser", "Holds clothes.","south", true, false);
+		Obstacle bed = new Obstacle("bed", "Place to sleep.","east", false, false);
+		Obstacle desk = new Obstacle("desk", "Workspace.","west", false, false);
+		Obstacle chair = new Obstacle("chair", "Place to sit.","north", false, false);
+		
+		room4.addObstacle("dresser", dresser);
+		room4.addObstacle("bed", bed);
+		room4.addObstacle("desk", desk);
+		room4.addObstacle("chair", chair);
+		
+		
 		rooms.put(1, room1);
 		rooms.put(2, room2);
 		rooms.put(3, room3);
