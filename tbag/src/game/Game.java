@@ -39,12 +39,11 @@ public class Game {
 
 	public void createRooms() {
 		// 24 rooms and an exit 
-		Room room1 = new Room("You wake up in a room with a set of keys on a table and a door to the west.", 1);
-		Room room2 = new Room("You advance into a dimly lit kitchen with a key hanging on a wall and an apple, banana, phonebook, "
-				+ "cookbook, and a plate on a countertop.", 2);
-		Room room3 = new Room("You move into a room with a keypad on the door and a chest on the other side of the room.", 3);
-		Room room4 = new Room("You walk into a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
-		Room room5 = new Room("You enter into a cold room with a wooden table in the center. On the"
+		Room room1 = new Room("You are in a room containing nothing but a table.", 1);
+		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There appears to be some sensory pad contained in the room...", 2);
+		Room room3 = new Room("You are in a room with a keypad on the door and a chest on the other side of the room.", 3);
+		Room room4 = new Room("You are in a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
+		Room room5 = new Room("You are in a cold room with a wooden table in the center. On the"
 				+ " table lies a record player, and a complete set of records for Pink Floyd's songs next to a doll "
 				+ "with a locked door to the east that reads Free to play along with time Evening never comes ", 5);
 
@@ -53,8 +52,6 @@ public class Game {
 		room1.addExit("west", room2);
 		
 		room2.addExit("east", room1);
-		
-		
 		room2.addExit("west", room3);
 		
 		room3.addExit("east", room2);
@@ -82,7 +79,6 @@ public class Game {
 		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true, false);
 		room1.addObject("table", table);
 		
-		
 		// Room 2
 		Item banana = new Item("banana");
 		banana.setWeight(0.3);
@@ -103,7 +99,7 @@ public class Game {
 		room2.addItem("phonebook", phonebook);
 		
 		Item cookbook = new Item("cookbook");
-		cookbook.setWeight(0.5);
+		cookbook.setWeight(2.0);
 		cookbook.setDescription("Full of recipes.");
 		
 		room2.addItem("cookbook", cookbook);
@@ -114,12 +110,21 @@ public class Game {
 		
 		room2.addItem("plate", plate);
 		
-		
 		Item smallKey = new Item("small key");
 		smallKey.setWeight(0.1);
 		smallKey.setDescription("This small key seems to be able to unlocks something...");
 		
 		room2.addItem("small key", smallKey);
+		
+		Door lockedDoor = new Door("Probably leads to another room...", "west", true, "none");
+		lockedDoor.setLocked(true);
+		room2.addObstacle("lockedDoor", lockedDoor);
+		
+		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true);
+		room2.setPuzzle(weightPuzzle);
+		
+		RoomObject sensor = new RoomObject("weight sensor", "Triggers something by weight...", true, true, false);
+		room2.addObject("weight sensor", sensor);
 		
 		// Room 3
 		RoomObject chest = new RoomObject("chest", "Holds items.", true, true, true);
@@ -178,7 +183,7 @@ public class Game {
 
 	public void updateGameState() { }
 	
-	public void saveData() { };
+	public void saveData() { }
 	
-	public void loadData() { };
+	public void loadData() { }
 }

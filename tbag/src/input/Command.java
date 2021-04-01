@@ -186,6 +186,18 @@ public class Command {
 									Item toRemove = inventory.removeItem(noun);
 									objectInventory.addItem(noun, toRemove);
 									output = "You placed the " + noun + " on the " + location + "."; 
+									
+									if (room.getPuzzle().getDescription().equals("weightPuzzle")) {
+										double weightSolution = Double.parseDouble(room.getPuzzle().getSolution());
+										
+										if (objectInventory.getCurrentWeight() >= weightSolution) {
+											Door door = (Door) room.getObstacle("lockedDoor");	// all objects thatll be unlockable through weight sensors will be named lockedDoor
+											if (door.isLocked()) {
+												door.setLocked(false);
+												output = "A door to the " + door.getDirection() + " swings open.";
+											}
+										}
+									}
 								} else {
 									output = "This object cannot hold that...";
 								}

@@ -16,6 +16,7 @@ public class RoomObject {
 		this.description = description;
 		this.canHoldItems = canHoldItems;
 		this.locked = locked;
+		this.inventory = new Inventory();
 	}
 	
 	public boolean canHoldItems() {

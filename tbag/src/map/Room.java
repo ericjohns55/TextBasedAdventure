@@ -80,7 +80,7 @@ public class Room {
 		String items = listItems();
 		
 		if (items != "") {
-			output += "\nThis room has " + items;
+			output += "\nThis room has a " + items;
 		}
 		
 		return output;
@@ -110,9 +110,7 @@ public class Room {
 				itemString += item.getName() + ", ";
 			}
 			
-			itemString = itemString.substring(0, itemString.length() - 2) + "\n";
-		} else {
-			itemString = "There does not appear to be any items in this room...";
+			itemString = itemString.substring(0, itemString.length() - 2);
 		}
 		
 		return itemString;
@@ -127,8 +125,6 @@ public class Room {
 			}
 			
 			objects = objects.substring(0, objects.length() - 2);
-		} else {
-			objects = "There do not appear to be any major objects in this room...";
 		}
 		
 		return objects;

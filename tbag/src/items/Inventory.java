@@ -71,7 +71,7 @@ public class Inventory {
             String item = key;
             double weight = items.get(key).getWeight();
 
-            inventory += item + " (" + weight + "lbs), ";
+            inventory += item + " (" + weight + "kgs), ";
         }		
 		
 		if (!items.isEmpty()) {
