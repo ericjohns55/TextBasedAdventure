@@ -191,10 +191,11 @@ public class Command {
 										double weightSolution = Double.parseDouble(room.getPuzzle().getSolution());
 										
 										if (objectInventory.getCurrentWeight() >= weightSolution) {
-											Door door = (Door) room.getObstacle("lockedDoor");	// all objects thatll be unlockable through weight sensors will be named lockedDoor
-											if (door.isLocked()) {
-												door.setLocked(false);
-												output = "A door to the " + door.getDirection() + " swings open.";
+											// all objects thatll be unlockable through weight sensors will be named weightObstacle (and will typically unlock)
+											Obstacle obstacle = room.getObstacle("weightObstacle");	
+											if (obstacle.isLocked()) {
+												obstacle.setLocked(false);
+												output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.";
 											}
 										}
 									}
