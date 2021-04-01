@@ -118,7 +118,7 @@ public class Game {
 		
 		Door lockedDoor = new Door("Probably leads to another room...", "west", true, "none");
 		lockedDoor.setLocked(true);
-		room2.addObstacle("lockedDoor", lockedDoor);
+		room2.addObstacle("weightObstacle", lockedDoor);
 		
 		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true);
 		room2.setPuzzle(weightPuzzle);

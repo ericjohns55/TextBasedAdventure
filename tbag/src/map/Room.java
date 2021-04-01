@@ -83,7 +83,8 @@ public class Room {
 			output += "\nThis room has a " + items;
 		}
 		
-		return output;
+		// newline so text doesnt overflow on story
+		return output + "\n";
 	}
 
 	//sets the rooms exit
