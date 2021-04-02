@@ -4,17 +4,19 @@ public class Obstacle {
 	private boolean blockingExit;
 	private boolean unlockable;
 	private boolean locked;
+	private boolean moveable;
 	private String description;
 	private String direction;
 	private String name;
 	
-	public Obstacle(String name, String description, String direction, boolean blockingExit, boolean unlockable) {
+	public Obstacle(String name, String description, String direction, boolean blockingExit, boolean unlockable, boolean moveable) {
 		this.name = name;
 		this.description = description;
 		this.blockingExit = blockingExit;
 		this.direction = direction;
 		this.unlockable = unlockable;
 		this.locked = unlockable;
+		this.moveable = moveable;
 	}
 	
 	public boolean isLocked() {
@@ -63,5 +65,13 @@ public class Obstacle {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isMoveable() {
+		return moveable;
+	}
+	
+	public void setMoveable(boolean moveable) {
+		this.moveable = moveable;
 	}
 }

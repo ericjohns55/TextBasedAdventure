@@ -68,5 +68,4 @@ public class RoomObject {
 	public void setLocked(boolean locked) {
 		this.locked = locked;
 	}
-
 }

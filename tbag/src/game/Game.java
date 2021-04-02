@@ -19,7 +19,7 @@ public class Game {
 
 	public Game() {
 		this.moves = 0;
-		this.player = new Player(this, 3);
+		this.player = new Player(this, 1);
 		this.rooms = new HashMap<Integer, Room>();
 
 		createRooms();
@@ -43,9 +43,7 @@ public class Game {
 		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There appears to be some sensory pad contained in the room...", 2);
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
 		Room room4 = new Room("You are in a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
-		Room room5 = new Room("You are in a cold room with a wooden table in the center. On the"
-				+ " table lies a record player, and a complete set of records for Pink Floyd's songs next to a doll "
-				+ "with a locked door to the east that reads Free to play along with time Evening never comes ", 5);
+		Room room5 = new Room("This is the current last room. More will be added later.", 5);
 
 		
 		
@@ -150,17 +148,13 @@ public class Game {
 		
 		
 		// Room 4
-		// public Obstacle(String name, String description, String direction, boolean blockingExit, boolean unlockable)
-		// dresser, , desk and chair
-		Obstacle dresser = new Obstacle("dresser", "Holds clothes.","south", true, false);
-		Obstacle bed = new Obstacle("bed", "Place to sleep.","east", false, false);
-		Obstacle desk = new Obstacle("desk", "Workspace.","west", false, false);
-		Obstacle chair = new Obstacle("chair", "Place to sit.","north", false, false);
+		Obstacle dresser = new Obstacle("dresser", "Holds clothes.","south", true, false, true);
+		Obstacle bed = new Obstacle("bed", "Place to sleep.","east", true, false, true);
+		Obstacle desk = new Obstacle("desk", "Workspace.","west", true, false, true);
 		
 		room4.addObstacle("dresser", dresser);
 		room4.addObstacle("bed", bed);
 		room4.addObstacle("desk", desk);
-		room4.addObstacle("chair", chair);
 
 		
 		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false));

@@ -4,7 +4,7 @@ public class Door extends Obstacle {
 	private String unlockItem;
 	
 	public Door(String description, String direction, boolean blockingExit, String unlockItem) {
-		super("door", description, direction, blockingExit, true);
+		super("door", description, direction, blockingExit, true, false);
 		this.unlockItem = unlockItem;
 	}
 	
