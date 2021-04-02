@@ -99,6 +99,22 @@ public class Inventory {
 		
 		return itemList;
 	}
+	
+	public String listItems(String noun) {
+		String itemList = "";
+		
+		for (String key : items.keySet()) {
+			itemList += key + ", ";
+		}
+		
+		if (!itemList.isEmpty()) {
+			itemList = "This " + noun + " has a " + itemList.substring(0, itemList.length() - 2);
+		} else {
+			itemList = "This " + noun + "does not contain any items.";
+		}
+		
+		return itemList;
+	}
 
 	public void consumeItem(String identifier){
 		if (items.containsKey(identifier)) {

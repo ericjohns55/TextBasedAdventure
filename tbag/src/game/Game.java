@@ -19,7 +19,7 @@ public class Game {
 
 	public Game() {
 		this.moves = 0;
-		this.player = new Player(this, 1);
+		this.player = new Player(this, 3);
 		this.rooms = new HashMap<Integer, Room>();
 
 		createRooms();
@@ -41,7 +41,7 @@ public class Game {
 		// 24 rooms and an exit 
 		Room room1 = new Room("You are in a room containing nothing but a table.", 1);
 		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There appears to be some sensory pad contained in the room...", 2);
-		Room room3 = new Room("You are in a room with a keypad on the door and a chest on the other side of the room.", 3);
+		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
 		Room room4 = new Room("You are in a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
 		Room room5 = new Room("You are in a cold room with a wooden table in the center. On the"
 				+ " table lies a record player, and a complete set of records for Pink Floyd's songs next to a doll "
@@ -78,6 +78,8 @@ public class Game {
 		
 		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true, false);
 		room1.addObject("table", table);
+		
+		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false));
 		
 		// Room 2
 		Item banana = new Item("banana");
@@ -130,6 +132,7 @@ public class Game {
 		RoomObject chest = new RoomObject("chest", "Holds items.", true, true, true);
 		
 		Item note = new Item("note");
+		note.setReadable(true);
 		note.setWeight(0.1);
 		note.setDescription("(8/2(2+2)) + 1000");
 		
@@ -140,6 +143,10 @@ public class Game {
 		Puzzle math = new Puzzle("Math problem.", "1016", "PEMDAS", true);
 		
 		room3.setPuzzle(math);
+		
+		Door writtenDoor = new Door("Probably leads to another room...", "south", true, "none");
+		writtenDoor.setLocked(true);
+		room3.addObstacle("writtenObstacle", writtenDoor);
 		
 		
 		// Room 4
@@ -154,7 +161,9 @@ public class Game {
 		room4.addObstacle("bed", bed);
 		room4.addObstacle("desk", desk);
 		room4.addObstacle("chair", chair);
+
 		
+		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false));
 		
 		rooms.put(1, room1);
 		rooms.put(2, room2);

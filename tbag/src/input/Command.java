@@ -9,6 +9,7 @@ import items.Item;
 import obstacles.Door;
 import obstacles.Obstacle;
 import map.Room;
+import object.Puzzle;
 import object.RoomObject;
 
 public class Command {
@@ -80,6 +81,7 @@ public class Command {
 		Player player = game.getPlayer();
 		Room room = player.getRoom();
 		Inventory inventory = player.getInventory();
+		Puzzle puzzle = room.getPuzzle();
 		
 		System.out.println("VERB: " + verb);
 		System.out.println("NOUN: " + noun);
@@ -111,6 +113,8 @@ public class Command {
 				case "open":
 					if (noun.equals("inventory")) {
 						output = inventory.openInventory();
+					} else if (room.hasObject(noun)) {
+						output = room.getObject(noun).getInventory().listItems(noun);
 					}
 					
 					break;
@@ -187,8 +191,8 @@ public class Command {
 									objectInventory.addItem(noun, toRemove);
 									output = "You placed the " + noun + " on the " + location + "."; 
 									
-									if (room.getPuzzle().getDescription().equals("weightPuzzle")) {
-										double weightSolution = Double.parseDouble(room.getPuzzle().getSolution());
+									if (puzzle.getDescription().equals("weightPuzzle")) {
+										double weightSolution = Double.parseDouble(puzzle.getSolution());
 										
 										if (objectInventory.getCurrentWeight() >= weightSolution) {
 											// all objects thatll be unlockable through weight sensors will be named weightObstacle (and will typically unlock)
@@ -272,6 +276,44 @@ public class Command {
 						}
 					} else {
 						output = "This obstacle does not exist...";
+					}
+					
+					break;
+				case "solve":
+				case "type":
+					if (puzzle.isWrittenSolution()) {
+						if (!puzzle.isSolved()) {
+							if (puzzle.getSolution().equals(noun)) {
+								puzzle.setSolved(true);
+								
+								Obstacle obstacle = room.getObstacle("writtenObstacle");
+								
+								if (obstacle.isLocked()) {
+									obstacle.setLocked(false);
+									output = "A door to the " + obstacle.getDirection() + " swings open!";
+								}								
+							} else {
+								output = noun + " is not correct.";
+							}
+						} else {
+							output = "You already solved this puzzle!";
+						}						
+					} else {
+						output = "Could not find anything to solve...";
+					}
+					
+					break;
+				case "read":
+					if (inventory.contains(noun)) {
+						Item toRead = inventory.getItem(noun);
+						
+						if (toRead.isReadable()) {
+							output = "This " + noun + " says \"" + toRead.getDescription() + "\"";
+						} else {
+							output = "Cannot read this item.";
+						}
+					} else {
+						output = "Could not find a " + noun;
 					}
 					
 					break;

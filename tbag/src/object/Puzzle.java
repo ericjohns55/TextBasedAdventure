@@ -15,7 +15,7 @@ public class Puzzle{
 		this.setWrittenSolution(writtenSolution);
 	}
 	
-	public boolean getSovled() {
+	public boolean isSolved() {
 		return solved;
 	}
 	
