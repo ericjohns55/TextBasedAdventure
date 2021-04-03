@@ -44,10 +44,20 @@ public class Game {
 				+ "cookbook, and a plate on a countertop.", 2);
 		Room room3 = new Room("You move into a room with a keypad on the door and a chest on the other side of the room.", 3);
 		Room room4 = new Room("You walk into a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
-		Room room5 = new Room("You enter into a cold room with a wooden table in the center. On the"
+		
+		Room room5 = new Room("You enter into a room with instruments including a cello, a set of drums, and a piano.", 5);
+		Room room6 = new Room("You enter into a cold room with a wooden table in the center. On the"
+				+ " table lies a record player, and a complete set of records for Pink Floyd's songs "
+				+ "and a wall that reads \"Free to play along with time Evening never comes\" ", 6);
+		Room room7 = new Room("You walk into a dining room area and in front of the head seat of the table sits a lamb heart on a plate with "
+				+ "a butcher knife next to it.", 7);
+		Room room8 = new Room("You move into a living room with a pentagram drawn on the ground and .", 8);
+		
+		
+	/*	Room room5 = new Room("You enter into a cold room with a wooden table in the center. On the"
 				+ " table lies a record player, and a complete set of records for Pink Floyd's songs next to a doll "
 				+ "with a locked door to the east that reads Free to play along with time Evening never comes ", 5);
-
+	*/
 		
 		
 		room1.addExit("west", room2);
@@ -64,7 +74,16 @@ public class Game {
 		room4.addExit("south", room5);
 		
 		room5.addExit("north", room4);
-	//	room5.addExit("east", room6);
+		room5.addExit("east", room6);
+		
+		room6.addExit("west", room5);
+		room6.addExit("east", room7);
+		
+		room7.addExit("west", room6);
+		room7.addExit("north", room8);
+		
+		room8.addExit("south", room7);
+	//	room8.addExit("west", room9);
 		
 
 
@@ -150,12 +169,69 @@ public class Game {
 		room4.addObstacle("desk", desk);
 		room4.addObstacle("chair", chair);
 		
+		// Room 5
+//	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
+// cello, drums
+		RoomObject piano = new RoomObject("piano", "Could play music.", false, true, false);
+		room5.addObject("piano", piano);
+		
+		RoomObject cello = new RoomObject("cello", "Could play music.", false, true, false);
+		room5.addObject("cello", cello);
+		
+		RoomObject drums = new RoomObject("drums", "Could play music.", false, true, false);
+		room5.addObject("drums", drums);
+
+		
+		// Room 6
+		RoomObject recordPlayer = new RoomObject("record player", "Plays music.", false, true, false);
+		room6.addObject("record player", recordPlayer);
+		
+		Item record = new Item("Remember A Day");
+		record.setWeight(0.7);
+		record.setDescription("This record has a song by Pink Floyd on it.");
+		
+		room6.addItem("Remember A Day", record);
+		
+		// Room 7
+		Item butcherKnife = new Item("butcher knife");
+		butcherKnife.setWeight(0.8);
+		butcherKnife.setDescription("This butcher knife is used for cutting.");
+		
+		room7.addItem("butcher knife", butcherKnife);
+		
+		Item blackKey = new Item("black key");
+		blackKey.setWeight(0.1);
+		blackKey.setDescription("This small black key seems to be able to unlock something...");
+		
+		room7.addItem("black key", blackKey);
+		
+		Item lambHeart = new Item("lamb heart");
+		lambHeart.setWeight(2.0);
+		lambHeart.setDescription("This lamb heart looks like it has something in it...");
+		
+		room7.addItem("lamb heart", lambHeart);
+		
+		Door door1 = new Door("Probably leads to another room...", "north", true, "black key");
+		door1.setLocked(true);
+		room7.addObstacle("door", door1);
+		
+		// Room 8
+		Item bloodVile = new Item("blood vile");
+		bloodVile.setWeight(0.1);
+		bloodVile.setDescription("This blood vile ...");
+		
+		room8.addItem("blood vile", bloodVile);
+		
+		
 		
 		rooms.put(1, room1);
 		rooms.put(2, room2);
 		rooms.put(3, room3);
 		rooms.put(4, room4);
 		rooms.put(5, room5);
+		rooms.put(6, room6);
+		rooms.put(7, room7);
+		rooms.put(8, room8);
 
 		
 	}
