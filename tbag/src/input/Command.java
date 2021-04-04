@@ -9,14 +9,14 @@ import actor.Player;
 import game.Game;
 import items.Inventory;
 import items.Item;
-import obstacles.Door;
-import obstacles.Obstacle;
 import map.Room;
+import map.RoomObject;
+import map.UnlockableObject;
 import object.Puzzle;
-import object.RoomObject;
 
 public class Command {
 	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "drop", "examine", "look", "push"));
+	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
 	public final static String invalidCommand = "I do not understand that command";
@@ -59,8 +59,7 @@ public class Command {
 				boolean addLocation = false;
 
 				for (int i = 1; i < breakdown.size(); i++) {					
-					if (breakdown.get(i).equals("on") || breakdown.get(i).equals("from") || breakdown.get(i).equals("to")) {
-						System.out.println(breakdown.get(i));
+					if (PREPOSITIONS.contains(breakdown.get(i))) {
 						addLocation = true;
 					} else {
 						if (addLocation) {
@@ -90,9 +89,7 @@ public class Command {
 		Inventory inventory = player.getInventory();
 		Puzzle puzzle = room.getPuzzle();
 		
-		System.out.println("VERB: " + verb);
-		System.out.println("NOUN: " + noun);
-		System.out.println("LOCATION: " + location);
+		System.out.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
 		
 		if (verb != null) {
 			if (noun != null || (verb.equals("look") || verb.equals("examine"))) {
@@ -107,9 +104,13 @@ public class Command {
 							} else if (inventory.contains(noun)) {
 								output = inventory.getItem(noun).getDescription();
 							} else if (room.hasObject(noun)) {
-								output = room.getObject(noun).getDescription();
-							} else if (room.hasObstacle(noun)) {
-								output = room.getObstacle(noun).getDescription();
+								RoomObject object = room.getObject(noun);
+								
+								if (object.isLocked()) {
+									output = "This object is locked, I cannot see what is inside.";
+								} else {
+									output = room.getObject(noun).getDescription();
+								}
 							}
 							
 							else {
@@ -138,7 +139,7 @@ public class Command {
 						break;
 					case "grab":
 					case "take":
-						if (location == null) {
+						if (location == null || location.equals("room") || location.equals("floor")) {
 							if (room.contains(noun)) {
 								Item toGrab = room.getItem(noun);
 								
@@ -183,7 +184,7 @@ public class Command {
 						break;
 					case "drop":
 						if (inventory.contains(noun)) {
-							if (location == null) {
+							if (location == null || location.equals("room") || location.equals("floor")) {
 								Item removed = inventory.removeItem(noun);
 								removed.setInInventory(false);
 								room.addItem(noun, removed);
@@ -204,7 +205,7 @@ public class Command {
 											
 											if (objectInventory.getCurrentWeight() >= weightSolution) {
 												// all objects thatll be unlockable through weight sensors will be named weightObstacle (and will typically unlock)
-												Obstacle obstacle = room.getObstacle("weightObstacle");	
+												RoomObject obstacle = room.getObject("weightObstacle");	
 												if (obstacle.isLocked()) {
 													obstacle.setLocked(false);
 													output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.";
@@ -227,7 +228,7 @@ public class Command {
 						break;
 					case "move":
 					case "walk":
-						if (room.getAllObstacles().size() == 0) {
+						if (room.getAllObjects().size() == 0) {
 							if (room.hasExit(noun)) {
 								output = moveRooms(player, room, noun);
 							} else {
@@ -236,13 +237,14 @@ public class Command {
 						} else {
 							boolean foundObstacleInPath = false;
 							
-							for (Obstacle obstacle : room.getAllObstacles().values()) {
-								if (obstacle.getDirection().equals(noun)) {
+							for (RoomObject roomObject : room.getAllObjects().values()) {
+								if (roomObject.getDirection().equals(noun)) {
+									
 									foundObstacleInPath = true;
 									
-									if (obstacle.isBlockingExit()) {
-										if (obstacle instanceof Door) {
-											Door door = (Door) obstacle;
+									if (roomObject.isBlockingExit()) {
+										if (roomObject instanceof UnlockableObject) {
+											UnlockableObject door = (UnlockableObject) roomObject;
 											
 											if (door.isLocked()) {
 												output = "This door appears to be locked... perhaps there is something in the room that can help you.";
@@ -250,7 +252,7 @@ public class Command {
 												output = moveRooms(player, room, noun);
 											}
 										} else {
-											output = "A " + obstacle.getName() + " is blocking your path!";
+											output = "A " + roomObject.getName() + " is blocking your path!";
 										}
 									} else {
 										output = moveRooms(player, room, noun);
@@ -269,19 +271,24 @@ public class Command {
 						
 						break;
 					case "unlock":
-						if (room.hasObstacle(noun)) {
-							Obstacle obstacle = room.getObstacle(noun);
+						if (room.hasObject(noun)) {
+							RoomObject roomObject = room.getObject(noun);
 							
-							if (obstacle.isUnlockable()) {
-								if (obstacle.isLocked()) {
-									if (obstacle instanceof Door) {
-										Door door = (Door) obstacle;
+							if (roomObject.isUnlockable()) {
+								if (roomObject.isLocked()) {
+									if (roomObject instanceof UnlockableObject) {
+										UnlockableObject unlockableObject = (UnlockableObject) roomObject;
 										
-										if (inventory.contains(door.getUnlockItem())) {
-											door.setLocked(false);
-											output = "You successfully unlocked the door.";
+										if (inventory.contains(unlockableObject.getUnlockItem())) {
+											unlockableObject.setLocked(false);
+											
+											if (unlockableObject.consumeItem()) {
+												inventory.removeItem(unlockableObject.getUnlockItem());
+											}
+											
+											output = "You successfully unlocked the " + unlockableObject.getName() + ".";
 										} else {
-											output = "You do not have the required item to unlock this door.";
+											output = "You do not have the required item to unlock this " + unlockableObject.getName() + ".";
 										}
 									} else {
 										output = "Not implemented";
@@ -304,7 +311,7 @@ public class Command {
 								if (puzzle.getSolution().equals(noun)) {
 									puzzle.setSolved(true);
 									
-									Obstacle obstacle = room.getObstacle("writtenObstacle");
+									RoomObject obstacle = room.getObject("writtenObstacle");
 									
 									if (obstacle.isLocked()) {
 										obstacle.setLocked(false);
@@ -336,21 +343,21 @@ public class Command {
 						
 						break;
 					case "push":
-						if (room.hasObstacle(noun)) {
-							Obstacle obstacle = room.getObstacle(noun);
+						if (room.hasObject(noun)) {
+							RoomObject object = room.getObject(noun);
 							
-							if (obstacle.isMoveable()) {
+							if (object.isMoveable()) {
 								if (location != null) {
-									obstacle.setDirection(location);
+									object.setDirection(location);
 									
-									output = "Pushed " + obstacle.getName() + " " + location;
+									output = "Pushed " + object.getName() + " " + location;
 								} else {
-									obstacle.setDirection(obstacle.getDirection() + "-left");	// will eventually do better placements.
+									object.setDirection(object.getDirection() + "-left");	// will eventually do better placements.
 									
-									output = "Moved " + obstacle.getName() + " out of the way.";
+									output = "Moved " + object.getName() + " out of the way.";
 								}
 							} else {
-								output = "Cannot push a " + obstacle.getName();
+								output = "Cannot push a " + object.getName();
 							}
 						} else {
 							output = "Cannot find " + noun + " to move.";
@@ -361,14 +368,14 @@ public class Command {
 			}
 		}
 		
-		return output != null ? output : invalidCommand;
+		return output != null ? output.trim() : invalidCommand;
 	}
 	
 	private String moveRooms(Player player, Room room, String direction) {
 		int roomID = room.getExit(noun).getRoomID();
 		player.setRoomID(roomID);
 		
-		String output = "You walk " + noun + "\n";
+		String output = "You walk " + noun + "\n\n";
 		output += player.getRoom().getDescription();
 		
 		return output;

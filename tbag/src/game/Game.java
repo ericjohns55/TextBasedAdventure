@@ -2,10 +2,9 @@ package game;
 
 import items.Item;
 import map.Room;
+import map.RoomObject;
+import map.UnlockableObject;
 import object.Puzzle;
-import object.RoomObject;
-import obstacles.Door;
-import obstacles.Obstacle;
 
 import java.util.HashMap;
 
@@ -39,10 +38,10 @@ public class Game {
 
 	public void createRooms() {
 		// 24 rooms and an exit 
-		Room room1 = new Room("You are in a room containing nothing but a table.", 1);
-		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There appears to be some sensory pad contained in the room...", 2);
+		Room room1 = new Room("You are in a room with a westward door containing nothing but a table.", 1);
+		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There is a door to the west and there appears to be some sensory pad contained in the room...", 2);
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
-		Room room4 = new Room("You are in a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
+		Room room4 = new Room("You are in a room with a dresser, bed, and desk but do not appear to see an exit.", 4);
 		Room room5 = new Room("This is the current last room. More will be added later.", 5);
 
 		
@@ -70,11 +69,11 @@ public class Game {
 		
 		room1.addItem("key", key);
 		
-		Door door = new Door("Probably leads to another room...", "west", true, "key");
+		UnlockableObject door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "key");
 		door.setLocked(true);
-		room1.addObstacle("door", door);
+		room1.addObject("door", door);
 		
-		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		RoomObject table = new RoomObject("Table", "A table that can hold things!", "north", false, false, false);
 		room1.addObject("table", table);
 		
 		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false));
@@ -116,18 +115,21 @@ public class Game {
 		
 		room2.addItem("small key", smallKey);
 		
-		Door lockedDoor = new Door("Probably leads to another room...", "west", true, "none");
+		UnlockableObject lockedDoor = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
 		lockedDoor.setLocked(true);
-		room2.addObstacle("weightObstacle", lockedDoor);
+		room2.addObject("weightObstacle", lockedDoor);
 		
 		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true);
 		room2.setPuzzle(weightPuzzle);
 		
-		RoomObject sensor = new RoomObject("weight sensor", "Triggers something by weight...", true, true, false);
+		RoomObject sensor = new RoomObject("weight sensor", "Triggers something by weight...", "north", false, false, false);
+		sensor.setCanHoldItems(true);
 		room2.addObject("weight sensor", sensor);
 		
 		// Room 3
-		RoomObject chest = new RoomObject("chest", "Holds items.", true, true, true);
+		UnlockableObject chest = new UnlockableObject("chest", "Holds items.", "north", false, "small key");
+		chest.setCanHoldItems(true);
+		chest.setLocked(true);
 		
 		Item note = new Item("note");
 		note.setReadable(true);
@@ -142,19 +144,19 @@ public class Game {
 		
 		room3.setPuzzle(math);
 		
-		Door writtenDoor = new Door("Probably leads to another room...", "south", true, "none");
+		UnlockableObject writtenDoor = new UnlockableObject("writtenObstacle", "Probably leads to another room...", "south", true, "none");
 		writtenDoor.setLocked(true);
-		room3.addObstacle("writtenObstacle", writtenDoor);
+		room3.addObject("writtenObstacle", writtenDoor);
 		
 		
 		// Room 4
-		Obstacle dresser = new Obstacle("dresser", "Holds clothes.","south", true, false, true);
-		Obstacle bed = new Obstacle("bed", "Place to sleep.","east", true, false, true);
-		Obstacle desk = new Obstacle("desk", "Workspace.","west", true, false, true);
+		RoomObject dresser = new RoomObject("dresser", "Holds clothes.","south", true, true, true);
+		RoomObject bed = new RoomObject("bed", "Place to sleep.","east", true, true, true);
+		RoomObject desk = new RoomObject("desk", "Workspace.","west", true, true, true);
 		
-		room4.addObstacle("dresser", dresser);
-		room4.addObstacle("bed", bed);
-		room4.addObstacle("desk", desk);
+		room4.addObject("dresser", dresser);
+		room4.addObject("bed", bed);
+		room4.addObject("desk", desk);
 
 		
 		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false));
