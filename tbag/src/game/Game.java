@@ -48,10 +48,10 @@ public class Game {
 		Room room5 = new Room("You enter into a room with instruments including a cello, a set of drums, and a piano.", 5);
 		Room room6 = new Room("You enter into a cold room with a wooden table in the center. On the"
 				+ " table lies a record player, and a complete set of records for Pink Floyd's songs "
-				+ "and a wall that reads \"Free to play along with time Evening never comes\" ", 6);
+				+ "and on the wall in spraypaint it reads \"Free to play along with time Evening never comes\" ", 6);
 		Room room7 = new Room("You walk into a dining room area and in front of the head seat of the table sits a lamb heart on a plate with "
-				+ "a butcher knife next to it.", 7);
-		Room room8 = new Room("You move into a living room with a pentagram drawn on the ground and .", 8);
+				+ "a butcher knife and a note next to it.", 7);
+		Room room8 = new Room("You move into a living room with a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
 		
 		
 	/*	Room room5 = new Room("You enter into a cold room with a wooden table in the center. On the"
@@ -170,8 +170,7 @@ public class Game {
 		room4.addObstacle("chair", chair);
 		
 		// Room 5
-//	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
-// cello, drums
+		//	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
 		RoomObject piano = new RoomObject("piano", "Could play music.", false, true, false);
 		room5.addObject("piano", piano);
 		
@@ -192,9 +191,12 @@ public class Game {
 		
 		room6.addItem("Remember A Day", record);
 		
+		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		room6.addObject("table", table6);
+		
 		// Room 7
 		Item butcherKnife = new Item("butcher knife");
-		butcherKnife.setWeight(0.8);
+		butcherKnife.setWeight(1.2);
 		butcherKnife.setDescription("This butcher knife is used for cutting.");
 		
 		room7.addItem("butcher knife", butcherKnife);
@@ -207,22 +209,38 @@ public class Game {
 		
 		Item lambHeart = new Item("lamb heart");
 		lambHeart.setWeight(2.0);
-		lambHeart.setDescription("This lamb heart looks like it has something in it...");
+		lambHeart.setDescription("This is a lamb heart.");
 		
 		room7.addItem("lamb heart", lambHeart);
 		
-		Door door1 = new Door("Probably leads to another room...", "north", true, "black key");
-		door1.setLocked(true);
-		room7.addObstacle("door", door1);
+		Item note7 = new Item("note");
+		note.setWeight(0.1);
+		note.setDescription("That lamb heart looks like it has something in it...");
+		
+		room7.addItem("note", note7);
+		
+		RoomObject table7 = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		room7.addObject("table", table7);
+		
+		Door door7 = new Door("Probably leads to another room...", "north", true, "black key");
+		door7.setLocked(true);
+		room7.addObstacle("door", door7);
 		
 		// Room 8
-		Item bloodVile = new Item("blood vile");
-		bloodVile.setWeight(0.1);
-		bloodVile.setDescription("This blood vile ...");
+		Item bloodVial = new Item("blood vial");
+		bloodVial.setWeight(0.2);
+		bloodVial.setDescription("This vial contains blood.");
 		
-		room8.addItem("blood vile", bloodVile);
+		room8.addItem("blood vial", bloodVial);
 		
+		Item note8 = new Item("note");
+		note.setWeight(0.1);
+		note.setDescription("You may want to pour that vial on something.");
 		
+		room8.addItem("note", note8);
+		
+		RoomObject table8 = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		room8.addObject("table", table8);
 		
 		rooms.put(1, room1);
 		rooms.put(2, room2);
