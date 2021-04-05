@@ -71,7 +71,7 @@ public class Inventory {
             String item = key;
             double weight = items.get(key).getWeight();
 
-            inventory += item + " (" + weight + "lbs), ";
+            inventory += item + " (" + weight + "kgs), ";
         }		
 		
 		if (!items.isEmpty()) {
@@ -95,6 +95,22 @@ public class Inventory {
 			itemList = "This object has a " + itemList.substring(0, itemList.length() - 2);
 		} else {
 			itemList = "This does not contain any items.";
+		}
+		
+		return itemList;
+	}
+	
+	public String listItems(String noun) {
+		String itemList = "";
+		
+		for (String key : items.keySet()) {
+			itemList += key + ", ";
+		}
+		
+		if (!itemList.isEmpty()) {
+			itemList = "This " + noun + " has a " + itemList.substring(0, itemList.length() - 2);
+		} else {
+			itemList = "This " + noun + "does not contain any items.";
 		}
 		
 		return itemList;

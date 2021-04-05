@@ -4,15 +4,12 @@ import java.util.HashMap;
 
 import items.Item;
 import object.Puzzle;
-import object.RoomObject;
-import obstacles.Obstacle;
 
 public class Room {
 	
 	// Each room has to have a set items in the room
 	private Puzzle puzzle;
 	private HashMap<String, RoomObject> objects;
-	private HashMap<String, Obstacle> obstacles;
 	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;
 	private String description; 
@@ -22,7 +19,6 @@ public class Room {
 	
 	public Room(String description, int roomID) {
 		objects = new HashMap<String, RoomObject>(); 
-		obstacles = new HashMap<String, Obstacle>();
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
 		this.description = description;
@@ -45,22 +41,6 @@ public class Room {
 	public RoomObject getObject(String name) { 
 		return objects.get(name); 
 	}
-
-	public HashMap<String, Obstacle> getAllObstacles() {
-		return obstacles;
-	}
-	
-	public void addObstacle(String name, Obstacle obstacle) {
-		obstacles.put(name, obstacle);
-	}
-	
-	public boolean hasObstacle(String name) {
-		return obstacles.containsKey(name);
-	}
-	
-	public Obstacle getObstacle(String name) {
-		return obstacles.get(name);
-	}	
 	
 	// How should the items be 
 	public void addItem(String identifier, Item item)
@@ -80,10 +60,11 @@ public class Room {
 		String items = listItems();
 		
 		if (items != "") {
-			output += "\nThis room has " + items;
+			output += "\nThis room has a " + items;
 		}
 		
-		return output;
+		// newline so text doesnt overflow on story
+		return output + "\n";
 	}
 
 	//sets the rooms exit
@@ -110,9 +91,7 @@ public class Room {
 				itemString += item.getName() + ", ";
 			}
 			
-			itemString = itemString.substring(0, itemString.length() - 2) + "\n";
-		} else {
-			itemString = "There does not appear to be any items in this room...";
+			itemString = itemString.substring(0, itemString.length() - 2);
 		}
 		
 		return itemString;
@@ -127,8 +106,6 @@ public class Room {
 			}
 			
 			objects = objects.substring(0, objects.length() - 2);
-		} else {
-			objects = "There do not appear to be any major objects in this room...";
 		}
 		
 		return objects;
@@ -164,5 +141,4 @@ public class Room {
 	public void setPuzzle(Puzzle puzzle) {
 		this.puzzle = puzzle;
 	}
-
 }

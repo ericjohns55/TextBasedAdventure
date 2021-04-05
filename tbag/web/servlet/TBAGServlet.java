@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import game.Game;
 
-
-
 public class TBAGServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Game game = new Game();
@@ -42,8 +40,8 @@ public class TBAGServlet extends HttpServlet {
 			if (text.length() != 0) {
 				String story = req.getParameter("story");
 				
-				story += game.runCommand(text);
-				
+				story += game.runCommand(text);				
+								
 				req.setAttribute("story", story + "\n");
 			}
 		}

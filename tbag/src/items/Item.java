@@ -8,6 +8,7 @@ public class Item {
 	private boolean canBePickedUp;
 	private boolean canBeConsumed; 
 	private boolean inInventory;
+	private boolean readable;
 	
 	public Item(String name, double weight) {
 		this.name = name;
@@ -17,6 +18,7 @@ public class Item {
 		this.canBeConsumed = false; 
 		this.inInventory = false;
 		this.description = "";
+		this.readable = false;
 	}
 	
 	public Item(String name) {
@@ -41,6 +43,14 @@ public class Item {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setReadable(boolean readable) {
+		this.readable = readable;
+	}
+	
+	public boolean isReadable() {
+		return readable;
 	}
 	
 	public double getWeight() {

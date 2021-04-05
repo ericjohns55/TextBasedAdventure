@@ -2,10 +2,9 @@ package game;
 
 import items.Item;
 import map.Room;
+import map.RoomObject;
+import map.UnlockableObject;
 import object.Puzzle;
-import object.RoomObject;
-import obstacles.Door;
-import obstacles.Obstacle;
 
 import java.util.HashMap;
 
@@ -39,11 +38,12 @@ public class Game {
 
 	public void createRooms() {
 		// 24 rooms and an exit 
-		Room room1 = new Room("You wake up in a room with a set of keys on a table and a door to the west.", 1);
-		Room room2 = new Room("You advance into a dimly lit kitchen with a key hanging on a wall and an apple, banana, phonebook, "
-				+ "cookbook, and a plate on a countertop.", 2);
-		Room room3 = new Room("You move into a room with a keypad on the door and a chest on the other side of the room.", 3);
-		Room room4 = new Room("You walk into a room with a dresser, bed, desk and chair but do not appear to see an exit.", 4);
+		Room room1 = new Room("You are in a room with a westward door containing nothing but a table.", 1);
+		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There is a door to the west and there appears to be some sensory pad contained in the room...", 2);
+		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
+		Room room4 = new Room("You are in a room with a dresser (S), bed (E), and desk (W) but do not appear to see an exit.", 4);
+		Room room5 = new Room("This is the current last room. More will be added later.", 5);
+
 		
 		Room room5 = new Room("You enter into a room with instruments including a cello, a set of drums, and a piano.", 5);
 		Room room6 = new Room("You enter into a cold room with a wooden table in the center. On the"
@@ -63,8 +63,6 @@ public class Game {
 		room1.addExit("west", room2);
 		
 		room2.addExit("east", room1);
-		
-		
 		room2.addExit("west", room3);
 		
 		room3.addExit("east", room2);
@@ -94,13 +92,14 @@ public class Game {
 		
 		room1.addItem("key", key);
 		
-		Door door = new Door("Probably leads to another room...", "west", true, "key");
+		UnlockableObject door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "key");
 		door.setLocked(true);
-		room1.addObstacle("door", door);
+		room1.addObject("door", door);
 		
-		RoomObject table = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		RoomObject table = new RoomObject("Table", "A table that can hold things!", "north", false, false, false);
 		room1.addObject("table", table);
 		
+		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false));
 		
 		// Room 2
 		Item banana = new Item("banana");
@@ -122,7 +121,7 @@ public class Game {
 		room2.addItem("phonebook", phonebook);
 		
 		Item cookbook = new Item("cookbook");
-		cookbook.setWeight(0.5);
+		cookbook.setWeight(2.0);
 		cookbook.setDescription("Full of recipes.");
 		
 		room2.addItem("cookbook", cookbook);
@@ -133,17 +132,30 @@ public class Game {
 		
 		room2.addItem("plate", plate);
 		
-		
 		Item smallKey = new Item("small key");
 		smallKey.setWeight(0.1);
 		smallKey.setDescription("This small key seems to be able to unlocks something...");
 		
 		room2.addItem("small key", smallKey);
 		
+		UnlockableObject lockedDoor = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
+		lockedDoor.setLocked(true);
+		room2.addObject("weightObstacle", lockedDoor);
+		
+		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true);
+		room2.setPuzzle(weightPuzzle);
+		
+		RoomObject sensor = new RoomObject("sensor", "Triggers something by weight...", "north", false, false, false);
+		sensor.setCanHoldItems(true);
+		room2.addObject("sensory pad", sensor);
+		
 		// Room 3
-		RoomObject chest = new RoomObject("chest", "Holds items.", true, true, true);
+		UnlockableObject chest = new UnlockableObject("chest", "Holds items.", "north", false, "small key");
+		chest.setCanHoldItems(true);
+		chest.setLocked(true);
 		
 		Item note = new Item("note");
+		note.setReadable(true);
 		note.setWeight(0.1);
 		note.setDescription("(8/2(2+2)) + 1000");
 		
@@ -151,24 +163,27 @@ public class Game {
 		
 		room3.addObject("chest", chest);
 
-		Puzzle math = new Puzzle("Math problem.", "1016", "PEMDAS", true);
+		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true);
 		
 		room3.setPuzzle(math);
 		
+		UnlockableObject writtenDoor = new UnlockableObject("door", "Probably leads to another room...", "south", true, "none");
+		writtenDoor.setLocked(true);
+		room3.addObject("writtenObstacle", writtenDoor);
+		
 		
 		// Room 4
-		// public Obstacle(String name, String description, String direction, boolean blockingExit, boolean unlockable)
-		// dresser, , desk and chair
-		Obstacle dresser = new Obstacle("dresser", "Holds clothes.","south", true, false);
-		Obstacle bed = new Obstacle("bed", "Place to sleep.","east", false, false);
-		Obstacle desk = new Obstacle("desk", "Workspace.","west", false, false);
-		Obstacle chair = new Obstacle("chair", "Place to sit.","north", false, false);
+		RoomObject dresser = new RoomObject("dresser", "Holds clothes.","south", true, true, true);
+		RoomObject bed = new RoomObject("bed", "Place to sleep.","east", true, true, true);
+		RoomObject desk = new RoomObject("desk", "Workspace.","west", true, true, true);
 		
-		room4.addObstacle("dresser", dresser);
-		room4.addObstacle("bed", bed);
-		room4.addObstacle("desk", desk);
-		room4.addObstacle("chair", chair);
-		
+		room4.addObject("dresser", dresser);
+		room4.addObject("bed", bed);
+		room4.addObject("desk", desk);
+
+		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false));
+    
+    
 		// Room 5
 		//	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
 		RoomObject piano = new RoomObject("piano", "Could play music.", false, true, false);
@@ -272,7 +287,7 @@ public class Game {
 
 	public void updateGameState() { }
 	
-	public void saveData() { };
+	public void saveData() { }
 	
-	public void loadData() { };
+	public void loadData() { }
 }
