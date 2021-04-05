@@ -15,6 +15,7 @@ import map.UnlockableObject;
 import object.Puzzle;
 
 public class Command {
+	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
 	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "drop", "examine", "look", "push"));
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
@@ -92,7 +93,7 @@ public class Command {
 		System.out.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
 		
 		if (verb != null) {
-			if (noun != null || (verb.equals("look") || verb.equals("examine"))) {
+			if (noun != null || SINGLE_WORD_COMMANDS.contains(verb)) {
 				switch (verb) {
 					case "examine":
 					case "look":
@@ -123,7 +124,11 @@ public class Command {
 						if (noun.equals("inventory")) {
 							output = inventory.openInventory();
 						} else if (room.hasObject(noun)) {
-							output = room.getObject(noun).getInventory().listItems(noun);
+							if (room.getObject(noun).isLocked()) {
+								output = "This " + room.getObject(noun).getName() + " is locked.";
+							} else {
+								output = room.getObject(noun).getInventory().listItems(noun);
+							}
 						}
 						
 						break;
@@ -164,15 +169,19 @@ public class Command {
 								if (roomObject.canHoldItems()) {
 									Inventory objectInventory = roomObject.getInventory();
 									
-									if (objectInventory.contains(noun)) {
-										Item toGrab = objectInventory.removeItem(noun);
-										inventory.addItem(noun, toGrab);
-										toGrab.setInInventory(true);
-										
-										output = "You picked up " + noun;
+									if (!roomObject.isLocked()) {
+										if (objectInventory.contains(noun)) {
+											Item toGrab = objectInventory.removeItem(noun);
+											inventory.addItem(noun, toGrab);
+											toGrab.setInInventory(true);
+											
+											output = "You picked up " + noun;
+										} else {
+											output = "This object does not have that item.";
+										}
 									} else {
-										output = "This object does not have that item.";
-									}
+										output = "This " + roomObject.getName() + " is locked.";
+									}									
 								} else {
 									output = "This object does not possess any items.";
 								}
@@ -315,7 +324,7 @@ public class Command {
 									
 									if (obstacle.isLocked()) {
 										obstacle.setLocked(false);
-										output = "A door to the " + obstacle.getDirection() + " swings open!";
+										output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open!";
 									}								
 								} else {
 									output = noun + " is not correct.";
@@ -363,6 +372,9 @@ public class Command {
 							output = "Cannot find " + noun + " to move.";
 						}
 						
+						break;
+					case "hint":
+						output = room.getPuzzle().getHint();
 						break;
 				}
 			}

@@ -41,7 +41,7 @@ public class Game {
 		Room room1 = new Room("You are in a room with a westward door containing nothing but a table.", 1);
 		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There is a door to the west and there appears to be some sensory pad contained in the room...", 2);
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
-		Room room4 = new Room("You are in a room with a dresser, bed, and desk but do not appear to see an exit.", 4);
+		Room room4 = new Room("You are in a room with a dresser (S), bed (E), and desk (W) but do not appear to see an exit.", 4);
 		Room room5 = new Room("This is the current last room. More will be added later.", 5);
 
 		
@@ -122,9 +122,9 @@ public class Game {
 		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true);
 		room2.setPuzzle(weightPuzzle);
 		
-		RoomObject sensor = new RoomObject("weight sensor", "Triggers something by weight...", "north", false, false, false);
+		RoomObject sensor = new RoomObject("sensor", "Triggers something by weight...", "north", false, false, false);
 		sensor.setCanHoldItems(true);
-		room2.addObject("weight sensor", sensor);
+		room2.addObject("sensory pad", sensor);
 		
 		// Room 3
 		UnlockableObject chest = new UnlockableObject("chest", "Holds items.", "north", false, "small key");
@@ -140,11 +140,11 @@ public class Game {
 		
 		room3.addObject("chest", chest);
 
-		Puzzle math = new Puzzle("Math problem.", "1016", "PEMDAS", true);
+		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true);
 		
 		room3.setPuzzle(math);
 		
-		UnlockableObject writtenDoor = new UnlockableObject("writtenObstacle", "Probably leads to another room...", "south", true, "none");
+		UnlockableObject writtenDoor = new UnlockableObject("door", "Probably leads to another room...", "south", true, "none");
 		writtenDoor.setLocked(true);
 		room3.addObject("writtenObstacle", writtenDoor);
 		
