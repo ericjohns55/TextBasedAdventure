@@ -42,8 +42,6 @@ public class Game {
 		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There is a door to the west and there appears to be some sensory pad contained in the room...", 2);
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
 		Room room4 = new Room("You are in a room with a dresser (S), bed (E), and desk (W) but do not appear to see an exit.", 4);
-		Room room5 = new Room("This is the current last room. More will be added later.", 5);
-
 		
 		Room room5 = new Room("You enter into a room with instruments including a cello, a set of drums, and a piano.", 5);
 		Room room6 = new Room("You enter into a cold room with a wooden table in the center. On the"
@@ -186,18 +184,18 @@ public class Game {
     
 		// Room 5
 		//	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
-		RoomObject piano = new RoomObject("piano", "Could play music.", false, true, false);
+		RoomObject piano = new RoomObject("piano", "Could play music.", "south", false, false, false);
 		room5.addObject("piano", piano);
 		
-		RoomObject cello = new RoomObject("cello", "Could play music.", false, true, false);
+		RoomObject cello = new RoomObject("cello", "Could play music.", "north", false, true, false);
 		room5.addObject("cello", cello);
 		
-		RoomObject drums = new RoomObject("drums", "Could play music.", false, true, false);
+		RoomObject drums = new RoomObject("drums", "Could play music.", "west", false, true, false);
 		room5.addObject("drums", drums);
 
 		
 		// Room 6
-		RoomObject recordPlayer = new RoomObject("record player", "Plays music.", false, true, false);
+		RoomObject recordPlayer = new RoomObject("record player", "Plays music.", "north", false, true, false);
 		room6.addObject("record player", recordPlayer);
 		
 		Item record = new Item("Remember A Day");
@@ -206,7 +204,7 @@ public class Game {
 		
 		room6.addItem("Remember A Day", record);
 		
-		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", "south", true, true, false);
 		room6.addObject("table", table6);
 		
 		// Room 7
@@ -234,12 +232,12 @@ public class Game {
 		
 		room7.addItem("note", note7);
 		
-		RoomObject table7 = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		RoomObject table7 = new RoomObject("Table", "A table that can hold things!", "east", true, true, false);
 		room7.addObject("table", table7);
 		
-		Door door7 = new Door("Probably leads to another room...", "north", true, "black key");
+		UnlockableObject door7 = new UnlockableObject("door", "Probably leads to another room...", "north", true, "black key");
 		door7.setLocked(true);
-		room7.addObstacle("door", door7);
+		room7.addObject("door", door7);
 		
 		// Room 8
 		Item bloodVial = new Item("blood vial");
@@ -254,7 +252,7 @@ public class Game {
 		
 		room8.addItem("note", note8);
 		
-		RoomObject table8 = new RoomObject("Table", "A table that can hold things!", true, true, false);
+		RoomObject table8 = new RoomObject("Table", "A table that can hold things!", "north", true, true, false);
 		room8.addObject("table", table8);
 		
 		rooms.put(1, room1);
