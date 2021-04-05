@@ -9,6 +9,7 @@ import actor.Player;
 import game.Game;
 import items.Inventory;
 import items.Item;
+import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
@@ -16,7 +17,7 @@ import object.Puzzle;
 
 public class Command {
 	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
-	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "drop", "examine", "look", "push"));
+	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "drop", "examine", "look", "push", "play"));
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
@@ -44,7 +45,11 @@ public class Command {
 		for (String word : individualWords) {
 			if (!ARTICLES.contains(word.toLowerCase())) {
 				breakdown.add(word.toLowerCase());
-			} 
+			} else {	// MUSIC EDGE CASE RIGHT HERE !!!
+				if (word.toLowerCase().equals("a") && breakdown.get(0).equals("play")) {
+					breakdown.add(word.toLowerCase());
+				}
+			}
 		}
 		
 		if (breakdown.size() > 1) {
@@ -373,10 +378,44 @@ public class Command {
 						}
 						
 						break;
+					case "play":
+						if (location != null) {
+							if (room.hasObject(location)) {
+								if (room.getObject(location) instanceof PlayableObject) {
+									PlayableObject object = (PlayableObject) room.getObject(location);
+									
+									output = "You played " + noun + " on the " + location;
+									
+									if (object.playNote(noun)) {
+										if (object.playedPassage()) {
+											RoomObject toUnlock = room.getObject("musicalObstacle");
+											
+											if (toUnlock.isLocked()) {
+												toUnlock.setLocked(false);
+												
+												output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.";
+											}
+										}
+									} else {
+										output = "You entered an invalid note.";
+									}
+								} else {
+									output = "You cannot play anything on that!";
+								}
+							} else {
+								output = "Could not find a " + location;
+							}
+						} else {
+							output = "Not sure where you want me to play that...";
+						}
+						
+						break;
 					case "hint":
 						output = room.getPuzzle().getHint();
 						break;
 				}
+			} else {
+				output = "Missing argument for command \"" + verb + "\"";
 			}
 		}
 		

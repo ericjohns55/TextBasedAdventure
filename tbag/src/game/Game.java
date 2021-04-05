@@ -1,6 +1,7 @@
 package game;
 
 import items.Item;
+import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
@@ -18,7 +19,7 @@ public class Game {
 
 	public Game() {
 		this.moves = 0;
-		this.player = new Player(this, 1);
+		this.player = new Player(this, 5);
 		this.rooms = new HashMap<Integer, Room>();
 
 		createRooms();
@@ -184,15 +185,21 @@ public class Game {
     
 		// Room 5
 		//	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
-		RoomObject piano = new RoomObject("piano", "Could play music.", "south", false, false, false);
+		String[] cScale = new String[] {"C", "D", "E", "F", "G", "A", "B"};
+		PlayableObject piano = new PlayableObject("piano", "Could play music.", "south", cScale);
 		room5.addObject("piano", piano);
 		
-		RoomObject cello = new RoomObject("cello", "Could play music.", "north", false, true, false);
+		PlayableObject cello = new PlayableObject("cello", "Could play music.", "north", cScale);
 		room5.addObject("cello", cello);
 		
-		RoomObject drums = new RoomObject("drums", "Could play music.", "west", false, true, false);
-		room5.addObject("drums", drums);
+		PlayableObject guitar = new PlayableObject("guitar", "Could play music.", "west", cScale);
+		room5.addObject("guitar", guitar);
+		
+		room5.setPuzzle(new Puzzle("Music puzzle", "Play a scale on any instrument.", "Perhaps try playing a C scale (consists of 7 naturals)...?", false));
 
+		UnlockableObject musicDoor = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
+		musicDoor.setLocked(true);
+		room5.addObject("musicalObstacle", musicDoor);
 		
 		// Room 6
 		RoomObject recordPlayer = new RoomObject("record player", "Plays music.", "north", false, true, false);
@@ -227,8 +234,9 @@ public class Game {
 		room7.addItem("lamb heart", lambHeart);
 		
 		Item note7 = new Item("note");
-		note.setWeight(0.1);
-		note.setDescription("That lamb heart looks like it has something in it...");
+		note7.setWeight(0.1);
+		note7.setReadable(true);
+		note7.setDescription("That lamb heart looks like it has something in it...");
 		
 		room7.addItem("note", note7);
 		
@@ -247,8 +255,9 @@ public class Game {
 		room8.addItem("blood vial", bloodVial);
 		
 		Item note8 = new Item("note");
-		note.setWeight(0.1);
-		note.setDescription("You may want to pour that vial on something.");
+		note8.setWeight(0.1);
+		note8.setReadable(true);
+		note8.setDescription("You may want to pour that vial on something.");
 		
 		room8.addItem("note", note8);
 		
