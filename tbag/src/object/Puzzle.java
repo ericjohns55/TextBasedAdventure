@@ -1,18 +1,20 @@
 package object;
 
-public class Puzzle{
+public class Puzzle {
 	private String description;
 	private String solution; 
 	private boolean solved;
 	private String hint;
 	private boolean writtenSolution;
+	private String unlockObstacle;
 	
-	public Puzzle(String description, String solution, String hint, boolean writtenSolution) {
-		this.setDescription(description);
+	public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle) {
+		this.description = description;
 		this.solution = solution;
 		this.solved = false;
 		this.hint = hint;
-		this.setWrittenSolution(writtenSolution);
+		this.writtenSolution = writtenSolution;
+		this.unlockObstacle = unlockObstacle;
 	}
 	
 	public boolean isSolved() {
@@ -54,4 +56,13 @@ public class Puzzle{
 	public void setWrittenSolution(boolean writtenSolution) {
 		this.writtenSolution = writtenSolution;
 	}
+
+	public String getUnlockObstacle() {
+		return unlockObstacle;
+	}
+
+	public void setUnlockObstacle(String unlockObstacle) {
+		this.unlockObstacle = unlockObstacle;
+	}
+	
 }

@@ -3,12 +3,14 @@ package map;
 public class PlayableObject extends RoomObject {
 	private String[] requiredNotes;
 	private String playedNotes;
+	private boolean isInstrument;
 	
-	public PlayableObject(String name, String description, String direction, String[] requiredNotes) {
+	public PlayableObject(String name, String description, String direction, String[] requiredNotes, boolean isInstrument) {
 		super(name, description, direction, false, false, false);
 		this.setInteractable(true);
 		this.requiredNotes = requiredNotes;
 		this.playedNotes = "";
+		this.isInstrument = isInstrument;
 	}
 
 	public String[] getRequiredNotes() {
@@ -25,6 +27,14 @@ public class PlayableObject extends RoomObject {
 
 	public void setPlayedNotes(String playedNotes) {
 		this.playedNotes = playedNotes;
+	}
+	
+	public boolean isInstrument() {
+		return isInstrument;
+	}
+	
+	public void setInstrument(boolean isInstrument) {
+		this.isInstrument = isInstrument;
 	}
 	
 	public boolean playedPassage() {

@@ -17,7 +17,7 @@ public class Inventory {
 	
 	public void addItem(String identifier, Item toAdd) {
 		if (canAddItem(toAdd)) {
-			items.put(identifier, toAdd);
+			items.put(identifier.toLowerCase(), toAdd);
 		}
 	}
 	
@@ -124,5 +124,9 @@ public class Inventory {
 		else {
 			System.out.println("I don't got that in my bag.");
 		}
+	}
+	
+	public boolean contains(Item item) {
+		return items.values().contains(item);
 	}
 }

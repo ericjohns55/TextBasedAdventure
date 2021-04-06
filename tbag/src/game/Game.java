@@ -5,6 +5,7 @@ import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
+import object.ObjectPuzzle;
 import object.Puzzle;
 
 import java.util.HashMap;
@@ -44,10 +45,10 @@ public class Game {
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
 		Room room4 = new Room("You are in a room with a dresser (S), bed (E), and desk (W) but do not appear to see an exit.", 4);
 		
-		Room room5 = new Room("You enter into a room with instruments including a cello, a set of drums, and a piano.", 5);
+		Room room5 = new Room("You enter into a room with instruments including a cello, a guitar, and a piano.", 5);
 		Room room6 = new Room("You enter into a cold room with a wooden table in the center. On the"
 				+ " table lies a record player, and a complete set of records for Pink Floyd's songs "
-				+ "and on the wall in spraypaint it reads \"Free to play along with time Evening never comes\" ", 6);
+				+ "and on the wall in spraypaint it reads \"Wining, dining, shining king\" ", 6);
 		Room room7 = new Room("You walk into a dining room area and in front of the head seat of the table sits a lamb heart on a plate with "
 				+ "a butcher knife and a note next to it.", 7);
 		Room room8 = new Room("You move into a living room with a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
@@ -98,7 +99,7 @@ public class Game {
 		RoomObject table = new RoomObject("Table", "A table that can hold things!", "north", false, false, false);
 		room1.addObject("table", table);
 		
-		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false));
+		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false, ""));
 		
 		// Room 2
 		Item banana = new Item("banana");
@@ -141,7 +142,7 @@ public class Game {
 		lockedDoor.setLocked(true);
 		room2.addObject("weightObstacle", lockedDoor);
 		
-		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true);
+		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true, "weightObstacle");
 		room2.setPuzzle(weightPuzzle);
 		
 		RoomObject sensor = new RoomObject("sensor", "Triggers something by weight...", "north", false, false, false);
@@ -162,7 +163,7 @@ public class Game {
 		
 		room3.addObject("chest", chest);
 
-		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true);
+		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true, "writtenObstacle");
 		
 		room3.setPuzzle(math);
 		
@@ -180,39 +181,63 @@ public class Game {
 		room4.addObject("bed", bed);
 		room4.addObject("desk", desk);
 
-		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false));
+		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false, ""));
     
     
 		// Room 5
 		//	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
 		String[] cScale = new String[] {"C", "D", "E", "F", "G", "A", "B"};
-		PlayableObject piano = new PlayableObject("piano", "Could play music.", "south", cScale);
+		PlayableObject piano = new PlayableObject("piano", "Could play music.", "south", cScale, true);
 		room5.addObject("piano", piano);
 		
-		PlayableObject cello = new PlayableObject("cello", "Could play music.", "north", cScale);
+		PlayableObject cello = new PlayableObject("cello", "Could play music.", "north", cScale, true);
 		room5.addObject("cello", cello);
 		
-		PlayableObject guitar = new PlayableObject("guitar", "Could play music.", "west", cScale);
+		PlayableObject guitar = new PlayableObject("guitar", "Could play music.", "west", cScale, true);
 		room5.addObject("guitar", guitar);
-		
-		room5.setPuzzle(new Puzzle("Music puzzle", "Play a scale on any instrument.", "Perhaps try playing a C scale (consists of 7 naturals)...?", false));
+
+		room5.setPuzzle(new Puzzle("Music puzzle", "Play a scale on any instrument.", "Perhaps try playing a C scale (consists of 7 naturals)...?", false, "musicalObstacle"));
 
 		UnlockableObject musicDoor = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
 		musicDoor.setLocked(true);
 		room5.addObject("musicalObstacle", musicDoor);
 		
 		// Room 6
-		RoomObject recordPlayer = new RoomObject("record player", "Plays music.", "north", false, true, false);
+		PlayableObject recordPlayer = new PlayableObject("record player", "Plays music.", "north", null, false);
 		room6.addObject("record player", recordPlayer);
 		
-		Item record = new Item("Remember A Day");
-		record.setWeight(0.7);
-		record.setDescription("This record has a song by Pink Floyd on it.");
-		
-		room6.addItem("Remember A Day", record);
-		
 		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", "south", true, true, false);
+		table6.setCanHoldItems(true);
+		table6.setInteractable(true);
 		room6.addObject("table", table6);
+		
+		Item record1 = new Item("Crumbling Land", 0.7);
+		record1.setDescription("This record has a song by Pink Floyd on it.");
+		
+		Item record2 = new Item("Another Brick Wall", 0.7);
+		record2.setDescription("This record has a song by Pink Floyd on it.");
+		
+		Item record3 = new Item("Hey You", 0.7);
+		record3.setDescription("This record has a song by Pink Floyd on it.");
+		
+		Item record4 = new Item("Young Lust", 0.7);
+		record4.setDescription("This record has a song by Pink Floyd on it.");
+		
+		Item record5 = new Item("Arnold Layne", 0.7);
+		record5.setDescription("This record has a song by Pink Floyd on it.");
+
+		table6.getInventory().addItem("Crumbling Land", record1);
+		table6.getInventory().addItem("Another Brick Wall", record2);
+		table6.getInventory().addItem("Hey You", record3);
+		table6.getInventory().addItem("Young Lust", record4);
+		table6.getInventory().addItem("Arnold Layne", record5);
+		
+		UnlockableObject recordDoor = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
+		recordDoor.setLocked(true);
+		room6.addObject("room6Door", recordDoor);
+		
+		ObjectPuzzle puzzle = new ObjectPuzzle("Play a record on a record player", "Play 'Crumbling Land'", "Zabriskie Point", recordPlayer, record1, "room6Door");
+		room6.setPuzzle(puzzle);
 		
 		// Room 7
 		Item butcherKnife = new Item("butcher knife");

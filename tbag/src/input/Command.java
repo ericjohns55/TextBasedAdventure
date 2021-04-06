@@ -13,11 +13,12 @@ import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
+import object.ObjectPuzzle;
 import object.Puzzle;
 
 public class Command {
 	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
-	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "drop", "examine", "look", "push", "play"));
+	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "place", "drop", "examine", "look", "push", "play"));
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
@@ -196,6 +197,7 @@ public class Command {
 						}
 						
 						break;
+					case "place":
 					case "drop":
 						if (inventory.contains(noun)) {
 							if (location == null || location.equals("room") || location.equals("floor")) {
@@ -218,8 +220,7 @@ public class Command {
 											double weightSolution = Double.parseDouble(puzzle.getSolution());
 											
 											if (objectInventory.getCurrentWeight() >= weightSolution) {
-												// all objects thatll be unlockable through weight sensors will be named weightObstacle (and will typically unlock)
-												RoomObject obstacle = room.getObject("weightObstacle");	
+												RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
 												if (obstacle.isLocked()) {
 													obstacle.setLocked(false);
 													output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.";
@@ -325,7 +326,7 @@ public class Command {
 								if (puzzle.getSolution().equals(noun)) {
 									puzzle.setSolved(true);
 									
-									RoomObject obstacle = room.getObject("writtenObstacle");
+									RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());
 									
 									if (obstacle.isLocked()) {
 										obstacle.setLocked(false);
@@ -386,18 +387,43 @@ public class Command {
 									
 									output = "You played " + noun + " on the " + location;
 									
-									if (object.playNote(noun)) {
-										if (object.playedPassage()) {
-											RoomObject toUnlock = room.getObject("musicalObstacle");
-											
-											if (toUnlock.isLocked()) {
-												toUnlock.setLocked(false);
-												
-												output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.";
+									boolean unlock = false;
+									
+									if (object.isInstrument()) {
+										if (object.playNote(noun)) {
+											if (object.playedPassage()) {
+												unlock = true;
 											}
+										} else {
+											output = "You entered an invalid note.";
 										}
 									} else {
-										output = "You entered an invalid note.";
+										if (inventory.contains(noun)) {
+											Item toDrop = inventory.removeItem(noun);
+											object.getInventory().addItem(noun, toDrop);
+											
+											output = "Played " + noun + " on the " + location;
+											
+											if (puzzle instanceof ObjectPuzzle) {
+												ObjectPuzzle obstaclePuzzle = (ObjectPuzzle) puzzle;
+												
+												if (obstaclePuzzle.isSolved()) {
+													unlock = true;
+												}
+											}
+										} else {
+											output = "You do not have that item!";
+										}
+									}
+									
+									if (unlock) {
+										RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
+										
+										if (toUnlock.isLocked()) {
+											toUnlock.setLocked(false);
+											
+											output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.";
+										}
 									}
 								} else {
 									output = "You cannot play anything on that!";
