@@ -129,4 +129,8 @@ public class Inventory {
 	public boolean contains(Item item) {
 		return items.values().contains(item);
 	}
+	
+	public HashMap<String, Item> getAllItems() {
+		return items;
+	}
 }

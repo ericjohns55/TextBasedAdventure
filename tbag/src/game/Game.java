@@ -1,5 +1,6 @@
 package game;
 
+import items.CompoundItem;
 import items.Item;
 import map.PlayableObject;
 import map.Room;
@@ -20,7 +21,7 @@ public class Game {
 
 	public Game() {
 		this.moves = 0;
-		this.player = new Player(this, 5);
+		this.player = new Player(this, 7);
 		this.rooms = new HashMap<Integer, Room>();
 
 		createRooms();
@@ -236,41 +237,40 @@ public class Game {
 		recordDoor.setLocked(true);
 		room6.addObject("room6Door", recordDoor);
 		
-		ObjectPuzzle puzzle = new ObjectPuzzle("Play a record on a record player", "Play 'Crumbling Land'", "Zabriskie Point", recordPlayer, record1, "room6Door");
+		ObjectPuzzle puzzle = new ObjectPuzzle("Play a record on a record player", "Play 'Crumbling Land'", "Zabriskie Point sountrack", recordPlayer, record1, "room6Door");
 		room6.setPuzzle(puzzle);
 		
 		// Room 7
-		Item butcherKnife = new Item("butcher knife");
-		butcherKnife.setWeight(1.2);
+		Item butcherKnife = new Item("butcher knife", 1.2);
 		butcherKnife.setDescription("This butcher knife is used for cutting.");
 		
-		room7.addItem("butcher knife", butcherKnife);
-		
-		Item blackKey = new Item("black key");
-		blackKey.setWeight(0.1);
+		Item blackKey = new Item("black key", 0.1);
 		blackKey.setDescription("This small black key seems to be able to unlock something...");
 		
-		room7.addItem("black key", blackKey);
+		Item meat = new Item("meat", 1.0);
+		meat.setDescription("Could be used to eat or feed something?");
 		
-		Item lambHeart = new Item("lamb heart");
-		lambHeart.setWeight(2.0);
-		lambHeart.setDescription("This is a lamb heart.");
+		CompoundItem lambHeart = new CompoundItem("lamb heart", 2.0, true, "butcher knife");
+		lambHeart.setDescription("A lamb heart; suspiciously heavy.");
+		lambHeart.getInventory().addItem("black key", blackKey);
+		lambHeart.getInventory().addItem("meat", meat);
 		
-		room7.addItem("lamb heart", lambHeart);
-		
-		Item note7 = new Item("note");
-		note7.setWeight(0.1);
+		Item note7 = new Item("note", 0.1);
 		note7.setReadable(true);
 		note7.setDescription("That lamb heart looks like it has something in it...");
 		
-		room7.addItem("note", note7);
-		
 		RoomObject table7 = new RoomObject("Table", "A table that can hold things!", "east", true, true, false);
+		table7.setCanHoldItems(true);
+		table7.getInventory().addItem("butcher knife", butcherKnife);
+		table7.getInventory().addItem("lamb heart", lambHeart);
+		table7.getInventory().addItem("note", note7);
 		room7.addObject("table", table7);
 		
 		UnlockableObject door7 = new UnlockableObject("door", "Probably leads to another room...", "north", true, "black key");
 		door7.setLocked(true);
 		room7.addObject("door", door7);
+		
+		room7.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "The key may be hidden somewhere.", false, ""));
 		
 		// Room 8
 		Item bloodVial = new Item("blood vial");

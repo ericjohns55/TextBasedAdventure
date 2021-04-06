@@ -112,7 +112,7 @@ public class Room {
 	}
 	
 	public Item getItem(String identifier) {
-		if (contains(identifier)) {
+		if (hasItem(identifier)) {
 			return items.get(identifier);
 		}  else {
 			return null;
@@ -120,13 +120,13 @@ public class Room {
 	}
 	
 	public void removeItem(String identifier) {
-		if (contains(identifier)) {
+		if (hasItem(identifier)) {
 			items.remove(identifier);
 		}
 	}
 	
 	// This is seeing if the item is in the room
-	public boolean contains(String identifier) {
+	public boolean hasItem(String identifier) {
 		// See if the "identifier" coming in is present in the items map
 		return items.containsKey(identifier);
 		

@@ -2,11 +2,13 @@ package input;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import actor.Player;
 import game.Game;
+import items.CompoundItem;
 import items.Inventory;
 import items.Item;
 import map.PlayableObject;
@@ -18,7 +20,7 @@ import object.Puzzle;
 
 public class Command {
 	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
-	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "place", "drop", "examine", "look", "push", "play"));
+//	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "place", "drop", "examine", "look", "push", "play"));
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
@@ -55,33 +57,34 @@ public class Command {
 		
 		if (breakdown.size() > 1) {
 			verb = breakdown.get(0);
-			noun = breakdown.get(breakdown.size() - 1); 
 			
 			// account for items with names multiple words long
 			// also account for locations
-			if (LOCATION_COMMANDS.contains(verb)) {
-				String fullNoun = "";
-				String fullLocation = "";
-				
-				boolean addLocation = false;
+//			if (LOCATION_COMMANDS.contains(verb)) {
+//				the following block of code was in here for some reason, not quite sure why	
+//			}
+//			
+			String fullNoun = "";
+			String fullLocation = "";
+			
+			boolean addLocation = false;
 
-				for (int i = 1; i < breakdown.size(); i++) {					
-					if (PREPOSITIONS.contains(breakdown.get(i))) {
-						addLocation = true;
+			for (int i = 1; i < breakdown.size(); i++) {					
+				if (PREPOSITIONS.contains(breakdown.get(i))) {
+					addLocation = true;
+				} else {
+					if (addLocation) {
+						fullLocation += breakdown.get(i) + " ";
 					} else {
-						if (addLocation) {
-							fullLocation += breakdown.get(i) + " ";
-						} else {
-							fullNoun += breakdown.get(i) + " ";
-						}
+						fullNoun += breakdown.get(i) + " ";
 					}
 				}
-				
-				noun = fullNoun.trim();
-				
-				if (fullLocation != "") {
-					location = fullLocation.trim();
-				}
+			}
+			
+			noun = fullNoun.trim();
+			
+			if (fullLocation != "") {
+				location = fullLocation.trim();
 			}
 		} else if (breakdown.size() == 1) {
 			verb = breakdown.get(0);
@@ -106,7 +109,7 @@ public class Command {
 						if (noun == null || noun == "" || noun.equals("room")) {
 							output = room.getDescription();
 						} else {
-							if (room.contains(noun)) {
+							if (room.hasItem(noun)) {
 								output = room.getItem(noun).getDescription();
 							} else if (inventory.contains(noun)) {
 								output = inventory.getItem(noun).getDescription();
@@ -145,13 +148,15 @@ public class Command {
 							output = inventory.openInventory();
 						} else if (noun.equals("objects")) {
 							output = room.listObjects();
+						} else if (room.hasObject(noun)) {
+							output = room.getObject(noun).getInventory().listItems();
 						}
 						
 						break;
 					case "grab":
 					case "take":
 						if (location == null || location.equals("room") || location.equals("floor")) {
-							if (room.contains(noun)) {
+							if (room.hasItem(noun)) {
 								Item toGrab = room.getItem(noun);
 								
 								if (toGrab != null) {
@@ -433,6 +438,74 @@ public class Command {
 							}
 						} else {
 							output = "Not sure where you want me to play that...";
+						}
+						
+						break;
+					case "cut":
+						if (location != null) {
+							if (room.hasObject(location)) {
+								RoomObject object = room.getObject(location);
+								
+								if (object.getInventory().contains(noun)) {
+									if (object.getInventory().getItem(noun) instanceof CompoundItem) {
+										CompoundItem item = (CompoundItem) object.getInventory().getItem(noun);
+										
+										if (item.isBreakable()) {
+											if (inventory.contains(item.getBreakIdentifier())) {
+												HashMap<String, Item> items = item.getItems();
+												
+												for (String identifier : items.keySet()) {
+													object.getInventory().addItem(identifier, items.get(identifier));
+													System.out.println("Adding " + identifier);
+												}
+												
+												object.getInventory().removeItem(noun);
+												item.getInventory().emptyInventory();
+												
+												output = "You break apart the " + noun + " and dumb the contents on the " + location;
+											} else {
+												output = "You do not possess the needed item to cut this.";
+											}
+										} else {
+											output = "You cannot cut this item.";
+										}
+									} else {
+										output = "Cannot cut this item";
+									}
+								} else {
+									output = "That " + location + " does not countain a " + noun;
+								}
+							} else {
+								output = "That location does not exist.";
+							}
+						} else {
+							if (room.hasItem(noun)) {
+								if (room.getItem(noun) instanceof CompoundItem) {
+									CompoundItem item = (CompoundItem) room.getItem(noun);
+									
+									if (item.isBreakable()) {
+										if (inventory.contains(item.getBreakIdentifier())) {
+											HashMap<String, Item> items = item.getItems();
+											
+											for (String identifier : items.keySet()) {
+												room.addItem(identifier, items.get(identifier));
+												System.out.println("Adding " + identifier);
+											}
+											
+											room.removeItem(noun);
+											item.getInventory().emptyInventory();
+											
+											output = "You break apart the " + noun + " and dumb the contents on the floor.";
+										} else {
+											output = "You do not possess the needed item to cut this.";
+										}
+									} else {
+										output = "You cannot cut this item.";
+									}
+								}
+							} else {
+								output = "The " + noun + " item does not exist.";
+							}
 						}
 						
 						break;
