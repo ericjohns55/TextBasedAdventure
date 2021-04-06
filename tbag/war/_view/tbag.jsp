@@ -47,7 +47,7 @@
 				float: center;
 			}
 			
-			#story {
+			#storyText {
 				background-color: #101010;
 				color: green;
 			}
@@ -66,13 +66,19 @@
 		</style>
 		
 		<script type="text/javascript">
-			function refocus() {
-				document.getElementById("userInput").focus();
+			function autoScroll() {
+    			var textarea = document.getElementById("storyText");
+    			if(textarea.selectionStart == textarea.selectionEnd) {
+    				 textarea.scrollTop = textarea.scrollHeight;
+ 				 }
+    			
 			}
 		</script>
+		
+		
 	</head>
 
-	<body>
+	<body  onload="autoScroll()">
 		<form action="${pageContext.servletContext.contextPath}/tbag" method="post">			
 			<center>
 				<table>
@@ -92,14 +98,13 @@
 						</td>
 					</tr>
 				</table>
-				
 				<table>		
 					<tr>
-						<td><textarea readonly id="story" name="story" rows="16" cols="108">${story}</textarea></td>
+						<td><textarea readonly id="storyText" name="story" rows="16" cols="108">${story}</textarea></td>
 					</tr>			
 					<tr>
-						<td><input id="text" type="text" name="userInput" size="140" value="${userInput}" onsubmit="refocus()"/></td>
-					</tr>
+						<td><input id="text" type="text" name="userInput" size="140" value="${userInput}" autofocus/></td>
+					</tr>	
 				</table>
 				
 				<table>

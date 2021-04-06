@@ -8,8 +8,10 @@ public class Item {
 	private boolean canBePickedUp;
 	private boolean canBeConsumed; 
 	private boolean inInventory;
+	private boolean isEquipped;
+	private boolean equippable;
 	
-	public Item(String name, double weight) {
+	public Item(String name, double weight, boolean equippable) {
 		this.name = name;
 		this.weight = weight;
 		this.isInteractable = false;
@@ -17,10 +19,12 @@ public class Item {
 		this.canBeConsumed = false; 
 		this.inInventory = false;
 		this.description = "";
+		this.equippable = equippable;
+		this.isEquipped = false;
 	}
 	
 	public Item(String name) {
-		this(name, 0);
+		this(name, 0, false);
 	}
 	
 	public Item() {
@@ -94,5 +98,21 @@ public class Item {
 				&& compareItem.getWeight() == getWeight()
 				&& compareItem.isInteractable() == isInteractable()
 				&& compareItem.canBePickedUp() == canBePickedUp();
+	}
+
+	public boolean isEquipped() {
+		return isEquipped;
+	}
+
+	public void setEquipped(boolean isEquipped) {
+		this.isEquipped = isEquipped;
+	}
+
+	public boolean isEquippable() {
+		return equippable;
+	}
+
+	public void setEquippable(boolean equippable) {
+		this.equippable = equippable;
 	}
 }

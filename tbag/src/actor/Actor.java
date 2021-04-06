@@ -7,13 +7,14 @@ import map.Room;
 
 public class Actor {
 	private Inventory inventory;
+	private Inventory equippedItems;
 	private Game game;
 
 	private int roomID;
 
 	public Actor(Game game, int roomID) {
 		inventory = new Inventory();
-		
+		equippedItems = new Inventory();
 		this.roomID = roomID;
 		this.game = game;
 	}
@@ -37,8 +38,30 @@ public class Actor {
 		}
 	}
 	
+	public void equipItem(String identifier, Item toAdd) {
+		if (toAdd.inInventory() && toAdd.isEquippable()) {
+			inventory.removeItem(identifier);
+			equippedItems.addItem(identifier, toAdd);
+		}
+	}
+	
+	public void unEquipItem(String identifier, Item toRemove) {
+		if (toRemove.isEquipped() && inventory.canAddItem(toRemove)) {
+			equippedItems.removeItem(identifier);
+			inventory.addItem(identifier, toRemove);
+		}
+		else if (toRemove.isEquipped() && !inventory.canAddItem(toRemove)) {
+			equippedItems.removeItem(identifier);
+			Actor.this.dropItem(identifier);
+		}
+	}
+	
 	public Inventory getInventory() {
 		return inventory;
+	}
+	
+	public Inventory getEquippedItems() {
+		return equippedItems;
 	}
 	
 	public void setRoomID(int roomID) {

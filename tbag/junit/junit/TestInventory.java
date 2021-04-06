@@ -67,8 +67,8 @@ public class TestInventory {
 	public void testCurrentWeight() {
 		inventory.emptyInventory();
 		
-		Item item1 = new Item("item1", 25);
-		Item item2 = new Item("item2", 12);
+		Item item1 = new Item("item1", 25, false);
+		Item item2 = new Item("item2", 12, false);
 
 		inventory.addItem("item1", item1);
 		inventory.addItem("item2", item2);
@@ -80,8 +80,8 @@ public class TestInventory {
 	public void testInventorySize() {
 		inventory.emptyInventory();
 		
-		Item item1 = new Item("item1", 25);
-		Item item2 = new Item("item2", 12);
+		Item item1 = new Item("item1", 25, false);
+		Item item2 = new Item("item2", 12, false);
 
 		inventory.addItem("item1", item1);
 		inventory.addItem("item2", item2);
