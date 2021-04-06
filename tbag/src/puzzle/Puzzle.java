@@ -1,4 +1,4 @@
-package object;
+package puzzle;
 
 public class Puzzle {
 	private String description;

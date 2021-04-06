@@ -3,7 +3,7 @@ package map;
 import java.util.HashMap;
 
 import items.Item;
-import object.Puzzle;
+import puzzle.Puzzle;
 
 public class Room {
 	

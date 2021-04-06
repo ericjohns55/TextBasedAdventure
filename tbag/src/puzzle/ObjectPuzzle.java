@@ -1,4 +1,4 @@
-package object;
+package puzzle;
 
 import items.Item;
 import map.RoomObject;

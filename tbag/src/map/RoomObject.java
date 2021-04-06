@@ -7,6 +7,8 @@ public class RoomObject {
 	private String description;
 	private String direction;
 	
+	private String covered;
+	
 	private boolean unlockable;
 	private boolean locked;
 	private boolean isInteractable;
@@ -14,6 +16,7 @@ public class RoomObject {
 	private boolean blockingExit;
 	private boolean moveable;
 	private boolean isObstacle;
+	private boolean coverable;
 
 	private Inventory inventory;
 	
@@ -31,6 +34,9 @@ public class RoomObject {
 		this.isInteractable = false;
 		this.canHoldItems = false;
 		this.locked = false;
+		this.coverable = false;
+		
+		this.covered = "";
 		
 		this.inventory = new Inventory();
 	}
@@ -123,5 +129,25 @@ public class RoomObject {
 
 	public void setObstacle(boolean isObstacle) {
 		this.isObstacle = isObstacle;
+	}
+	
+	public boolean isCoverable() {
+		return coverable;
+	}
+	
+	public void setCoverable(boolean coverable) {
+		this.coverable = coverable;
+	}
+	
+	public void cover(String toCover) {
+		covered = toCover;
+	}
+	
+	public String getCovering() {
+		return covered;
+	}
+	
+	public boolean isCovered() {
+		return covered != "";
 	}
 }

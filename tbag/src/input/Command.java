@@ -15,8 +15,8 @@ import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
-import object.ObjectPuzzle;
-import object.Puzzle;
+import puzzle.ObjectPuzzle;
+import puzzle.Puzzle;
 
 public class Command {
 	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
@@ -462,7 +462,7 @@ public class Command {
 												object.getInventory().removeItem(noun);
 												item.getInventory().emptyInventory();
 												
-												output = "You break apart the " + noun + " and dumb the contents on the " + location;
+												output = "You break apart the " + noun + " and dump the contents on the " + location;
 											} else {
 												output = "You do not possess the needed item to cut this.";
 											}
@@ -509,6 +509,52 @@ public class Command {
 						}
 						
 						break;
+					case "pour":
+						if (location != null) {
+							if (room.hasObject(location)) {
+								if (inventory.contains(noun)) {
+									RoomObject object = room.getObject(location);
+									Item item = inventory.getItem(noun);
+									
+									if (item.isPourable()) {
+										if (object.isCoverable()) {
+											if (!object.isCovered()) {
+												object.cover(noun);
+												
+												output = "You poured the " + noun + " on the " + location;
+												
+												if (item.consumeOnUse()) {
+													inventory.removeItem(noun);
+												}
+												
+												if (puzzle.getSolution().equals(object.getCovering())) {
+													RoomObject solutionObject = room.getObject(puzzle.getUnlockObstacle());
+													
+													if (solutionObject.isLocked()) {
+														solutionObject.setLocked(false);
+														output += "\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!";
+													}
+												}
+											} else {
+												output = "This object is already covered.";
+											}
+										} else {
+											output = "Cannot pour " + noun + " on " + location;
+										}
+									} else {
+										output = "You cannot pour a " + noun;
+									}
+								} else {
+									output = "You do not possess a " + noun;
+								}
+							} else {
+								output = "A " + location + " does not exist in your room.";
+							}
+						} else {
+							output = "I am not sure where to pour that.";
+						}
+						
+						break;
 					case "hint":
 						output = room.getPuzzle().getHint();
 						break;
@@ -516,6 +562,8 @@ public class Command {
 			} else {
 				output = "Missing argument for command \"" + verb + "\"";
 			}
+		} else {
+			output = "Unknown command.";
 		}
 		
 		return output != null ? output.trim() : invalidCommand;

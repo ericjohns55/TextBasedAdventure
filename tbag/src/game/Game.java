@@ -6,8 +6,8 @@ import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
-import object.ObjectPuzzle;
-import object.Puzzle;
+import puzzle.ObjectPuzzle;
+import puzzle.Puzzle;
 
 import java.util.HashMap;
 
@@ -21,7 +21,7 @@ public class Game {
 
 	public Game() {
 		this.moves = 0;
-		this.player = new Player(this, 7);
+		this.player = new Player(this, 1);
 		this.rooms = new HashMap<Integer, Room>();
 
 		createRooms();
@@ -51,9 +51,9 @@ public class Game {
 				+ " table lies a record player, and a complete set of records for Pink Floyd's songs "
 				+ "and on the wall in spraypaint it reads \"Wining, dining, shining king\" ", 6);
 		Room room7 = new Room("You walk into a dining room area and in front of the head seat of the table sits a lamb heart on a plate with "
-				+ "a butcher knife and a note next to it.", 7);
-		Room room8 = new Room("You move into a living room with a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
-		
+				+ "a butcher knife and a note next to it. There is a door on the northern wall of the room.", 7);
+		Room room8 = new Room("You move into a living room with a westward door and a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
+		Room room9 = new Room("Last current room", 9);
 		
 	/*	Room room5 = new Room("You enter into a cold room with a wooden table in the center. On the"
 				+ " table lies a record player, and a complete set of records for Pink Floyd's songs next to a doll "
@@ -82,7 +82,7 @@ public class Game {
 		room7.addExit("north", room8);
 		
 		room8.addExit("south", room7);
-	//	room8.addExit("west", room9);
+		room8.addExit("west", room9);
 		
 
 
@@ -273,21 +273,27 @@ public class Game {
 		room7.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "The key may be hidden somewhere.", false, ""));
 		
 		// Room 8
-		Item bloodVial = new Item("blood vial");
-		bloodVial.setWeight(0.2);
+		Item bloodVial = new Item("blood vial", 0.2);
+		bloodVial.setPourable(true);
 		bloodVial.setDescription("This vial contains blood.");
 		
 		room8.addItem("blood vial", bloodVial);
 		
-		Item note8 = new Item("note");
-		note8.setWeight(0.1);
+		Item note8 = new Item("note", 0.1);
 		note8.setReadable(true);
 		note8.setDescription("You may want to pour that vial on something.");
 		
 		room8.addItem("note", note8);
 		
-		RoomObject table8 = new RoomObject("Table", "A table that can hold things!", "north", true, true, false);
-		room8.addObject("table", table8);
+		RoomObject pentagram = new RoomObject("pentagram", "Altar to Satan", "north", true, true, false);
+		pentagram.setCoverable(true);
+		room8.addObject("pentagram", pentagram);
+		
+		UnlockableObject room8Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
+		room8Door.setLocked(true);
+		room8.addObject("room8Door", room8Door);
+
+		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
 		
 		rooms.put(1, room1);
 		rooms.put(2, room2);
@@ -297,8 +303,7 @@ public class Game {
 		rooms.put(6, room6);
 		rooms.put(7, room7);
 		rooms.put(8, room8);
-
-		
+		rooms.put(9, room9);		
 	}
 	
 	public void addRoom(Room room) {
