@@ -47,9 +47,9 @@ public class TestItem {
 	}
 	
 	@Test
-	public void testConsumeable() {
-		item.setConsumable(true);
-		assertTrue(item.isConsumable());
+	public void testPourable() {
+		item.setPourable(true);
+		assertTrue(item.isPourable());
 	}
 	
 	@Test

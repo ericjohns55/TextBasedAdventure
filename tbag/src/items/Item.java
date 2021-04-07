@@ -6,19 +6,25 @@ public class Item {
 	private double weight;
 	private boolean isInteractable;
 	private boolean canBePickedUp;
-	private boolean canBeConsumed; 
+	private boolean consumeOnUse; 
 	private boolean inInventory;
+	private boolean isEquipped;
+	private boolean equippable;
 	private boolean readable;
+	private boolean pourable;
 	
 	public Item(String name, double weight) {
 		this.name = name;
 		this.weight = weight;
 		this.isInteractable = false;
 		this.canBePickedUp = true;
-		this.canBeConsumed = false; 
+		this.consumeOnUse = false; 
 		this.inInventory = false;
 		this.description = "";
+		this.equippable = false;
+		this.isEquipped = false;
 		this.readable = false;
+		this.pourable = false;
 	}
 	
 	public Item(String name) {
@@ -69,12 +75,12 @@ public class Item {
 		this.isInteractable = isInteractable;
 	}
 
-	public boolean isConsumable() {
-		return canBeConsumed;
+	public boolean consumeOnUse() {
+		return consumeOnUse;
 	}
 	
-	public void setConsumable(boolean canBeConsumed) {
-		this.canBeConsumed = canBeConsumed;
+	public void setConsumeOnuse(boolean consumeOnUse) {
+		this.consumeOnUse = consumeOnUse;
 	}
 	
 	public boolean canBePickedUp() {
@@ -93,6 +99,14 @@ public class Item {
 		this.inInventory = inInventory;
 	}
 	
+	public boolean isPourable() {
+		return pourable;
+	}
+	
+	public void setPourable(boolean pourable) {
+		this.pourable = pourable;
+	}
+	
 	@Override
 	public boolean equals(Object compare) {
 		if (!(compare instanceof Item))
@@ -104,5 +118,21 @@ public class Item {
 				&& compareItem.getWeight() == getWeight()
 				&& compareItem.isInteractable() == isInteractable()
 				&& compareItem.canBePickedUp() == canBePickedUp();
+	}
+
+	public boolean isEquipped() {
+		return isEquipped;
+	}
+
+	public void setEquipped(boolean isEquipped) {
+		this.isEquipped = isEquipped;
+	}
+
+	public boolean isEquippable() {
+		return equippable;
+	}
+
+	public void setEquippable(boolean equippable) {
+		this.equippable = equippable;
 	}
 }
