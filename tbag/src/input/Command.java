@@ -2,23 +2,29 @@ package input;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import actor.Player;
 import game.Game;
+import items.CompoundItem;
 import items.Inventory;
 import items.Item;
+import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
-import object.Puzzle;
+import puzzle.ObjectPuzzle;
+import puzzle.Puzzle;
 
 public class Command {
 	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
-	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "drop", "examine", "look", "push"));
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
+	
+	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
+			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint"));
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -44,38 +50,37 @@ public class Command {
 		for (String word : individualWords) {
 			if (!ARTICLES.contains(word.toLowerCase())) {
 				breakdown.add(word.toLowerCase());
-			} 
+			} else {	// MUSIC EDGE CASE RIGHT HERE !!!
+				if (word.toLowerCase().equals("a") && breakdown.get(0).equals("play")) {
+					breakdown.add(word.toLowerCase());
+				}
+			}
 		}
 		
 		if (breakdown.size() > 1) {
 			verb = breakdown.get(0);
-			noun = breakdown.get(breakdown.size() - 1); 
 			
-			// account for items with names multiple words long
-			// also account for locations
-			if (LOCATION_COMMANDS.contains(verb)) {
-				String fullNoun = "";
-				String fullLocation = "";
-				
-				boolean addLocation = false;
+			String fullNoun = "";
+			String fullLocation = "";
+			
+			boolean addLocation = false;
 
-				for (int i = 1; i < breakdown.size(); i++) {					
-					if (PREPOSITIONS.contains(breakdown.get(i))) {
-						addLocation = true;
+			for (int i = 1; i < breakdown.size(); i++) {					
+				if (PREPOSITIONS.contains(breakdown.get(i))) {
+					addLocation = true;
+				} else {
+					if (addLocation) {
+						fullLocation += breakdown.get(i) + " ";
 					} else {
-						if (addLocation) {
-							fullLocation += breakdown.get(i) + " ";
-						} else {
-							fullNoun += breakdown.get(i) + " ";
-						}
+						fullNoun += breakdown.get(i) + " ";
 					}
 				}
-				
-				noun = fullNoun.trim();
-				
-				if (fullLocation != "") {
-					location = fullLocation.trim();
-				}
+			}
+			
+			noun = fullNoun.trim();
+			
+			if (fullLocation != "") {
+				location = fullLocation.trim();
 			}
 		} else if (breakdown.size() == 1) {
 			verb = breakdown.get(0);
@@ -100,7 +105,7 @@ public class Command {
 						if (noun == null || noun == "" || noun.equals("room")) {
 							output = room.getDescription();
 						} else {
-							if (room.contains(noun)) {
+							if (room.hasItem(noun)) {
 								output = room.getItem(noun).getDescription();
 							} else if (inventory.contains(noun)) {
 								output = inventory.getItem(noun).getDescription();
@@ -139,13 +144,15 @@ public class Command {
 							output = inventory.openInventory();
 						} else if (noun.equals("objects")) {
 							output = room.listObjects();
+						} else if (room.hasObject(noun)) {
+							output = room.getObject(noun).getInventory().listItems();
 						}
 						
 						break;
 					case "grab":
 					case "take":
 						if (location == null || location.equals("room") || location.equals("floor")) {
-							if (room.contains(noun)) {
+							if (room.hasItem(noun)) {
 								Item toGrab = room.getItem(noun);
 								
 								if (toGrab != null) {
@@ -153,7 +160,7 @@ public class Command {
 									inventory.addItem(noun, toGrab);
 									room.removeItem(noun);
 									
-									output = "You picked up " + noun;
+									output = "You picked up " + noun + ".";
 								} else {
 									output = "This item does not exist in your current room.";
 								}
@@ -175,7 +182,7 @@ public class Command {
 											inventory.addItem(noun, toGrab);
 											toGrab.setInInventory(true);
 											
-											output = "You picked up " + noun;
+											output = "You picked up " + noun + ".";
 										} else {
 											output = "This object does not have that item.";
 										}
@@ -191,6 +198,7 @@ public class Command {
 						}
 						
 						break;
+					case "place":
 					case "drop":
 						if (inventory.contains(noun)) {
 							if (location == null || location.equals("room") || location.equals("floor")) {
@@ -213,8 +221,7 @@ public class Command {
 											double weightSolution = Double.parseDouble(puzzle.getSolution());
 											
 											if (objectInventory.getCurrentWeight() >= weightSolution) {
-												// all objects thatll be unlockable through weight sensors will be named weightObstacle (and will typically unlock)
-												RoomObject obstacle = room.getObject("weightObstacle");	
+												RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
 												if (obstacle.isLocked()) {
 													obstacle.setLocked(false);
 													output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.";
@@ -300,10 +307,10 @@ public class Command {
 											output = "You do not have the required item to unlock this " + unlockableObject.getName() + ".";
 										}
 									} else {
-										output = "Not implemented";
+										output = "Not implemented.";
 									}
 								} else {
-									output = "This is already unlocked";
+									output = "This is already unlocked.";
 								}
 							} else {
 								output = "You cannot unlock that!";
@@ -320,7 +327,7 @@ public class Command {
 								if (puzzle.getSolution().equals(noun)) {
 									puzzle.setSolved(true);
 									
-									RoomObject obstacle = room.getObject("writtenObstacle");
+									RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());
 									
 									if (obstacle.isLocked()) {
 										obstacle.setLocked(false);
@@ -347,7 +354,7 @@ public class Command {
 								output = "Cannot read this item.";
 							}
 						} else {
-							output = "Could not find a " + noun;
+							output = "Could not find a " + noun + ".";
 						}
 						
 						break;
@@ -366,10 +373,180 @@ public class Command {
 									output = "Moved " + object.getName() + " out of the way.";
 								}
 							} else {
-								output = "Cannot push a " + object.getName();
+								output = "Cannot push a " + object.getName() + ".";
 							}
 						} else {
 							output = "Cannot find " + noun + " to move.";
+						}
+						
+						break;
+					case "play":
+						if (location != null) {
+							if (room.hasObject(location)) {
+								if (room.getObject(location) instanceof PlayableObject) {
+									PlayableObject object = (PlayableObject) room.getObject(location);
+									
+									output = "You played " + noun + " on the " + location + ".";
+									
+									boolean unlock = false;
+									
+									if (object.isInstrument()) {
+										if (object.playNote(noun)) {
+											if (object.playedPassage()) {
+												unlock = true;
+											}
+										} else {
+											output = "You entered an invalid note.";
+										}
+									} else {
+										if (inventory.contains(noun)) {
+											Item toDrop = inventory.removeItem(noun);
+											object.getInventory().addItem(noun, toDrop);
+											
+											output = "Played " + noun + " on the " + location + ".";
+											
+											if (puzzle instanceof ObjectPuzzle) {
+												ObjectPuzzle obstaclePuzzle = (ObjectPuzzle) puzzle;
+												
+												if (obstaclePuzzle.isSolved()) {
+													unlock = true;
+												}
+											}
+										} else {
+											output = "You do not have that item!";
+										}
+									}
+									
+									if (unlock) {
+										RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
+										
+										if (toUnlock.isLocked()) {
+											toUnlock.setLocked(false);
+											
+											output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.";
+										}
+									}
+								} else {
+									output = "You cannot play anything on that!";
+								}
+							} else {
+								output = "Could not find a " + location + ".";
+							}
+						} else {
+							output = "Not sure where you want me to play that...";
+						}
+						
+						break;
+					case "cut":
+						if (location != null) {
+							if (room.hasObject(location)) {
+								RoomObject object = room.getObject(location);
+								
+								if (object.getInventory().contains(noun)) {
+									if (object.getInventory().getItem(noun) instanceof CompoundItem) {
+										CompoundItem item = (CompoundItem) object.getInventory().getItem(noun);
+										
+										if (item.isBreakable()) {
+											if (inventory.contains(item.getBreakIdentifier())) {
+												HashMap<String, Item> items = item.getItems();
+												
+												for (String identifier : items.keySet()) {
+													object.getInventory().addItem(identifier, items.get(identifier));
+													System.out.println("Adding " + identifier);
+												}
+												
+												object.getInventory().removeItem(noun);
+												item.getInventory().emptyInventory();
+												
+												output = "You break apart the " + noun + " and dump the contents on the " + location + ".";
+											} else {
+												output = "You do not possess the needed item to cut this.";
+											}
+										} else {
+											output = "You cannot cut this item.";
+										}
+									} else {
+										output = "Cannot cut this item.";
+									}
+								} else {
+									output = "That " + location + " does not countain a " + noun + ".";
+								}
+							} else {
+								output = "That location does not exist.";
+							}
+						} else {
+							if (room.hasItem(noun)) {
+								if (room.getItem(noun) instanceof CompoundItem) {
+									CompoundItem item = (CompoundItem) room.getItem(noun);
+									
+									if (item.isBreakable()) {
+										if (inventory.contains(item.getBreakIdentifier())) {
+											HashMap<String, Item> items = item.getItems();
+											
+											for (String identifier : items.keySet()) {
+												room.addItem(identifier, items.get(identifier));
+											}
+											
+											room.removeItem(noun);
+											item.getInventory().emptyInventory();
+											
+											output = "You break apart the " + noun + " and dumb the contents on the floor.";
+										} else {
+											output = "You do not possess the needed item to cut this.";
+										}
+									} else {
+										output = "You cannot cut this item.";
+									}
+								}
+							} else {
+								output = "The " + noun + " item does not exist.";
+							}
+						}
+						
+						break;
+					case "pour":
+						if (location != null) {
+							if (room.hasObject(location)) {
+								if (inventory.contains(noun)) {
+									RoomObject object = room.getObject(location);
+									Item item = inventory.getItem(noun);
+									
+									if (item.isPourable()) {
+										if (object.isCoverable()) {
+											if (!object.isCovered()) {
+												object.cover(noun);
+												
+												output = "You poured the " + noun + " on the " + location + ".";
+												
+												if (item.consumeOnUse()) {
+													inventory.removeItem(noun);
+												}
+												
+												if (puzzle.getSolution().equals(object.getCovering())) {
+													RoomObject solutionObject = room.getObject(puzzle.getUnlockObstacle());
+													
+													if (solutionObject.isLocked()) {
+														solutionObject.setLocked(false);
+														output += "\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!";
+													}
+												}
+											} else {
+												output = "This object is already covered.";
+											}
+										} else {
+											output = "Cannot pour " + noun + " on " + location + ".";
+										}
+									} else {
+										output = "You cannot pour a " + noun + ".";
+									}
+								} else {
+									output = "You do not possess a " + noun + ".";
+								}
+							} else {
+								output = "A " + location + " does not exist in your room.";
+							}
+						} else {
+							output = "I am not sure where to pour that.";
 						}
 						
 						break;
@@ -377,7 +554,15 @@ public class Command {
 						output = room.getPuzzle().getHint();
 						break;
 				}
+			} else {
+				if (VALID_COMMANDS.contains(verb)) {
+					output = "Missing argument for command \"" + verb + "\"";
+				} else {
+					output = "Unknown command.";
+				}
 			}
+		} else {
+			output = "Unknown command.";
 		}
 		
 		return output != null ? output.trim() : invalidCommand;

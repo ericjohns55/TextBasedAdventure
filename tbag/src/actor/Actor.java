@@ -17,26 +17,7 @@ public class Actor {
 		this.roomID = roomID;
 		this.game = game;
 	}
-	
-	public void grabItem(String identifier, Item toAdd) {
-		inventory.addItem(identifier, toAdd);
-	}
-	
-	public boolean dropItem(String identifier) {
-		if (inventory.contains(identifier)) {
-			Item drop = inventory.removeItem(identifier);
-			
-			if (drop != null) {
-				getRoom().addItem(identifier, drop);
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
-	
+		
 	public Inventory getInventory() {
 		return inventory;
 	}

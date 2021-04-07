@@ -29,7 +29,7 @@ public class TestRoom {
 	public void testItemsInRoom() {
 		Item testItem = new Item();
 		room.addItem("sandwich1", testItem);
-		assertTrue(room.contains("sandwich1"));
+		assertTrue(room.hasItem("sandwich1"));
 	}
 	
 	@Test
@@ -51,7 +51,7 @@ public class TestRoom {
 		Item testItem = new Item();
 		room.addItem("sandwich1", testItem);
 		room.removeItem("sandwich1");
-		assertFalse(room.contains("sandwich1"));
+		assertFalse(room.hasItem("sandwich1"));
 	}
 	
 	// Need to test to make sure it has a puzzle too
