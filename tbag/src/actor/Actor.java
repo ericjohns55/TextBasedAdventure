@@ -33,7 +33,7 @@ public class Actor {
 		}
 		else if (toRemove.isEquipped() && !inventory.canAddItem(toRemove)) {
 			equippedItems.removeItem(identifier);
-			Actor.this.dropItem(identifier);
+			game.getRoom(roomID).addItem(identifier, toRemove);
 		}
 	}
 	

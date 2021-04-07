@@ -28,7 +28,7 @@ public class Item {
 	}
 	
 	public Item(String name) {
-		this(name, 0, false);
+		this(name, 0);
 	}
 	
 	public Item() {
