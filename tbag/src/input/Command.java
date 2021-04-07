@@ -20,9 +20,11 @@ import puzzle.Puzzle;
 
 public class Command {
 	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
-//	private static Set<String> LOCATION_COMMANDS = new HashSet<>(Arrays.asList("grab", "take", "place", "drop", "examine", "look", "push", "play"));
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
+	
+	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
+			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint"));
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -58,12 +60,6 @@ public class Command {
 		if (breakdown.size() > 1) {
 			verb = breakdown.get(0);
 			
-			// account for items with names multiple words long
-			// also account for locations
-//			if (LOCATION_COMMANDS.contains(verb)) {
-//				the following block of code was in here for some reason, not quite sure why	
-//			}
-//			
 			String fullNoun = "";
 			String fullLocation = "";
 			
@@ -559,7 +555,11 @@ public class Command {
 						break;
 				}
 			} else {
-				output = "Missing argument for command \"" + verb + "\"";
+				if (VALID_COMMANDS.contains(verb)) {
+					output = "Missing argument for command \"" + verb + "\"";
+				} else {
+					output = "Unknown command.";
+				}
 			}
 		} else {
 			output = "Unknown command.";
