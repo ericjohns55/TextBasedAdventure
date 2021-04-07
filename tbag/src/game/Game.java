@@ -128,7 +128,7 @@ public class Game {
 		note.setWeight(0.1);
 		note.setDescription("(8/2(2+2)) + 1000");
 		
-		chest.getInventory().addItem("note", note);
+		//chest.getInventory().addItem("note", note);
 		
 		room3.addObject("chest", chest);
 
