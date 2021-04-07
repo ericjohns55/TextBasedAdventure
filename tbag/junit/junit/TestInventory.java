@@ -32,8 +32,10 @@ public class TestInventory {
 		inventory.addItem("testItem1", newItem);
 		Item grabItem = inventory.getItem("testItem1");
 		grabItem.setCanBePickedUp(true);
+		
 		assertTrue(grabItem.equals(newItem));
-	}
+
+		}
 	
 	@Test
 	public void canAddItem() {

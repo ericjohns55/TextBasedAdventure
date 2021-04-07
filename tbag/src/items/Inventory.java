@@ -17,7 +17,7 @@ public class Inventory {
 	
 	public void addItem(String identifier, Item toAdd) {
 		if (canAddItem(toAdd)) {
-			items.put(identifier, toAdd);
+			items.put(identifier.toLowerCase(), toAdd);
 		}
 	}
 	
@@ -30,6 +30,7 @@ public class Inventory {
 	}
 	
 	public Item getItem(String identifier) {
+		identifier = identifier.toLowerCase();
 		return items.containsKey(identifier) ? items.get(identifier) : emptyItem;
 	}
 	
@@ -52,6 +53,7 @@ public class Inventory {
 	}
 	
 	public boolean contains(String identifier) {
+		identifier = identifier.toLowerCase();
 		return items.containsKey(identifier);
 	}
 	
@@ -71,7 +73,7 @@ public class Inventory {
             String item = key;
             double weight = items.get(key).getWeight();
 
-            inventory += item + " (" + weight + "lbs), ";
+            inventory += item + " (" + weight + "kgs), ";
         }		
 		
 		if (!items.isEmpty()) {
@@ -99,8 +101,25 @@ public class Inventory {
 		
 		return itemList;
 	}
+	
+	public String listItems(String noun) {
+		String itemList = "";
+		
+		for (String key : items.keySet()) {
+			itemList += key + ", ";
+		}
+		
+		if (!itemList.isEmpty()) {
+			itemList = "This " + noun + " has a " + itemList.substring(0, itemList.length() - 2);
+		} else {
+			itemList = "This " + noun + "does not contain any items.";
+		}
+		
+		return itemList;
+	}
 
 	public void consumeItem(String identifier){
+		identifier = identifier.toLowerCase();
 		if (items.containsKey(identifier)) {
 			items.remove(identifier);
 			//add in what it does later
@@ -108,5 +127,13 @@ public class Inventory {
 		else {
 			System.out.println("I don't got that in my bag.");
 		}
+	}
+	
+	public boolean contains(Item item) {
+		return items.values().contains(item);
+	}
+	
+	public HashMap<String, Item> getAllItems() {
+		return items;
 	}
 }
