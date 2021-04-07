@@ -164,7 +164,7 @@ public class Command {
 									inventory.addItem(noun, toGrab);
 									room.removeItem(noun);
 									
-									output = "You picked up " + noun;
+									output = "You picked up " + noun + ".";
 								} else {
 									output = "This item does not exist in your current room.";
 								}
@@ -186,7 +186,7 @@ public class Command {
 											inventory.addItem(noun, toGrab);
 											toGrab.setInInventory(true);
 											
-											output = "You picked up " + noun;
+											output = "You picked up " + noun + ".";
 										} else {
 											output = "This object does not have that item.";
 										}
@@ -311,10 +311,10 @@ public class Command {
 											output = "You do not have the required item to unlock this " + unlockableObject.getName() + ".";
 										}
 									} else {
-										output = "Not implemented";
+										output = "Not implemented.";
 									}
 								} else {
-									output = "This is already unlocked";
+									output = "This is already unlocked.";
 								}
 							} else {
 								output = "You cannot unlock that!";
@@ -358,7 +358,7 @@ public class Command {
 								output = "Cannot read this item.";
 							}
 						} else {
-							output = "Could not find a " + noun;
+							output = "Could not find a " + noun + ".";
 						}
 						
 						break;
@@ -377,7 +377,7 @@ public class Command {
 									output = "Moved " + object.getName() + " out of the way.";
 								}
 							} else {
-								output = "Cannot push a " + object.getName();
+								output = "Cannot push a " + object.getName() + ".";
 							}
 						} else {
 							output = "Cannot find " + noun + " to move.";
@@ -390,7 +390,7 @@ public class Command {
 								if (room.getObject(location) instanceof PlayableObject) {
 									PlayableObject object = (PlayableObject) room.getObject(location);
 									
-									output = "You played " + noun + " on the " + location;
+									output = "You played " + noun + " on the " + location + ".";
 									
 									boolean unlock = false;
 									
@@ -407,7 +407,7 @@ public class Command {
 											Item toDrop = inventory.removeItem(noun);
 											object.getInventory().addItem(noun, toDrop);
 											
-											output = "Played " + noun + " on the " + location;
+											output = "Played " + noun + " on the " + location + ".";
 											
 											if (puzzle instanceof ObjectPuzzle) {
 												ObjectPuzzle obstaclePuzzle = (ObjectPuzzle) puzzle;
@@ -434,7 +434,7 @@ public class Command {
 									output = "You cannot play anything on that!";
 								}
 							} else {
-								output = "Could not find a " + location;
+								output = "Could not find a " + location + ".";
 							}
 						} else {
 							output = "Not sure where you want me to play that...";
@@ -462,7 +462,7 @@ public class Command {
 												object.getInventory().removeItem(noun);
 												item.getInventory().emptyInventory();
 												
-												output = "You break apart the " + noun + " and dump the contents on the " + location;
+												output = "You break apart the " + noun + " and dump the contents on the " + location + ".";
 											} else {
 												output = "You do not possess the needed item to cut this.";
 											}
@@ -470,10 +470,10 @@ public class Command {
 											output = "You cannot cut this item.";
 										}
 									} else {
-										output = "Cannot cut this item";
+										output = "Cannot cut this item.";
 									}
 								} else {
-									output = "That " + location + " does not countain a " + noun;
+									output = "That " + location + " does not countain a " + noun + ".";
 								}
 							} else {
 								output = "That location does not exist.";
@@ -489,7 +489,6 @@ public class Command {
 											
 											for (String identifier : items.keySet()) {
 												room.addItem(identifier, items.get(identifier));
-												System.out.println("Adding " + identifier);
 											}
 											
 											room.removeItem(noun);
@@ -521,7 +520,7 @@ public class Command {
 											if (!object.isCovered()) {
 												object.cover(noun);
 												
-												output = "You poured the " + noun + " on the " + location;
+												output = "You poured the " + noun + " on the " + location + ".";
 												
 												if (item.consumeOnUse()) {
 													inventory.removeItem(noun);
@@ -539,13 +538,13 @@ public class Command {
 												output = "This object is already covered.";
 											}
 										} else {
-											output = "Cannot pour " + noun + " on " + location;
+											output = "Cannot pour " + noun + " on " + location + ".";
 										}
 									} else {
-										output = "You cannot pour a " + noun;
+										output = "You cannot pour a " + noun + ".";
 									}
 								} else {
-									output = "You do not possess a " + noun;
+									output = "You do not possess a " + noun + ".";
 								}
 							} else {
 								output = "A " + location + " does not exist in your room.";
