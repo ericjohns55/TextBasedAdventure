@@ -38,18 +38,18 @@ public class TBAGServlet extends HttpServlet {
 			game.resetMoves();
 		} else {
 			String text = req.getParameter("userInput");
+			String story = req.getParameter("story");
 			
 			if (text.length() != 0) {
-				String story = req.getParameter("story");
 
 				pastInputs += text + "\n";
 				story += game.runCommand(text);
 				
-				req.setAttribute("story", story + "\n");
-				req.setAttribute("pastInputs", pastInputs + "\n");
-				req.setAttribute("duration", req.getParameter("duration"));
-				
 			}
+			
+			req.setAttribute("story", story + "\n");
+			req.setAttribute("pastInputs", pastInputs + "\n");
+			req.setAttribute("duration", req.getParameter("duration"));
 		}
 		
 		req.setAttribute("moves", "Moves: " + game.getMoves());

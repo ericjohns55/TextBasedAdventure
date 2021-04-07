@@ -2,6 +2,9 @@ package junit;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import items.Item;
+
 import static org.junit.Assert.*;
 
 import map.RoomObject;
@@ -72,64 +75,64 @@ public class TestRoomObject {
   
   
   
-  // michaelfeldman's tests
-  // Testing the getters
+    // michaelfeldman's tests
+    // Testing the getters
 	@Test
 	public void testGetName() {
-		assertEquals("name", roomObject.getName());
+		assertEquals("name", object.getName());
 	}
 	
 	@Test
 	public void testGetDescription() {
-		assertEquals("description", roomObject.getDescription());
+		assertEquals("desc", object.getDescription());
 	}
 	
 	@Test
 	public void testGetDirection() {
-		assertEquals("direction", roomObject.getDirection());
+		assertEquals("dir", object.getDirection());
 	}
 	
 	@Test
 	public void testIsObstacle() {
-		assertEquals(true, roomObject.isObstacle());
+		assertEquals(false, object.isObstacle());
 	}
 	
 	@Test
 	public void testIsBlockingExit() {
-		assertEquals(true, roomObject.isBlockingExit());
+		assertEquals(false, object.isBlockingExit());
 	}
 	
 	@Test
 	public void testIsMoveable() {
-		assertEquals(true, roomObject.isMoveable());
+		assertEquals(false, object.isMoveable());
 	}
 	
 	@Test
 	public void testGetInventory() {
 		Item spring = new Item("sprong", 0.1);
-		roomObject.getInventory().addItem("boing", spring);
-		assertEquals(spring, roomObject.getInventory().getItem("boing"));
+		object.getInventory().addItem("boing", spring);
+		assertTrue(object.getInventory().contains("boing"));
 	}
 	
 	// These puppies are automatically set to false when a new roomObject is made 
 	@Test
 	public void testIsUnlockable() {
-		assertEquals(false, roomObject.isUnlockable());
+		assertEquals(false, object.isUnlockable());
 	}
 	
 	@Test
 	public void testIsLocked() {
-		assertEquals(false, roomObject.isLocked());
+		assertEquals(false, object.isLocked());
 	}
 	
 	@Test
 	public void testIsInteractable() {
-		assertEquals(false, roomObject.isInteractable());
+		assertEquals(false, object.isInteractable());
 	}
 	
 	@Test
 	public void testCanHoldItems() {
-		assertEquals(false, roomObject.canHoldItems());
+		assertEquals(false, object.canHoldItems());
 	}
 	
 	
@@ -138,63 +141,63 @@ public class TestRoomObject {
 	// setName, setDescription, setInteractable, setLocked, setDirectioncan, canHoldItems, 
 	@Test
 	public void testSetName() {
-		roomObject.setName("name");
-		assertEquals("name",roomObject.getName());
+		object.setName("name");
+		assertEquals("name",object.getName());
 	}
 	
 	@Test
 	public void testSetDescription() {
-		roomObject.setDescription("des");
-		assertEquals("des", roomObject.getDescription());
+		object.setDescription("des");
+		assertEquals("des", object.getDescription());
 	}
 	
 	@Test
 	public void testSetInteractable() {
-		roomObject.setInteractable(false);
-		assertEquals(false, roomObject.isInteractable());
+		object.setInteractable(false);
+		assertEquals(false, object.isInteractable());
 	}
 	
 	@Test
 	public void testSetDirection() {
-		roomObject.setDirection("m");
-		assertEquals("m", roomObject.getDirection());
+		object.setDirection("m");
+		assertEquals("m", object.getDirection());
 	}
 	
 	@Test
 	public void testSetCanHoldItems() {
-		roomObject.setCanHoldItems(true);
-		assertEquals(true, roomObject.canHoldItems());
+		object.setCanHoldItems(true);
+		assertEquals(true, object.canHoldItems());
 	}
 	
 	@Test
 	public void testSetLocked() {
-		roomObject.setUnlockable(true);
-		roomObject.setLocked(true);
+		object.setUnlockable(true);
+		object.setLocked(true);
 		
-		assertEquals(true, roomObject.isLocked());
+		assertEquals(true, object.isLocked());
 	}
 	
 	@Test
 	public void testSetObstacle() {
-		roomObject.setObstacle(false);
-		assertEquals(false, roomObject.isObstacle());
+		object.setObstacle(false);
+		assertEquals(false, object.isObstacle());
 	}
 	
 	@Test
 	public void testSetUnlockable() {
-		roomObject.setUnlockable(true);
-		assertEquals(true, roomObject.isUnlockable());
+		object.setUnlockable(true);
+		assertEquals(true, object.isUnlockable());
 	}
 	
 	@Test
 	public void testSetMoveable() {
-		roomObject.setMoveable(false);
-		assertEquals(false, roomObject.isMoveable());
+		object.setMoveable(false);
+		assertEquals(false, object.isMoveable());
 	}
 	
 	@Test
 	public void testSetBlockingExit() {
-		roomObject.setBlockingExit(false);
-		assertEquals(false, roomObject.isBlockingExit());
+		object.setBlockingExit(false);
+		assertEquals(false, object.isBlockingExit());
 	}
 }
