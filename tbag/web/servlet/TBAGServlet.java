@@ -41,8 +41,8 @@ public class TBAGServlet extends HttpServlet {
 			String story = req.getParameter("story");
 			
 			if (text.length() != 0) {
-
 				pastInputs += text + "\n";
+				story += " > " + text + "\n";
 				story += game.runCommand(text);
 				
 			}
