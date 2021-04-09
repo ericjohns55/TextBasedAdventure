@@ -17,6 +17,7 @@ public class RoomObject {
 	private boolean moveable;
 	private boolean isObstacle;
 	private boolean coverable;
+	private boolean previouslyUnlocked;
 
 	private Inventory inventory;
 	
@@ -35,6 +36,7 @@ public class RoomObject {
 		this.canHoldItems = false;
 		this.locked = false;
 		this.coverable = false;
+		this.previouslyUnlocked = false;
 		
 		this.covered = "";
 		
@@ -149,5 +151,13 @@ public class RoomObject {
 	
 	public boolean isCovered() {
 		return covered != "";
+	}
+	
+	public boolean wasPreviouslyUnlocked() {
+		return previouslyUnlocked;
+	}
+	
+	public void setPreviouslyUnlocked(boolean previouslyUnlocked) {
+		this.previouslyUnlocked = previouslyUnlocked;
 	}
 }

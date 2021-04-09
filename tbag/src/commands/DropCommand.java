@@ -47,6 +47,7 @@ public class DropCommand extends UserCommand {
 								RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
 								if (obstacle.isLocked()) {
 									obstacle.setLocked(false);
+									obstacle.setPreviouslyUnlocked(true);
 									output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.";
 								}
 							}

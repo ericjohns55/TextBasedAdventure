@@ -5,6 +5,7 @@ import items.Inventory;
 import items.Item;
 import map.Room;
 import map.RoomObject;
+import puzzle.Puzzle;
 
 public class TakeCommand extends UserCommand {
 	public TakeCommand(Game game, String verb, String noun, String location) {
@@ -20,6 +21,7 @@ public class TakeCommand extends UserCommand {
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
+		Puzzle puzzle = getPuzzle();
 		
 		if (location == null || location.equals("room") || location.equals("floor")) {
 			if (room.hasItem(noun)) {
@@ -53,6 +55,20 @@ public class TakeCommand extends UserCommand {
 							toGrab.setInInventory(true);
 							
 							output = "You picked up " + noun + ".";
+							
+							if (puzzle.getDescription().equals("weightPuzzle")) {
+								double weightSolution = Double.parseDouble(puzzle.getSolution());
+								
+								if (objectInventory.getCurrentWeight() < weightSolution) {
+									RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
+									
+									if (!obstacle.isLocked() && obstacle.wasPreviouslyUnlocked()) {
+										obstacle.setLocked(true);
+										obstacle.setPreviouslyUnlocked(false);
+										output += "\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " slams shut.";
+									}
+								}
+							}
 						} else {
 							output = "This object does not have that item.";
 						}
