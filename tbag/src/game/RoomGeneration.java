@@ -54,8 +54,7 @@ public class RoomGeneration {
 
 
 		// Room 1
-		Item key = new Item("key");
-		key.setWeight(0.1);
+		Item key = new Item("key", 0.1);
 		key.setDescription("This key seems to be able to unlock a door.");
 
 		room1.addItem("key", key);
