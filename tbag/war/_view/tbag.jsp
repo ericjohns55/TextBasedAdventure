@@ -34,8 +34,6 @@
 			#timeleftText {
 				font-size: 24px;
 				font-family: Arial;
-				margin-left: 50px;
-				margin-right: 50px;
 				color: white;
 			} 
 			
@@ -71,8 +69,6 @@
 			#time{
 				font-size: 24px;
 				font-family: Arial;
-				margin-left: 50px;
-				margin-right: 50px;
 				color: white;
 			}
 		</style>
