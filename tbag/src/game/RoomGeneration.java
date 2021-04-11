@@ -60,9 +60,9 @@ public class RoomGeneration {
 		room7.addExit("north", room8);
 
 		room8.addExit("south", room7);
-		room8.addExit("west", room9);
+		room8.addExit("west up stairs", room9);
 
-		room9.addExit("east", room8);
+		room9.addExit("east down stairs", room8);
 		room9.addExit("north", room10);
 
 		room10.addExit("south", room9);
