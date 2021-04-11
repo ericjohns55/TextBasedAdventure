@@ -23,6 +23,7 @@ public class RoomObject {
 	
 	private int roomID;
 	private int inventoryID;
+	private int objectID;
 	
 	public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable, int roomID) {
 		this.name = name;
@@ -46,6 +47,7 @@ public class RoomObject {
 		this.inventory = new Inventory();
 		this.roomID = roomID;
 		this.inventoryID = 0;
+		this.objectID = 0;
 	}
 	
 	public int getRoomID() {
@@ -180,5 +182,13 @@ public class RoomObject {
 	
 	public void setPreviouslyUnlocked(boolean previouslyUnlocked) {
 		this.previouslyUnlocked = previouslyUnlocked;
+	}
+
+	public int getObjectID() {
+		return objectID;
+	}
+
+	public void setObjectID(int objectID) {
+		this.objectID = objectID;
 	}
 }

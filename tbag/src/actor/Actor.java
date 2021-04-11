@@ -11,12 +11,14 @@ public class Actor {
 	private Game game;
 
 	private int roomID;
+	private int inventoryID;
 
 	public Actor(Game game, int roomID) {
 		inventory = new Inventory();
 		equippedItems = new Inventory();
 		this.roomID = roomID;
 		this.game = game;
+		this.inventoryID = 0;
 	}
 	
 	public void equipItem(String identifier, Item toAdd) {
@@ -56,5 +58,13 @@ public class Actor {
 
 	public Room getRoom() {
 		return game.getRoom(getRoomID());
+	}
+
+	public int getInventoryID() {
+		return inventoryID;
+	}
+
+	public void setInventoryID(int inventoryID) {
+		this.inventoryID = inventoryID;
 	}
 }

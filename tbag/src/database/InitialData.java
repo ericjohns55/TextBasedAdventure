@@ -48,7 +48,7 @@ public class InitialData {
 				item.setEquippable(Integer.parseInt(iter.next()) == 1);
 				item.setReadable(Integer.parseInt(iter.next()) == 1);
 				item.setPourable(Integer.parseInt(iter.next()) == 1);
-				item.setInventoryID(Integer.parseInt(iter.next()));
+				item.setLocationID(Integer.parseInt(iter.next()));
 				
 				itemList.add(item);
 			}
@@ -61,7 +61,7 @@ public class InitialData {
 	}
 	
 	public List<CompoundItem> getAllCompoundItems() throws IOException {
-		List<CompoundItem> itemList = new ArrayList<CompoundItem>();
+		List<CompoundItem> compoundItemList = new ArrayList<CompoundItem>();
 		ReadCSV readItems = new ReadCSV("compoundItems.csv");
 		
 		try {
@@ -77,8 +77,8 @@ public class InitialData {
 				
 			}
 			
-			System.out.println("itemList loaded");
-			return itemList;
+			System.out.println("compoundItemList loaded");
+			return compoundItemList;
 		} finally {
 			readItems.close();
 		}

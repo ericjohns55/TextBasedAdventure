@@ -14,11 +14,11 @@ public class Item {
 	private boolean pourable;
 	
 	private int itemID;
-	private int inventoryID;
+	private int locationID;
 	
 	public Item(String name, double weight) {
-		this.itemID = 0; // TODO: FIX
-		this.inventoryID = 0;
+		this.itemID = 10; // TODO: FIX
+		this.locationID = 0;
 		
 		this.name = name;
 		this.weight = weight;
@@ -49,12 +49,12 @@ public class Item {
 		this.itemID = itemID;
 	}
 	
-	public int getInventoryID() {
-		return inventoryID;
+	public int getLocationID() {
+		return locationID;
 	}
 	
-	public void setInventoryID(int inventoryID) {
-		this.inventoryID = inventoryID;
+	public void setLocationID(int locationID) {
+		this.locationID = locationID;
 	}
 	
 	public String getDescription() {

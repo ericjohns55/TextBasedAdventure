@@ -39,6 +39,10 @@ public class Inventory {
 		}
 	}
 	
+	public void removeItem(Item item) {
+		items.remove(item);
+	}
+	
 	public Item getItem(String identifier) {
 		identifier = identifier.toLowerCase();
 		return items.containsKey(identifier) ? items.get(identifier) : emptyItem;

@@ -280,7 +280,7 @@ public class TestCommandLogic {
 		
 		assertTrue(commandOutput.contains(expectedOutput));
 		
-		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", "south", true, true, false);
+		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", "south", true, true, false, 8);
 		game.getRoom(8).addObject("table", table6);
 		
 		expectedOutput = "Cannot pour blood vial on table.";

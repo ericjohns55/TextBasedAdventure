@@ -33,7 +33,7 @@ public class CutCommand extends UserCommand {
 						CompoundItem item = (CompoundItem) object.getInventory().getItem(noun);
 						
 						if (item.isBreakable()) {
-							if (inventory.contains(item.getBreakIdentifier())) {
+							if (inventory.contains(item.getBreakItem())) {
 								HashMap<String, Item> items = item.getItems();
 								
 								for (String identifier : items.keySet()) {
@@ -66,7 +66,7 @@ public class CutCommand extends UserCommand {
 					CompoundItem item = (CompoundItem) room.getItem(noun);
 					
 					if (item.isBreakable()) {
-						if (inventory.contains(item.getBreakIdentifier())) {
+						if (inventory.contains(item.getBreakItem())) {
 							HashMap<String, Item> items = item.getItems();
 							
 							for (String identifier : items.keySet()) {
