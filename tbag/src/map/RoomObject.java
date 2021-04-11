@@ -21,7 +21,10 @@ public class RoomObject {
 
 	private Inventory inventory;
 	
-	public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable) {
+	private int roomID;
+	private int inventoryID;
+	
+	public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable, int roomID) {
 		this.name = name;
 		this.description = description;
 		this.direction = direction;
@@ -41,6 +44,24 @@ public class RoomObject {
 		this.covered = "";
 		
 		this.inventory = new Inventory();
+		this.roomID = roomID;
+		this.inventoryID = 0;
+	}
+	
+	public int getRoomID() {
+		return roomID;
+	}
+	
+	public void setRoomID(int roomID) {
+		this.roomID = roomID;
+	}
+
+	public int getInventoryID() {
+		return inventoryID;
+	}
+	
+	public void setInventoryID(int inventoryID) {
+		this.inventoryID = inventoryID;
 	}
 	
 	public boolean canHoldItems() {

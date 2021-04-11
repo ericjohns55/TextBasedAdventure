@@ -13,7 +13,13 @@ public class Item {
 	private boolean readable;
 	private boolean pourable;
 	
+	private int itemID;
+	private int inventoryID;
+	
 	public Item(String name, double weight) {
+		this.itemID = 0; // TODO: FIX
+		this.inventoryID = 0;
+		
 		this.name = name;
 		this.weight = weight;
 		this.isInteractable = false;
@@ -33,6 +39,22 @@ public class Item {
 	
 	public Item() {
 		this("Item");
+	}
+	
+	public int getItemID() {
+		return itemID;
+	}
+	
+	public void setItemID(int itemID) {
+		this.itemID = itemID;
+	}
+	
+	public int getInventoryID() {
+		return inventoryID;
+	}
+	
+	public void setInventoryID(int inventoryID) {
+		this.inventoryID = inventoryID;
 	}
 	
 	public String getDescription() {

@@ -7,12 +7,22 @@ public class Inventory {
 	
 	private HashMap<String, Item> items;
 	private Item emptyItem;
+	private int inventoryID;
 	
 	// identifier: create lookup table to check against items
 	
 	public Inventory() {
 		items = new HashMap<String, Item>();
 		emptyItem = new Item("emptyItem");
+		this.inventoryID = 0;
+	}
+	
+	public int getInventoryID() {
+		return inventoryID;
+	}
+	
+	public void setInventoryID(int inventoryID) {
+		this.inventoryID = inventoryID;
 	}
 	
 	public void addItem(String identifier, Item toAdd) {

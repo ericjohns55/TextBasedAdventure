@@ -7,14 +7,24 @@ public class Puzzle {
 	private String hint;
 	private boolean writtenSolution;
 	private String unlockObstacle;
+	private int roomID;
 	
-	public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle) {
+	public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle, int roomID) {
 		this.description = description;
 		this.solution = solution;
 		this.solved = false;
 		this.hint = hint;
 		this.writtenSolution = writtenSolution;
 		this.unlockObstacle = unlockObstacle;
+		this.roomID = roomID;
+	}
+	
+	public int getRoomID() {
+		return roomID;
+	}
+	
+	public void setRoomID(int roomID) {
+		this.roomID = roomID;
 	}
 	
 	public boolean isSolved() {

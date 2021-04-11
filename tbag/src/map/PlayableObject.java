@@ -5,8 +5,8 @@ public class PlayableObject extends RoomObject {
 	private String playedNotes;
 	private boolean isInstrument;
 	
-	public PlayableObject(String name, String description, String direction, String[] requiredNotes, boolean isInstrument) {
-		super(name, description, direction, false, false, false);
+	public PlayableObject(String name, String description, String direction, String[] requiredNotes, boolean isInstrument, int roomID) {
+		super(name, description, direction, false, false, false, roomID);
 		this.setInteractable(true);
 		this.requiredNotes = requiredNotes;
 		this.playedNotes = "";

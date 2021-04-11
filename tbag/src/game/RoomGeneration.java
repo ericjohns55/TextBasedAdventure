@@ -67,7 +67,7 @@ public class RoomGeneration {
 		table.setCanHoldItems(true);
 		room1.addObject("table", table);
 
-		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false, ""));
+		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false, "", 1));
 
 		// Room 2
 		Item banana = new Item("banana");
@@ -110,7 +110,7 @@ public class RoomGeneration {
 		lockedDoor.setLocked(true);
 		room2.addObject("weightObstacle", lockedDoor);
 
-		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true, "weightObstacle");
+		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true, "weightObstacle", 2);
 		room2.setPuzzle(weightPuzzle);
 
 		RoomObject sensor = new RoomObject("sensor", "Triggers something by weight...", "north", false, false, false);
@@ -131,7 +131,7 @@ public class RoomGeneration {
 
 		room3.addObject("chest", chest);
 
-		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true, "writtenObstacle");
+		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true, "writtenObstacle", 3);
 
 		room3.setPuzzle(math);
 
@@ -149,7 +149,7 @@ public class RoomGeneration {
 		room4.addObject("bed", bed);
 		room4.addObject("desk", desk);
 
-		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false, ""));
+		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false, "", 4));
 
 
 		// Room 5
@@ -164,7 +164,7 @@ public class RoomGeneration {
 		PlayableObject guitar = new PlayableObject("guitar", "Could play music.", "west", cScale, true);
 		room5.addObject("guitar", guitar);
 
-		room5.setPuzzle(new Puzzle("Music puzzle", "Play a scale on any instrument.", "Perhaps try playing a C scale (consists of 7 naturals)...?", false, "musicalObstacle"));
+		room5.setPuzzle(new Puzzle("Music puzzle", "Play a scale on any instrument.", "Perhaps try playing a C scale (consists of 7 naturals)...?", false, "musicalObstacle", 5));
 
 		UnlockableObject musicDoor = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
 		musicDoor.setLocked(true);
@@ -204,7 +204,7 @@ public class RoomGeneration {
 		recordDoor.setLocked(true);
 		room6.addObject("room6Door", recordDoor);
 
-		ObjectPuzzle puzzle = new ObjectPuzzle("Play a record on a record player", "Play 'Crumbling Land'", "Zabriskie Point sountrack", recordPlayer, record1, "room6Door");
+		ObjectPuzzle puzzle = new ObjectPuzzle("Play a record on a record player", "Play 'Crumbling Land'", "Zabriskie Point sountrack", recordPlayer, record1, "room6Door", 6);
 		room6.setPuzzle(puzzle);
 
 		// Room 7
@@ -237,7 +237,7 @@ public class RoomGeneration {
 		door7.setLocked(true);
 		room7.addObject("door", door7);
 
-		room7.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "The key may be hidden somewhere.", false, ""));
+		room7.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "The key may be hidden somewhere.", false, "", 7));
 
 		// Room 8
 		Item bloodVial = new Item("blood vial", 0.2);
@@ -260,7 +260,7 @@ public class RoomGeneration {
 		room8Door.setLocked(true);
 		room8.addObject("room8Door", room8Door);
 
-		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
+		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door", 8));
 
 		rooms.put(1, room1);
 		rooms.put(2, room2);

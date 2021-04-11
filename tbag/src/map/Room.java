@@ -2,6 +2,7 @@ package map;
 
 import java.util.HashMap;
 
+import items.Inventory;
 import items.Item;
 import puzzle.Puzzle;
 
@@ -10,19 +11,19 @@ public class Room {
 	// Each room has to have a set items in the room
 	private Puzzle puzzle;
 	private HashMap<String, RoomObject> objects;
-	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;
 	private String description; 
+	private Inventory inventory;
 	private int roomID;
 	
 	// Each room has to have a puzzle as well
 	
 	public Room(String description, int roomID) {
 		objects = new HashMap<String, RoomObject>(); 
-		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
 		this.description = description;
 		this.roomID = roomID;
+		inventory = new Inventory();
 	}
 	
 
@@ -45,7 +46,7 @@ public class Room {
 	// How should the items be 
 	public void addItem(String identifier, Item item)
 	{
-		items.put(identifier, item);
+		inventory.addItem(identifier, item);
 	}
 
 	// Returns roomID
@@ -53,6 +54,7 @@ public class Room {
 	{
 		return roomID;
 	}
+	
 	//Returns the rooms description
 	public String getDescription() 
 	{
@@ -86,8 +88,8 @@ public class Room {
 	public String listItems() {
 		String itemString = "";
 		
-		if (!items.isEmpty()) {
-			for (Item item : items.values()) {
+		if (!inventory.isEmpty()) {
+			for (Item item : inventory.getAllItems().values()) {
 				itemString += item.getName() + ", ";
 			}
 			
@@ -113,7 +115,7 @@ public class Room {
 	
 	public Item getItem(String identifier) {
 		if (hasItem(identifier)) {
-			return items.get(identifier);
+			return inventory.getItem(identifier);
 		}  else {
 			return null;
 		}
@@ -121,17 +123,16 @@ public class Room {
 	
 	public void removeItem(String identifier) {
 		if (hasItem(identifier)) {
-			items.remove(identifier);
+			inventory.removeItem(identifier);
 		}
 	}
 	
 	// This is seeing if the item is in the room
 	public boolean hasItem(String identifier) {
 		// See if the "identifier" coming in is present in the items map
-		return items.containsKey(identifier);
+		return inventory.contains(identifier);
 		
 	}
-
 
 	public Puzzle getPuzzle() {
 		return puzzle;
@@ -141,4 +142,10 @@ public class Room {
 	public void setPuzzle(Puzzle puzzle) {
 		this.puzzle = puzzle;
 	}
+
+
+	public void setRoomID(int roomID) {
+		this.roomID = roomID;
+	}
+	
 }

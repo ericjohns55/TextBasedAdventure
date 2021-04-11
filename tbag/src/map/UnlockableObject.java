@@ -4,8 +4,8 @@ public class UnlockableObject extends RoomObject {
 	private boolean consumeItem;
 	private String unlockItem;
 	
-	public UnlockableObject(String name, String description, String direction, boolean blockingExit, String unlockItem) {
-		super(name, description, direction, true, blockingExit, false);
+	public UnlockableObject(String name, String description, String direction, boolean blockingExit, String unlockItem, int roomID) {
+		super(name, description, direction, true, blockingExit, false, roomID);
 		this.setUnlockable(true);
 		this.setLocked(true);
 		this.unlockItem = unlockItem;
