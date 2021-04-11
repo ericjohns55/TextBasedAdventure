@@ -19,15 +19,26 @@ public class RoomGeneration {
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
 		Room room4 = new Room("You are in a room with a dresser (S), bed (E), and desk (W) but do not appear to see an exit.", 4);
 
-		Room room5 = new Room("You enter into a room with instruments including a cello, a guitar, and a piano.", 5);
-		Room room6 = new Room("You enter into a cold room with a wooden table in the center. On the"
-				+ " table lies a record player, and a complete set of records for Pink Floyd's songs "
+		Room room5 = new Room("You are in a room with instruments including a cello, a guitar, and a piano.", 5);
+		Room room6 = new Room("You are in a cold room with a wooden table in the center. On the"
+				+ " table lies a record player, and some records of Pink Floyd's songs "
 				+ "and on the wall in spraypaint it reads \"Wining, dining, shining king\" ", 6);
-		Room room7 = new Room("You walk into a dining room area and in front of the head seat of the table sits a lamb heart on a plate with "
+		Room room7 = new Room("You are in a dining room area and in front of the head seat of the table sits a lamb heart on a plate with "
 				+ "a butcher knife and a note next to it. There is a door on the northern wall of the room.", 7);
-		Room room8 = new Room("You move into a living room with a westward door and a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
-		Room room9 = new Room("Last current room", 9);
-
+		Room room8 = new Room("You are in a living room with a westward door and a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
+		
+		Room room9 = new Room("You are in a room with metal walls and a hellhound in front of a door to the north.", 9);
+		Room room8 = new Room("You are in a room where everthing appears to be upside down. There appears to be a desk and a bed on the ceiling with a blurry painting on the wall.", 10);
+		Room room11 = new Room("You are in a room, on the wall there is a sign that says \"There is nothing wrong here\". "
+				+ "This room is very clean, quiet, and cold; and you can't help but to feel like you're not alone as you hear murmurs in the walls. On a table in the exact center of the room there is a computer that says \"What is the capital of New Jersey?\" on the screen.", 11);
+		Room room8 = new Room("You are in a room where it is so dark that you can not see a thing.", 12);
+		Room room8 = new Room("Last current room", 13);
+		
+		
+		
+		
+		
+		
 		room1.addExit("west", room2);
 
 		room2.addExit("east", room1);
@@ -51,8 +62,20 @@ public class RoomGeneration {
 		room8.addExit("south", room7);
 		room8.addExit("west", room9);
 
+		room9.addExit("east", room8);
+		room9.addExit("north", room10);
 
+		room10.addExit("south", room9);
+		room10.addExit("east", room11);
 
+		room11.addExit("west", room10);
+		room11.addExit("east", room12);
+
+		room12.addExit("west", room11);
+		room12.addExit("south", room13);
+
+		
+		
 		// Room 1
 		Item key = new Item("key");
 		key.setWeight(0.1);
@@ -263,6 +286,100 @@ public class RoomGeneration {
 
 		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
 
+	
+		
+		
+		// Room 9 
+		//public UnlockableObject(String name, String description, String direction, boolean blockingExit, String unlockItem)
+		// UnlockableObject hellhound = new UnlockableObject("hellhound", "Looks hungry for meat.", "north", true, "meat");
+		// hellhound.setCanHoldItems(true);
+		// hellhound.setLocked(true);
+		
+		// public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable)
+		// I made the hellhound a roomobject instead of a unlockable object because I feel like it would act the same as 
+		// the weight sensor room. But I included the unlockable object for it above too with the parameter field
+		RoomObject hellhound = new RoomObject("hellhound", "Looks hungry for meat.", "north", false, false, false);
+		hellhound.setCanHoldItems(true);
+		room9.addObject("hellhound", hellhound);
+		
+		
+		UnlockableObject room9Door = new UnlockableObject("door", "Probably leads to another room...", "north", true, "none");
+		room9Door.setLocked(true);
+		room9.addObject("room9Door", room9Door);
+		
+		// public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle)
+		room9.setPuzzle(new Puzzle("Hellhound Room", "meat", "I wonder if the hellhound would like some meat from one of the previous rooms.", false, "room9Door"));
+				
+		
+		// Room 10
+		// Upside down room
+
+		
+		Item circularShard = new Item("circular shard", 0.6);
+		circularShard.setDescription("This shard of glass is circular.");
+
+		room10.addItem("circular shard", circularShard);		
+		
+		Item rectangularShard = new Item("rectangular shard", 0.6);
+		rectangularShard.setDescription("This shard of glass is rectangular.");
+
+		room10.addItem("rectangular shard", rectangularShard);
+		
+		Item jaggedShard = new Item("jagged shard", 0.6);
+		jaggedShard.setDescription("This shard of glass is jagged.");
+
+		room10.addItem("jagged shard", jaggedShard);
+		
+		Item triangularShard = new Item("triangular shard", 0.6);
+		triangularShard.setDescription("This shard of glass is triangular.");
+
+		room10.addItem("triangular shard", triangularShard);
+
+		
+		// Need to add a blurryPainting object to look at
+		
+		
+		//public ObjectPuzzle(String description, String solution, String hint, RoomObject object, Item requiredItem, String unlockObstacle) {
+		
+		ObjectPuzzle upsideDownRoomPuzzle = new ObjectPuzzle("Look at a painting with a glass shard.", "Play 'Crumbling Land'", "This shard of glass is a well known geometric shape.", blurryPainting, triangularShard, "room10Door");
+		room10.setPuzzle(upsideDownRoomPuzzle);
+		
+		UnlockableObject room10Door = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
+		room10Door.setLocked(true);
+		room10.addObject("room10Door", room10Door);
+		
+		
+		// Room 11
+		RoomObject table11 = new RoomObject("Table", "A table that can hold things!", "north", false, false, false);
+		table11.setCanHoldItems(true);
+		room11.addObject("table", table11);
+		
+		Puzzle newJersey = new Puzzle("Geography problem.", "Trenton", "There's a name in the solution.", true, "writtenObstacle");
+		room11.setPuzzle(newJersey);
+		
+		
+		UnlockableObject room11Door = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
+		room11Door.setLocked(true);
+		room11.addObject("room11door", room11Door);
+		
+		
+		
+		// Room 12
+		Item redKey = new Item("redKey");
+		redKey.setWeight(0.1);
+		redKey.setDescription("This red key seems to be able to unlock a door.");
+
+		room12.addItem("red key", redKey);
+		
+		UnlockableObject room12Door = new UnlockableObject("door", "Probably leads to another room...", "south", true, "key");
+		room12Door.setLocked(true);
+		room12.addObject("room12Door", room12Door);
+		
+		room12.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
+
+		
+		
+		
 		rooms.put(1, room1);
 		rooms.put(2, room2);
 		rooms.put(3, room3);
@@ -271,6 +388,15 @@ public class RoomGeneration {
 		rooms.put(6, room6);
 		rooms.put(7, room7);
 		rooms.put(8, room8);
-		rooms.put(9, room9);		
+		rooms.put(9, room9);
+		
+	
+		rooms.put(10, room10);
+		rooms.put(11, room11);
+		rooms.put(12, room12);
+		rooms.put(13, room13);
+		
+		
+		
 	}
 }
