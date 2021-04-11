@@ -5,30 +5,33 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import items.Item;
 import map.RoomObject;
 import map.UnlockableObject;
 
 public class TestUnlockableObject {
 	
 	private UnlockableObject unlockableObject;
+	private Item item;
 	
 	
 	@Before
 	public void setUp() {
 		//public UnlockableObject(String name, String description, String direction, boolean blockingExit, String unlockItem)
-		unlockableObject = new UnlockableObject("name", "description", "direction", true, "ite");
+		item = new Item("moose");
+		unlockableObject = new UnlockableObject("name", "description", "direction", true, item, 4);
 	}
 
 	
 	@Test
 	public void testGetUnlockItem() {
-		assertEquals("ite", unlockableObject.getUnlockItem());
+		assertEquals(item, unlockableObject.getUnlockItem());
 	}
 	
 	@Test
 	public void testSetUnlockItem() {
-		unlockableObject.setUnlockItem("moose");
-		assertEquals("moose", unlockableObject.getUnlockItem());
+		unlockableObject.setUnlockItem(item);
+		assertEquals(item, unlockableObject.getUnlockItem());
 	}
 	
 	
