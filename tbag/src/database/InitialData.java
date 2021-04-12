@@ -62,25 +62,60 @@ public class InitialData {
 	
 	public List<CompoundItem> getAllCompoundItems() throws IOException {
 		List<CompoundItem> compoundItemList = new ArrayList<CompoundItem>();
-		ReadCSV readItems = new ReadCSV("compoundItems.csv");
+		ReadCSV readCompoundItems = new ReadCSV("compoundItems.csv");
 		
 		try {
 			int itemID = 1;
 			
 			while (true) {
-				List<String> itemRow = readItems.next();
+				List<String> itemRow = readCompoundItems.next();
 				
 				if (itemRow == null) {
 					break;
 				}
 				
+				Iterator<String> iter = itemRow.iterator();
+				Integer.parseInt(iter.next());
 				
+				// name, weight, breakable, breakItem
+				
+				String name = iter.next();
+				String description = iter.next();
+				double weight = Double.parseDouble(iter.next());
+				boolean interactable = Integer.parseInt(iter.next()) == 1;
+				boolean canBePickedUp = Integer.parseInt(iter.next()) == 1;
+				boolean consumeOnUse = Integer.parseInt(iter.next()) == 1;
+				boolean inInventory = Integer.parseInt(iter.next()) == 1;
+				boolean equipped = Integer.parseInt(iter.next()) == 1;
+				boolean equippable = Integer.parseInt(iter.next()) == 1;
+				boolean readable = Integer.parseInt(iter.next()) == 1;
+				boolean pourable = Integer.parseInt(iter.next()) == 1;
+				int locationID = Integer.parseInt(iter.next());
+				int inventoryID = Integer.parseInt(iter.next());
+				int breakItemID = Integer.parseInt(iter.next());
+				boolean breakable = Integer.parseInt(iter.next()) == 1;
+				
+				CompoundItem item = new CompoundItem(name, weight, breakable, null);
+				item.setItemID(itemID++);
+				item.setDescription(description);
+				item.setInteractable(interactable);
+				item.setCanBePickedUp(canBePickedUp);
+				item.setConsumeOnuse(consumeOnUse);
+				item.setInInventory(inInventory);
+				item.setEquipped(equipped);
+				item.setEquippable(equippable);
+				item.setReadable(readable);
+				item.setPourable(pourable);
+				item.setLocationID(locationID);
+				item.setInventoryID(inventoryID);
+				item.setBreakItem(getAllItems().get(breakItemID));
+				item.setBreakable(breakable);
 			}
 			
 			System.out.println("compoundItemList loaded");
 			return compoundItemList;
 		} finally {
-			readItems.close();
+			readCompoundItems.close();
 		}
 	}
 	
