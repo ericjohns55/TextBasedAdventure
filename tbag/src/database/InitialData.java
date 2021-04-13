@@ -120,7 +120,36 @@ public class InitialData {
 	}
 	
 	public List<Actor> getAllActors() throws IOException {
+		List<Actor> actorList = new ArrayList<Actor>();
+		ReadCSV readItems = new ReadCSV("actor.csv");
 		
+		try {
+			int actorID = 1;
+			
+			while (true) {
+				List<String> itemRow = readItems.next();
+				
+				if (itemRow == null) {
+					break;
+				}
+				
+				Iterator<String> iter = itemRow.iterator();
+				Integer.parseInt(iter.next());
+				
+				int roomID = Integer.parseInt(iter.next());
+				
+				Actor actor = new Actor(new Game(), roomID);
+				actor.setInventoryID(Integer.parseInt(iter.next()));
+				actor.setActorID(actorID);
+				
+				actorList.add(actor);
+			}
+			
+			System.out.println("actorList loaded");
+			return actorList;
+		} finally {
+			readItems.close();
+		}
 	}
 	
 	public List<Room> getAllRooms() throws IOException {
@@ -158,26 +187,262 @@ public class InitialData {
 	}
 	
 	public List<RoomObject> getAllObjects() throws IOException {
+		List<RoomObject> roomObjectList = new ArrayList<RoomObject>();
+		ReadCSV readItems = new ReadCSV("roomObjects.csv");
 		
+		try {
+			int objectID = 1;
+			
+			while (true) {
+				List<String> itemRow = readItems.next();
+				
+				if (itemRow == null) {
+					break;
+				}
+				
+				Iterator<String> iter = itemRow.iterator();
+				Integer.parseInt(iter.next());
+				
+				String name = iter.next();
+				String description = iter.next();
+				String direction = iter.next();
+				boolean isObstacle = Integer.parseInt(iter.next()) == 1;
+				boolean blockingExit = Integer.parseInt(iter.next()) == 1;
+				boolean moveable = Integer.parseInt(iter.next()) == 1;
+				String covered = iter.next();
+				boolean unlockable = Integer.parseInt(iter.next()) == 1;
+				boolean locked = Integer.parseInt(iter.next()) == 1;
+				boolean isInteractable = Integer.parseInt(iter.next()) == 1;
+				boolean canHoldItems = Integer.parseInt(iter.next()) == 1;
+				boolean coverable = Integer.parseInt(iter.next()) == 1;
+				boolean previouslyUnlocked = Integer.parseInt(iter.next()) == 1;
+				int roomID = Integer.parseInt(iter.next());
+				int inventoryID = Integer.parseInt(iter.next());
+				
+				RoomObject roomObject = new RoomObject(name, description, direction, isObstacle, blockingExit, moveable, roomID);
+				roomObject.cover(covered);
+				roomObject.setUnlockable(unlockable);
+				roomObject.setLocked(locked);
+				roomObject.setInteractable(isInteractable);
+				roomObject.setCanHoldItems(canHoldItems);
+				roomObject.setCoverable(coverable);
+				roomObject.setPreviouslyUnlocked(previouslyUnlocked);
+				roomObject.setInventoryID(inventoryID);
+				roomObject.setObjectID(objectID++);
+				
+				roomObjectList.add(roomObject);
+			}
+			
+			System.out.println("roomObjectList loaded");
+			return roomObjectList;
+		} finally {
+			readItems.close();
+		}
 	}
 	
 	public List<PlayableObject> getAllPlayableObjects() throws IOException {
+
+		List<PlayableObject> playableObjectList = new ArrayList<PlayableObject>();
+		ReadCSV readItems = new ReadCSV("playableObjects.csv");
 		
+		try {
+			int objectID = 1;
+			
+			while (true) {
+				List<String> itemRow = readItems.next();
+				
+				if (itemRow == null) {
+					break;
+				}
+				
+				Iterator<String> iter = itemRow.iterator();
+				Integer.parseInt(iter.next());
+				
+				String name = iter.next();
+				String description = iter.next();
+				String direction = iter.next();
+				boolean isObstacle = Integer.parseInt(iter.next()) == 1;
+				boolean blockingExit = Integer.parseInt(iter.next()) == 1;
+				boolean moveable = Integer.parseInt(iter.next()) == 1;
+				String covered = iter.next();
+				boolean unlockable = Integer.parseInt(iter.next()) == 1;
+				boolean locked = Integer.parseInt(iter.next()) == 1;
+				boolean isInteractable = Integer.parseInt(iter.next()) == 1;
+				boolean canHoldItems = Integer.parseInt(iter.next()) == 1;
+				boolean coverable = Integer.parseInt(iter.next()) == 1;
+				boolean previouslyUnlocked = Integer.parseInt(iter.next()) == 1;
+				int roomID = Integer.parseInt(iter.next());
+				int inventoryID = Integer.parseInt(iter.next());
+				boolean isInstrument = Integer.parseInt(iter.next()) == 1;
+				String playedNotes = iter.next();
+				String requiredNotes = iter.next();
+				
+				PlayableObject playableObject = new PlayableObject(name, description, direction, requiredNotes, isInstrument, roomID);
+				playableObject.cover(covered);
+				playableObject.setObstacle(isObstacle);
+				playableObject.setBlockingExit(blockingExit);
+				playableObject.setMoveable(moveable);
+				playableObject.setUnlockable(unlockable);
+				playableObject.setLocked(locked);
+				playableObject.setInteractable(isInteractable);
+				playableObject.setCanHoldItems(canHoldItems);
+				playableObject.setCoverable(coverable);
+				playableObject.setPreviouslyUnlocked(previouslyUnlocked);
+				playableObject.setInventoryID(inventoryID);
+				playableObject.setObjectID(objectID++);
+				playableObject.setPlayedNotes(playedNotes);
+				
+				playableObjectList.add(playableObject);
+			}
+			
+			System.out.println("playableObjectList loaded");
+			return playableObjectList;
+		} finally {
+			readItems.close();
+		}
 	}
 	
 	public List<UnlockableObject> getAllUnlockableObjects() throws IOException {
+		List<UnlockableObject> unlockableObjectsList = new ArrayList<UnlockableObject>();
+		ReadCSV readItems = new ReadCSV("unlockableObjects.csv");
 		
+		try {
+			int objectID = 1;
+			
+			while (true) {
+				List<String> itemRow = readItems.next();
+				
+				if (itemRow == null) {
+					break;
+				}
+				
+				Iterator<String> iter = itemRow.iterator();
+				Integer.parseInt(iter.next());
+				
+				String name = iter.next();
+				String description = iter.next();
+				String direction = iter.next();
+				boolean isObstacle = Integer.parseInt(iter.next()) == 1;
+				boolean blockingExit = Integer.parseInt(iter.next()) == 1;
+				boolean moveable = Integer.parseInt(iter.next()) == 1;
+				String covered = iter.next();
+				boolean unlockable = Integer.parseInt(iter.next()) == 1;
+				boolean locked = Integer.parseInt(iter.next()) == 1;
+				boolean isInteractable = Integer.parseInt(iter.next()) == 1;
+				boolean canHoldItems = Integer.parseInt(iter.next()) == 1;
+				boolean coverable = Integer.parseInt(iter.next()) == 1;
+				boolean previouslyUnlocked = Integer.parseInt(iter.next()) == 1;
+				int roomID = Integer.parseInt(iter.next());
+				int inventoryID = Integer.parseInt(iter.next());
+				boolean consumeItem = Integer.parseInt(iter.next()) == 1;
+				int unlockItemID = Integer.parseInt(iter.next());
+				
+				UnlockableObject unlockableObject = new UnlockableObject(name, description, direction, blockingExit, getAllItems().get(unlockItemID), roomID);
+				unlockableObject.cover(covered);
+				unlockableObject.setObstacle(isObstacle);
+				unlockableObject.setMoveable(moveable);
+				unlockableObject.setUnlockable(unlockable);
+				unlockableObject.setLocked(locked);
+				unlockableObject.setInteractable(isInteractable);
+				unlockableObject.setCanHoldItems(canHoldItems);
+				unlockableObject.setCoverable(coverable);
+				unlockableObject.setPreviouslyUnlocked(previouslyUnlocked);
+				unlockableObject.setInventoryID(inventoryID);
+				unlockableObject.setObjectID(objectID++);
+				unlockableObject.setUnlockItemID(unlockItemID);
+				unlockableObject.setConsumeItem(consumeItem);
+				
+				unlockableObjectsList.add(unlockableObject);
+			}
+			
+			System.out.println("unlockableObjectsList loaded");
+			return unlockableObjectsList;
+		} finally {
+			readItems.close();
+		}
 	}
 	
 	public List<Puzzle> getAllPuzzles() throws IOException {
+		List<Puzzle> puzzlesList = new ArrayList<Puzzle>();
+		ReadCSV readItems = new ReadCSV("puzzles.csv");
 		
+		try {
+			int puzzleID = 1;
+			
+			while (true) {
+				List<String> itemRow = readItems.next();
+				
+				if (itemRow == null) {
+					break;
+				}
+				
+				Iterator<String> iter = itemRow.iterator();
+				Integer.parseInt(iter.next());
+				
+				String description = iter.next();
+				String solution = iter.next();
+				String hint = iter.next();
+				boolean writtenSolution = Integer.parseInt(iter.next()) == 1;
+				String unlockObstacle = iter.next();
+				boolean solved = Integer.parseInt(iter.next()) == 1;
+				int roomID = Integer.parseInt(iter.next());
+				
+				Puzzle puzzle = new Puzzle(description, solution, hint, writtenSolution, unlockObstacle, roomID);
+				puzzle.setSolved(solved);
+				
+				puzzle.setPuzzleID(puzzleID++);
+				
+				puzzlesList.add(puzzle);
+			}
+			
+			System.out.println("puzzlesList loaded");
+			return puzzlesList;
+		} finally {
+			readItems.close();
+		}
 	}
 	
 	public List<ObjectPuzzle> getAllObjectPuzzles() throws IOException {
+		List<ObjectPuzzle> objectPuzzlesList = new ArrayList<ObjectPuzzle>();
+		ReadCSV readItems = new ReadCSV("objectPuzzle.csv");
 		
-	}
-	
-	public Game getGameState() throws IOException {
-		
+		try {
+			int puzzleID = 1;
+			
+			while (true) {
+				List<String> itemRow = readItems.next();
+				
+				if (itemRow == null) {
+					break;
+				}
+				
+				Iterator<String> iter = itemRow.iterator();
+				Integer.parseInt(iter.next());
+				
+				String description = iter.next();
+				String solution = iter.next();
+				String hint = iter.next();
+				boolean writtenSolution = Integer.parseInt(iter.next()) == 1;
+				String unlockObstacle = iter.next();
+				boolean solved = Integer.parseInt(iter.next()) == 1;
+				int roomID = Integer.parseInt(iter.next());
+				int objectID = Integer.parseInt(iter.next());
+				int itemID = Integer.parseInt(iter.next());
+				
+				ObjectPuzzle puzzle = new ObjectPuzzle(description, solution, hint, getAllObjects().get(objectID), getAllItems().get(itemID), unlockObstacle, roomID);
+				puzzle.setPuzzleID(puzzleID++);
+				puzzle.setWrittenSolution(writtenSolution);
+				puzzle.setSolved(solved);
+				
+				objectPuzzlesList.add(puzzle);
+				
+				return objectPuzzlesList;
+			}
+			
+			System.out.println("objectPuzzlesList loaded");
+			return objectPuzzlesList;
+		} finally {
+			readItems.close();
+		}
 	}
 }

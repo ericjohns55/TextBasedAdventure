@@ -8,6 +8,7 @@ public class Puzzle {
 	private boolean writtenSolution;
 	private String unlockObstacle;
 	private int roomID;
+	private int puzzleID;
 	
 	public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle, int roomID) {
 		this.description = description;
@@ -17,6 +18,7 @@ public class Puzzle {
 		this.writtenSolution = writtenSolution;
 		this.unlockObstacle = unlockObstacle;
 		this.roomID = roomID;
+		this.puzzleID = roomID;
 	}
 	
 	public int getRoomID() {
@@ -74,5 +76,12 @@ public class Puzzle {
 	public void setUnlockObstacle(String unlockObstacle) {
 		this.unlockObstacle = unlockObstacle;
 	}
-	
+
+	public int getPuzzleID() {
+		return puzzleID;
+	}
+
+	public void setPuzzleID(int puzzleID) {
+		this.puzzleID = puzzleID;
+	}
 }
