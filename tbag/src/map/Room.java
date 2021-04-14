@@ -15,6 +15,7 @@ public class Room {
 	private String description; 
 	private Inventory inventory;
 	private int roomID;
+	private int inventoryID;
 	
 	// Each room has to have a puzzle as well
 	
@@ -24,6 +25,7 @@ public class Room {
 		this.description = description;
 		this.roomID = roomID;
 		inventory = new Inventory();
+		this.inventoryID = inventory.getInventoryID();
 	}
 	
 
@@ -148,4 +150,11 @@ public class Room {
 		this.roomID = roomID;
 	}
 	
+	public int getInventoryID() {
+		return inventoryID;
+	}
+	
+	public void setInventoryID(int inventoryID) {
+		this.inventoryID = inventoryID;
+	}
 }

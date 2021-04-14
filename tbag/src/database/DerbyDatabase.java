@@ -11,6 +11,7 @@ import java.util.List;
 import actor.Actor;
 import actor.Player;
 import game.Game;
+import items.CompoundItem;
 import items.Inventory;
 import items.Item;
 import map.Room;
@@ -94,29 +95,419 @@ public class DerbyDatabase implements IDatabase {
 		
 		return conn;
 	}
+	
+	@Override
+	public Item getItemByID(int itemID) {
+		return executeTransaction(new Transaction<Item>() {
+			@Override
+			public Item execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select items.*" + 
+								"from items" +
+									"where items.itemID = ?");	
+					
+					stmt.setInt(1, itemID);
+					
+					Item item = null;
+					
+					resultSet = stmt.executeQuery();
+					
+					boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						int index = 1;
+						
+						int itemID = resultSet.getInt(index++);
+						String name = resultSet.getString(index++);
+						String description = resultSet.getString(index++);
+						double weight = resultSet.getDouble(index++);
+						boolean isInteractable = resultSet.getInt(index++) == 1;
+						boolean canBePickedUp = resultSet.getInt(index++) == 1;
+						boolean consumeOnUse = resultSet.getInt(index++) == 1;
+						boolean inInventory = resultSet.getInt(index++) == 1;
+						boolean isEquipped = resultSet.getInt(index++) == 1;
+						boolean equippable = resultSet.getInt(index++) == 1;
+						boolean readable = resultSet.getInt(index++) == 1;
+						boolean pourable = resultSet.getInt(index++) == 1;
+						int locationID = resultSet.getInt(index++);
+						
+						item = new Item(name, weight);
+						item.setItemID(itemID);
+						item.setDescription(description);
+						item.setInteractable(isInteractable);
+						item.setCanBePickedUp(canBePickedUp);
+						item.setConsumeOnuse(consumeOnUse);
+						item.setInInventory(inInventory);
+						item.setEquipped(isEquipped);
+						item.setEquippable(equippable);
+						item.setReadable(readable);
+						item.setPourable(pourable);
+						item.setLocationID(locationID);
+					}
+					
+					if (!found) {
+						System.out.println("Could not find any item with that ID");
+					}
+					
+					return item;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
 
 	@Override
 	public Inventory getPlayerInventory(Player player) {
-		// TODO Auto-generated method stub
-		return null;
+		return executeTransaction(new Transaction<Inventory>() {
+			@Override
+			public Inventory execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select items.itemID" + 
+								"from items, inventories" +
+									"where inventories.inventoryID = ? and items.inventoryID = inventories.inventoryID");	
+					
+					stmt.setInt(1, player.getInventoryID());
+					
+					
+					Inventory inventory = new Inventory();
+					
+					resultSet = stmt.executeQuery();
+					
+					boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						int index = 1;
+						
+						int itemID = resultSet.getInt(index++);
+						
+						Item item = getItemByID(itemID);
+						
+						inventory.addItem(item.getName(), item);
+					}
+					
+					if (!found) {
+						System.out.println("Could not find any items to populate player inventory.");
+					}
+					
+					return inventory;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
 	public Inventory getInventory(RoomObject roomObject) {
-		// TODO Auto-generated method stub
-		return null;
+		return executeTransaction(new Transaction<Inventory>() {
+			@Override
+			public Inventory execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				ResultSet resultSet2 = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select items.itemID" + 
+								"from items, roomObjects" +
+									"where roomObjects.inventoryID = ? and items.inventoryID = roomObjects.inventoryID");	
+					
+					stmt.setInt(1, roomObject.getInventoryID());
+					
+					
+					Inventory inventory = new Inventory();
+					
+					resultSet = stmt.executeQuery();
+					
+					boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						int index = 1;
+						
+						int itemID = resultSet.getInt(index++);
+						
+						Item item = getItemByID(itemID);
+						
+						inventory.addItem(item.getName(), item);
+					}
+					
+					if (!found) {
+						System.out.println("Could not populate inventory.");
+					}
+					
+					
+					stmt2 = conn.prepareStatement(
+							"select compoundItems.*" + 
+								"from compoundItems, roomObjects" +
+									"where roomObjects.inventoryID = ? and compoundItems.inventoryID = roomObjects.inventoryID");	
+					
+					stmt2.setInt(1, roomObject.getInventoryID());
+					
+					resultSet2 = stmt2.executeQuery();
+					
+					while (resultSet2.next()) {						
+						int index = 1;
+						
+						int itemID = resultSet.getInt(index++);
+						String name = resultSet.getString(index++);
+						String description = resultSet.getString(index++);
+						double weight = resultSet.getDouble(index++);
+						boolean isInteractable = resultSet.getInt(index++) == 1;
+						boolean canBePickedUp = resultSet.getInt(index++) == 1;
+						boolean consumeOnUse = resultSet.getInt(index++) == 1;
+						boolean inInventory = resultSet.getInt(index++) == 1;
+						boolean isEquipped = resultSet.getInt(index++) == 1;
+						boolean equippable = resultSet.getInt(index++) == 1;
+						boolean readable = resultSet.getInt(index++) == 1;
+						boolean pourable = resultSet.getInt(index++) == 1;
+						int locationID = resultSet.getInt(index++);
+						int inventoryID = resultSet.getInt(index++);
+						int breakID = resultSet.getInt(index++);
+						boolean breakable = resultSet.getInt(index++) == 1;
+						
+						Item breakItem = getItemByID(breakID);
+						
+						CompoundItem item = new CompoundItem(name, weight, breakable, breakItem);
+						item.setItemID(itemID);
+						item.setDescription(description);
+						item.setInteractable(isInteractable);
+						item.setCanBePickedUp(canBePickedUp);
+						item.setConsumeOnuse(consumeOnUse);
+						item.setInInventory(inInventory);
+						item.setEquipped(isEquipped);
+						item.setEquippable(equippable);
+						item.setReadable(readable);
+						item.setPourable(pourable);
+						item.setLocationID(locationID);
+						item.setInventoryID(inventoryID);
+						item.setBreakItem(breakItem);
+						
+						inventory.addItem(name, item);
+					}
+					
+					return inventory;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
 	public Inventory getInventory(Room room) {
-		// TODO Auto-generated method stub
-		return null;
+		return executeTransaction(new Transaction<Inventory>() {
+			@Override
+			public Inventory execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				ResultSet resultSet2 = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select items.itemID" + 
+								"from items, rooms" +
+									"where rooms.inventoryID = ? and items.inventoryID = rooms.inventoryID");	
+					
+					stmt.setInt(1, room.getInventoryID());
+					
+					Inventory inventory = new Inventory();
+					
+					resultSet = stmt.executeQuery();
+					
+					boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						int index = 1;
+						
+						int itemID = resultSet.getInt(index++);
+						
+						Item item = getItemByID(itemID);
+						
+						inventory.addItem(item.getName(), item);
+					}
+					
+					if (!found) {
+						System.out.println("Could not populate inventory.");
+					}
+					
+					
+					stmt2 = conn.prepareStatement(
+							"select compoundItems.*" + 
+								"from compoundItems, rooms" +
+									"where rooms.inventoryID = ? and compoundItems.inventoryID = rooms.inventoryID");	
+					
+					stmt2.setInt(1, room.getInventoryID());
+					
+					resultSet2 = stmt2.executeQuery();
+					
+					while (resultSet2.next()) {						
+						int index = 1;
+						
+						int itemID = resultSet.getInt(index++);
+						String name = resultSet.getString(index++);
+						String description = resultSet.getString(index++);
+						double weight = resultSet.getDouble(index++);
+						boolean isInteractable = resultSet.getInt(index++) == 1;
+						boolean canBePickedUp = resultSet.getInt(index++) == 1;
+						boolean consumeOnUse = resultSet.getInt(index++) == 1;
+						boolean inInventory = resultSet.getInt(index++) == 1;
+						boolean isEquipped = resultSet.getInt(index++) == 1;
+						boolean equippable = resultSet.getInt(index++) == 1;
+						boolean readable = resultSet.getInt(index++) == 1;
+						boolean pourable = resultSet.getInt(index++) == 1;
+						int locationID = resultSet.getInt(index++);
+						int inventoryID = resultSet.getInt(index++);
+						int breakID = resultSet.getInt(index++);
+						boolean breakable = resultSet.getInt(index++) == 1;
+						
+						Item breakItem = getItemByID(breakID);
+						
+						CompoundItem item = new CompoundItem(name, weight, breakable, breakItem);
+						item.setItemID(itemID);
+						item.setDescription(description);
+						item.setInteractable(isInteractable);
+						item.setCanBePickedUp(canBePickedUp);
+						item.setConsumeOnuse(consumeOnUse);
+						item.setInInventory(inInventory);
+						item.setEquipped(isEquipped);
+						item.setEquippable(equippable);
+						item.setReadable(readable);
+						item.setPourable(pourable);
+						item.setLocationID(locationID);
+						item.setInventoryID(inventoryID);
+						item.setBreakItem(breakItem);
+						
+						inventory.addItem(name, item);
+					}
+					
+					return inventory;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
 	public Inventory getInventoryByID(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return executeTransaction(new Transaction<Inventory>() {
+			@Override
+			public Inventory execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				ResultSet resultSet2 = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select items.itemID" + 
+								"from items, inventories" +
+									"where inventories.inventoryID = ? and items.inventoryID = inventories.inventoryID");	
+					
+					stmt.setInt(1, id);
+					
+					Inventory inventory = new Inventory();
+					
+					resultSet = stmt.executeQuery();
+					
+					boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+						
+						int index = 1;
+						
+						int itemID = resultSet.getInt(index++);
+						
+						Item item = getItemByID(itemID);
+						
+						inventory.addItem(item.getName(), item);
+					}
+					
+					if (!found) {
+						System.out.println("Could not populate inventory.");
+					}
+					
+					
+					stmt2 = conn.prepareStatement(
+							"select compoundItems.*" + 
+								"from compoundItems, inventories" +
+									"where inventories.inventoryID = ? and compoundItems.inventoryID = inventories.inventoryID");	
+					
+					stmt2.setInt(1, id);
+					
+					resultSet2 = stmt2.executeQuery();
+					
+					while (resultSet2.next()) {						
+						int index = 1;
+						
+						int itemID = resultSet.getInt(index++);
+						String name = resultSet.getString(index++);
+						String description = resultSet.getString(index++);
+						double weight = resultSet.getDouble(index++);
+						boolean isInteractable = resultSet.getInt(index++) == 1;
+						boolean canBePickedUp = resultSet.getInt(index++) == 1;
+						boolean consumeOnUse = resultSet.getInt(index++) == 1;
+						boolean inInventory = resultSet.getInt(index++) == 1;
+						boolean isEquipped = resultSet.getInt(index++) == 1;
+						boolean equippable = resultSet.getInt(index++) == 1;
+						boolean readable = resultSet.getInt(index++) == 1;
+						boolean pourable = resultSet.getInt(index++) == 1;
+						int locationID = resultSet.getInt(index++);
+						int inventoryID = resultSet.getInt(index++);
+						int breakID = resultSet.getInt(index++);
+						boolean breakable = resultSet.getInt(index++) == 1;
+						
+						Item breakItem = getItemByID(breakID);
+						
+						CompoundItem item = new CompoundItem(name, weight, breakable, breakItem);
+						item.setItemID(itemID);
+						item.setDescription(description);
+						item.setInteractable(isInteractable);
+						item.setCanBePickedUp(canBePickedUp);
+						item.setConsumeOnuse(consumeOnUse);
+						item.setInInventory(inInventory);
+						item.setEquipped(isEquipped);
+						item.setEquippable(equippable);
+						item.setReadable(readable);
+						item.setPourable(pourable);
+						item.setLocationID(locationID);
+						item.setInventoryID(inventoryID);
+						item.setBreakItem(breakItem);
+						
+						inventory.addItem(name, item);
+					}
+					
+					return inventory;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -134,7 +525,7 @@ public class DerbyDatabase implements IDatabase {
 									"where roomObjects.roomID = ?"
 					);	
 					
-					stmt.setString(1, room.getRoomID() + "");
+					stmt.setInt(1, room.getRoomID());
 					
 					List<RoomObject> roomObjects = new ArrayList<RoomObject>();
 					
@@ -241,61 +632,6 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
-	public Puzzle getPuzzle(Room room) {
-		return executeTransaction(new Transaction<Puzzle>() {
-			@Override
-			public Puzzle execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-				try {
-					stmt = conn.prepareStatement(
-							"select puzzles.*" +
-								"from puzzles" +
-									"where puzzle.roomID = ?"
-					);
-					
-					stmt.setString(1, room.getRoomID() + "");
-					
-					resultSet = stmt.executeQuery();
-					
-					boolean found = false;
-					
-					Puzzle puzzle = null;
-					
-					while (resultSet.next()) {
-						found = true;
-						
-						int index = 1;
-						
-						int puzzleID = resultSet.getInt(index++);
-						String description = resultSet.getString(index++);
-						String solution = resultSet.getString(index++);
-						String hint = resultSet.getString(index++);
-						boolean writtenSolution = resultSet.getInt(index++) == 1;
-						String unlockObstacle = resultSet.getString(index++);
-						boolean solved = resultSet.getInt(index++) == 1;
-						int roomID = resultSet.getInt(index++);
-						
-						puzzle = new Puzzle(description, solution, hint, writtenSolution, unlockObstacle, roomID);
-						puzzle.setPuzzleID(puzzleID);
-						puzzle.setSolved(solved);
-					}
-					
-					if (!found) {
-						System.out.println("Could not find puzzle.");
-					}		
-					
-					return puzzle;		
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});
-	}
-
-	@Override
 	public void addItemToInventory(Inventory inventory, Item item) {
 		// TODO Auto-generated method stub
 		
@@ -330,5 +666,4 @@ public class DerbyDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

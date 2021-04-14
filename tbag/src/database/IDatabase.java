@@ -9,16 +9,15 @@ import items.Item;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
-import puzzle.Puzzle;
 
 public interface IDatabase {
+	public Item getItemByID(int itemID);
 	public Inventory getPlayerInventory(Player player);
 	public Inventory getInventory(RoomObject roomObject);
 	public Inventory getInventory(Room room);
 	public Inventory getInventoryByID(int id);
 	public List<RoomObject> findAllObjects(Room room);	
 	public List<Actor> findAllActors();
-	public Puzzle getPuzzle(Room room);
 	
 	public void addItemToInventory(Inventory inventory, Item item);
 	public Item removeItemFromInventory(Inventory inventory, Item item);
