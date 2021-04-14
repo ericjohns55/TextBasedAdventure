@@ -76,4 +76,16 @@ public class Actor {
 	public void setActorID(int actorID) {
 		this.actorID = actorID;
 	}
+
+	public Game getGame() {
+		return game;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
 }

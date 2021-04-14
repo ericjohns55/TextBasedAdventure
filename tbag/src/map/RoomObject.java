@@ -191,4 +191,8 @@ public class RoomObject {
 	public void setObjectID(int objectID) {
 		this.objectID = objectID;
 	}
+	
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
 }

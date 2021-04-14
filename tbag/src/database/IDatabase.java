@@ -4,15 +4,11 @@ import java.util.List;
 
 import actor.Actor;
 import actor.Player;
-import game.Game;
-import items.CompoundItem;
 import items.Inventory;
 import items.Item;
-import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
-import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 public interface IDatabase {
@@ -21,7 +17,7 @@ public interface IDatabase {
 	public Inventory getInventory(Room room);
 	public Inventory getInventoryByID(int id);
 	public List<RoomObject> findAllObjects(Room room);	
-	public List<Player> findAllPlayers();
+	public List<Actor> findAllActors();
 	public Puzzle getPuzzle(Room room);
 	
 	public void addItemToInventory(Inventory inventory, Item item);
