@@ -4,12 +4,14 @@ import java.util.HashMap;
 
 import items.Item;
 import puzzle.Puzzle;
+import actor.NPC;
 
 public class Room {
 	
 	// Each room has to have a set items in the room
 	private Puzzle puzzle;
 	private HashMap<String, RoomObject> objects;
+	private HashMap<String, NPC> npcs;
 	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;
 	private String description; 
@@ -21,6 +23,7 @@ public class Room {
 		objects = new HashMap<String, RoomObject>(); 
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
+		npcs = new HashMap<String, NPC>();
 		this.description = description;
 		this.roomID = roomID;
 	}
@@ -141,4 +144,20 @@ public class Room {
 	public void setPuzzle(Puzzle puzzle) {
 		this.puzzle = puzzle;
 	}
+
+	public void addNpc(String name, NPC npc)
+	{
+		npcs.put(name, npc);
+	}
+	
+	//gets the rooms exit
+	public NPC getNpc(String name)
+	{
+		return npcs.get(name);
+	}
+	
+	public boolean hasNpc(String name) {
+		return npcs.containsKey(name);
+	}
+	
 }
