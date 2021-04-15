@@ -4,6 +4,7 @@ import java.util.List;
 
 import actor.Actor;
 import actor.Player;
+import items.CompoundItem;
 import items.Inventory;
 import items.Item;
 import map.Room;
@@ -17,12 +18,12 @@ public interface IDatabase {
 	public Inventory getInventory(Room room);
 	public Inventory getInventoryByID(int id);
 	public List<RoomObject> findAllObjects(Room room);	
-	public List<Actor> findAllActors();
+	public List<Player> findAllPlayers();
 	
-	public void addItemToInventory(Inventory inventory, Item item);
+	public Integer addItemToInventory(Inventory destinationInventory, Item item);
 	public Item removeItemFromInventory(Inventory inventory, Item item);
-	public void toggleLocks(UnlockableObject object, boolean locked);
-	public void moveRooms(Player player, int roomID);
-	public void pushObject(RoomObject object, String direction);
-	public void breakItem();
+	public Integer toggleLocks(UnlockableObject object, boolean locked);
+	public Integer moveRooms(Player player, int roomID);
+	public Integer pushObject(RoomObject object, String direction);
+	public void breakItem(CompoundItem compoundItem);
 }

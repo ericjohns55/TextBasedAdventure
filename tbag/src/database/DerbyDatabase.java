@@ -14,6 +14,7 @@ import game.Game;
 import items.CompoundItem;
 import items.Inventory;
 import items.Item;
+import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
@@ -584,17 +585,17 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
-	public List<Actor> findAllActors() {
-		return executeTransaction(new Transaction<List<Actor>>() {
+	public List<Player> findAllPlayers() {
+		return executeTransaction(new Transaction<List<Player>>() {
 			@Override
-			public List<Actor> execute(Connection conn) throws SQLException {
+			public List<Player> execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
 				
 				try {
-					stmt = conn.prepareStatement("select actors.* from actors");	
+					stmt = conn.prepareStatement("select players.* from players");	
 					
-					List<Actor> actors = new ArrayList<Actor>();
+					List<Player> players = new ArrayList<Player>();
 					
 					resultSet = stmt.executeQuery();
 					
@@ -609,20 +610,20 @@ public class DerbyDatabase implements IDatabase {
 						int roomID = resultSet.getInt(index++);
 						int inventoryID = resultSet.getInt(index++);
 						
-						Actor actor = new Actor(new Game(), roomID);
+						Player actor = new Player(new Game(), roomID);
 						actor.setActorID(actorID);
 						actor.setRoomID(roomID);
 						actor.setInventoryID(inventoryID);
 						actor.setInventory(getInventoryByID(inventoryID));
 						
-						actors.add(actor);
+						players.add(actor);
 					}
 					
 					if (!found) {
-						System.out.println("Could not find any actors.");
+						System.out.println("Could not find any players.");
 					}
 					
-					return actors;
+					return players;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
@@ -632,37 +633,120 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
-	public void addItemToInventory(Inventory inventory, Item item) {
-		// TODO Auto-generated method stub
-		
+	public Integer addItemToInventory(Inventory inventory, Item item) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
+
+					stmt.setInt(1, inventory.getInventoryID());
+					stmt.setInt(2, item.getItemID());
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
-	public Item removeItemFromInventory(Inventory inventory, Item item) {
-		// TODO Auto-generated method stub
-		return null;
+	public Item removeItemFromInventory(Inventory destinationInventory, Item item) {
+		return executeTransaction(new Transaction<Item>() {
+			@Override
+			public Item execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
+
+					stmt.setInt(1, destinationInventory.getInventoryID());
+					stmt.setInt(2, item.getItemID());
+
+					stmt.executeUpdate();
+					
+					return getItemByID(item.getItemID());
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
-	public void toggleLocks(UnlockableObject object, boolean locked) {
-		// TODO Auto-generated method stub
-		
+	public Integer toggleLocks(UnlockableObject object, boolean locked) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("update unlockableObjects set locked = ? where unlockableObjects.objectID = ?");
+
+					stmt.setInt(1, locked ? 1 : 0);
+					stmt.setInt(2, object.getObjectID());
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
-	public void moveRooms(Player player, int roomID) {
-		// TODO Auto-generated method stub
-		
+	public Integer moveRooms(Player player, int roomID) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("update players set roomID = ? where players.actorID = ?");
+
+					stmt.setInt(1, roomID);
+					stmt.setInt(2, player.getActorID());
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
-	public void pushObject(RoomObject object, String direction) {
-		// TODO Auto-generated method stub
-		
+	public Integer pushObject(RoomObject object, String direction) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					if (object instanceof PlayableObject) {
+						stmt = conn.prepareStatement("update playableObjects set direction = ? where playableObjects.objectID = ?");
+					} else if (object instanceof UnlockableObject) {
+						stmt = conn.prepareStatement("update unlockableObjects set direction = ? where unlockableObjects.objectID = ?");
+					} else {
+						stmt = conn.prepareStatement("update roomObjects set direction = ? where roomObjects.objectID = ?");
+					}
+
+					stmt.setString(1, direction);
+					stmt.setInt(2, object.getObjectID());
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 
 	@Override
-	public void breakItem() {
+	public void breakItem(CompoundItem compoundItem) {
 		// TODO Auto-generated method stub
 		
 	}
