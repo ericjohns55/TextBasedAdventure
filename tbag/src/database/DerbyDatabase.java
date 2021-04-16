@@ -746,8 +746,31 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
-	public void breakItem(CompoundItem compoundItem) {
-		// TODO Auto-generated method stub
-		
+	public Integer breakItem(CompoundItem compoundItem, Inventory destinationInventory) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				
+				try {
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.inventoryID = ?");
+
+					stmt.setInt(1, destinationInventory.getInventoryID());
+					stmt.setInt(2, compoundItem.getInventoryID());
+
+					stmt.executeUpdate();
+					
+					stmt2 = conn.prepareStatement("update compoundItems set inventoryID = ? where compoundItems.itemID = ?");
+					
+					stmt2.setInt(1, -1);
+					stmt2.setInt(2, compoundItem.getItemID());
+					
+					return stmt2.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
 	}
 }

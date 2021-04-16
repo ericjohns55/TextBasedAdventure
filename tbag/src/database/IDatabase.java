@@ -25,5 +25,5 @@ public interface IDatabase {
 	public Integer toggleLocks(UnlockableObject object, boolean locked);
 	public Integer moveRooms(Player player, int roomID);
 	public Integer pushObject(RoomObject object, String direction);
-	public void breakItem(CompoundItem compoundItem);
+	public Integer breakItem(CompoundItem compoundItem, Inventory destinationInventory);
 }
