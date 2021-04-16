@@ -940,10 +940,8 @@ public class DerbyDatabase implements IDatabase {
 					stmtRms = conn.prepareStatement(
 						"create table rooms (" +
 						"	roomID integer," +			
-						"	description varchar(255)," +	
-						"	connectionsID integer," +
-						"	inventoryID integer," +
-						"	puzzleID integer" +
+						"	description varchar(255)," +
+						"	inventoryID integer" +
 						")"
 					);	
 					stmtRms.executeUpdate();

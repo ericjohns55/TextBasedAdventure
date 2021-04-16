@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import actor.Actor;
+import actor.Player;
 import game.Game;
 import items.CompoundItem;
+import items.Inventory;
 import items.Item;
 import map.PlayableObject;
 import map.Room;
@@ -29,5 +31,83 @@ public class FakeDatabase implements IDatabase {
 		} catch (IOException e) {
 			throw new IllegalStateException("Couldn't read initial data", e);
 		}
+	}
+
+	@Override
+	public Item getItemByID(int itemID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Inventory getPlayerInventory(Player player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Inventory getInventory(RoomObject roomObject) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Inventory getInventory(Room room) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Inventory getInventoryByID(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<RoomObject> findAllObjects(Room room) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Player> findAllPlayers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer addItemToInventory(Inventory destinationInventory, Item item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Item removeItemFromInventory(Inventory inventory, Item item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer toggleLocks(UnlockableObject object, boolean locked) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer moveRooms(Player player, int roomID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer pushObject(RoomObject object, String direction) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer breakItem(CompoundItem compoundItem, Inventory destinationInventory) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

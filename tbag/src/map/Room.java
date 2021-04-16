@@ -7,25 +7,24 @@ import items.Item;
 import puzzle.Puzzle;
 
 public class Room {
-	
 	// Each room has to have a set items in the room
 	private Puzzle puzzle;
 	private HashMap<String, RoomObject> objects;
-	private HashMap<String, Room> exits;
 	private String description; 
 	private Inventory inventory;
 	private int roomID;
 	private int inventoryID;
+	private Connections connections;
 	
 	// Each room has to have a puzzle as well
 	
 	public Room(String description, int roomID) {
-		objects = new HashMap<String, RoomObject>(); 
-		exits = new HashMap<String, Room>();
+		this.objects = new HashMap<String, RoomObject>(); 
 		this.description = description;
 		this.roomID = roomID;
-		inventory = new Inventory();
-		this.inventoryID = inventory.getInventoryID();
+		this.inventory = new Inventory();
+		this.inventoryID = inventory.getInventoryID(); 
+		this.connections = new Connections(roomID);
 	}
 	
 
@@ -72,19 +71,19 @@ public class Room {
 	}
 
 	//sets the rooms exit
-	public void addExit(String direction, Room neighbor)
+	public void addExit(String direction, Room destination)
 	{
-		exits.put(direction, neighbor);
+		connections.addConnection(direction, destination);
 	}
 	
 	//gets the rooms exit
 	public Room getExit(String direction)
 	{
-		return exits.get(direction);
+		return connections.getConnection(direction);
 	}
 	
 	public boolean hasExit(String direction) {
-		return exits.containsKey(direction);
+		return connections.hasConnection(direction);
 	}
 	
 	public String listItems() {
@@ -133,7 +132,6 @@ public class Room {
 	public boolean hasItem(String identifier) {
 		// See if the "identifier" coming in is present in the items map
 		return inventory.contains(identifier);
-		
 	}
 
 	public Puzzle getPuzzle() {
@@ -156,5 +154,17 @@ public class Room {
 	
 	public void setInventoryID(int inventoryID) {
 		this.inventoryID = inventoryID;
+	}
+
+	public Connections getConnections() {
+		return connections;
+	}
+	
+	public void setConnections(Connections connections) {
+		this.connections = connections;
+	}	
+	
+	public int getConnectionsID() {
+		return connections.getConnectionID();
 	}
 }

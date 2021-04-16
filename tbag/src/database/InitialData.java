@@ -2,6 +2,7 @@ package database;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import actor.Actor;
 import game.Game;
 import items.CompoundItem;
 import items.Item;
+import map.Connections;
 import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
@@ -441,6 +443,40 @@ public class InitialData {
 			
 			System.out.println("objectPuzzlesList loaded");
 			return objectPuzzlesList;
+		} finally {
+			readItems.close();
+		}
+	}
+	
+	public List<Connections> getAllConnections() throws IOException {
+		List<Connections> connectionsList = new ArrayList<Connections>();
+		ReadCSV readItems = new ReadCSV("connections.csv");
+		
+		try {			
+			while (true) {
+				List<String> itemRow = readItems.next();
+				
+				if (itemRow == null) {
+					break;
+				}				
+				
+				Iterator<String> iter = itemRow.iterator();
+				
+				int locationID = Integer.parseInt(iter.next());
+				int destinationID = Integer.parseInt(iter.next());
+				String direction = iter.next();
+
+				Connections connections = new Connections(locationID);
+				connections.setConnectionID(locationID);
+				connections.addConnection(direction, getAllRooms().get(destinationID));
+				
+				connectionsList.add(connections);
+				
+				return connectionsList;
+			}
+			
+			System.out.println("connectionsList loaded");
+			return connectionsList;
 		} finally {
 			readItems.close();
 		}
