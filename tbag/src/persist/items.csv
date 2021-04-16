@@ -1,0 +1,21 @@
+itemID|name|description|weight|isInteractable|canBePickedUp|consumeOnUse|inInventory|isEquipped|equippable|readable|pourable|inventoryID
+1|key|This key seems to be able to unlock a door.|0.1|0|1|0|0|0|0|0|0|
+2|banana|Fruit.|0.3|0|1|0|0|0|0|0|0|
+3|apple|Fruit.|0.5|0|1|0|0|0|0|0|0|
+4|phonebook|Full of numbers.|2.5|0|1|0|0|0|0|0|0|
+5|cookbook|Full of recipes.|2|0|1|0|0|0|0|0|0|
+6|plate|Can holf food.|1|0|1|0|0|0|0|0|0|
+7|small key|This small key seems to be able to unlocks something...|0.1|0|1|0|0|0|0|0|0|
+8|note|(8/2(2+2)) + 1000|0.1|0|1|0|0|0|0|1|0|
+9|Crumbling Land Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|
+10|Another Brick Wall Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|
+11|Hey You Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|
+12|Young Lust Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|
+13|Arnold Layne Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|
+14|butcherKnife|This butcher knife is used for cutting.|1.2|0|1|0|0|0|0|0|0|
+15|blackKey|This small black key seems to be able to unlock something...|0.1|0|1|0|0|0|0|0|0|
+16|meat|Could be used to eat or feed something?|1|0|1|0|0|0|0|0|0|
+17|lambHeart|A lamb heart; suspiciously heavy.|2|0|1|0|0|0|0|0|0|
+18|note7|That lamb heart looks like it has something in it...|0.1|0|1|0|0|0|0|1|0|
+19|bloodVial|This vial contains blood.|0.2|0|1|0|0|0|0|0|1|
+20|note8|You may want to pour that vial on something.|0.1|0|1|0|0|0|0|1|0|

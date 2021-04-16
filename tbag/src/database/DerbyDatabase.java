@@ -575,6 +575,8 @@ public class DerbyDatabase implements IDatabase {
 						System.out.println("Could not find any room objects.");
 					}
 					
+					// TODO: OBJECT PUZZLES
+					
 					return roomObjects;
 				} finally {
 					DBUtil.closeQuietly(resultSet);
@@ -769,6 +771,222 @@ public class DerbyDatabase implements IDatabase {
 					return stmt2.executeUpdate();
 				} finally {
 					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+	public void createTables() {
+		executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmtCmpdItms = null;
+				PreparedStatement stmtInvs = null;
+				PreparedStatement stmtItms = null;	
+				PreparedStatement stmtObjPuzls = null;	
+				PreparedStatement stmtPlybleObjs = null;	
+				PreparedStatement stmtPlyrs = null;	
+				PreparedStatement stmtPuzls = null;	
+				PreparedStatement stmtRmObjs = null;
+				PreparedStatement stmtRms = null;
+				PreparedStatement stmtUnlckbleObjs = null;				
+			
+				try {
+					stmtCmpdItms = conn.prepareStatement(
+						"create table compoundItems (" +
+						"	itemID integer," +								
+						"	name varchar(40)," +
+						"	description varchar(255)," +
+						"	weight double," +
+						"	isInteractable integer," +
+						"	canBePickedUp integer," +
+						"	consumeOnUse integer," +
+						"	inInventory integer," +
+						"	isEquipped integer," +
+						"	equippable integer," +
+						"	readable integer," +
+						"	pourable integer," +
+						"	locationID integer," +
+						"	inventoryID integer," +
+						"	breakItemID integer," +
+						"	breakable integer" +
+						")"
+					);	
+					stmtCmpdItms.executeUpdate();
+					
+					System.out.println("compoundItems table created");
+					
+					stmtInvs = conn.prepareStatement("create table inventories (inventoryID integer)");	
+					stmtInvs.executeUpdate();
+					
+					System.out.println("inventories table created");	
+					
+					stmtItms = conn.prepareStatement(
+						"create table items (" +
+						"	itemID integer," +								
+						"	name varchar(40)," +
+						"	description varchar(255)," +
+						"	weight double," +
+						"	isInteractable integer," +
+						"	canBePickedUp integer," +
+						"	consumeOnUse integer," +
+						"	inInventory integer," +
+						"	isEquipped integer," +
+						"	equippable integer," +
+						"	readable integer," +
+						"	pourable integer," +
+						"	inventoryID integer" +
+						")"
+					);	
+					stmtItms.executeUpdate();
+					
+					System.out.println("items table created");	
+					
+					stmtObjPuzls = conn.prepareStatement(
+						"create table objectPuzzles (" +
+						"	puzzleID integer," +								
+						"	description varchar(40)," +
+						"	solution varchar(255)," +
+						"	hint varchar(255)," +
+						"	solved integer," +
+						"	writtenSolution integer," +
+						"	unlockObstacle varchar(40)," +
+						"	roomID integer," +
+						"	objectID integer," +
+						"	itemID integer" +
+						")"
+					);	
+					stmtObjPuzls.executeUpdate();
+					
+					System.out.println("objectPuzzles table created");	
+					
+					stmtPlybleObjs = conn.prepareStatement(
+						"create table playableObjects (" +
+						"	objectID integer," +								
+						"	name varchar(40)," +
+						"	description varchar(255)," +								
+						"	direction varchar(40)," +
+						"	isObstacle integer," +
+						"	blockingExit integer," +
+						"	moveable integer," +
+						"	covered varchar(40)," +
+						"	unlockable integer," +
+						"	locked integer," +
+						"	isInteractable integer," +
+						"	canHoldItems integer," +
+						"	coverable integer," +
+						"	previouslyUnlocked integer," +
+						"	roomID integer," +
+						"	inventoryID integer," +
+						"	isInstrument integer," +							
+						"	playedNotes varchar(40)," +							
+						"	requiredNotes varchar(40)" +
+						")"
+					);	
+					stmtPlybleObjs.executeUpdate();
+					
+					System.out.println("playableObjects table created");						
+								
+					stmtPlyrs = conn.prepareStatement(
+						"create table players (" +
+						"	actorID integer," +
+						"	roomID integer," +
+						"	inventoryID integer" +
+						")"
+					);	
+					stmtPlyrs.executeUpdate();
+					
+					System.out.println("players table created");	
+					
+					stmtPuzls = conn.prepareStatement(
+						"create table puzzles (" +
+						"	puzzleID integer," +								
+						"	description varchar(40)," +
+						"	solution varchar(255)," +
+						"	hint varchar(255)," +
+						"	writtenSolution integer," +
+						"	unlockObstacle varchar(40)," +
+						"	solved integer," +
+						"	roomID integer" +
+						")"
+					);	
+					stmtPuzls.executeUpdate();
+					
+					System.out.println("puzzles table created");
+					
+					stmtRmObjs = conn.prepareStatement(
+						"create table roomObjects (" +
+						"	objectID integer," +								
+						"	name varchar(40)," +
+						"	description varchar(255)," +								
+						"	direction varchar(40)," +
+						"	isObstacle integer," +
+						"	blockingExit integer," +
+						"	moveable integer," +
+						"	covered varchar(40)," +
+						"	unlockable integer," +
+						"	locked integer," +
+						"	isInteractable integer," +
+						"	canHoldItems integer," +
+						"	coverable integer," +
+						"	previouslyUnlocked integer," +
+						"	roomID integer," +
+						"	inventoryID integer" +
+						")"
+					);	
+					stmtRmObjs.executeUpdate();
+					
+					System.out.println("roomObjects table created");	
+					
+					stmtRms = conn.prepareStatement(
+						"create table rooms (" +
+						"	roomID integer," +			
+						"	description varchar(255)," +	
+						"	connectionsID integer," +
+						"	inventoryID integer," +
+						"	puzzleID integer" +
+						")"
+					);	
+					stmtRms.executeUpdate();
+					
+					System.out.println("rooms table created");		
+					
+					stmtUnlckbleObjs = conn.prepareStatement(
+						"create table unlockableObjects (" +
+						"	objectID integer," +								
+						"	name varchar(40)," +
+						"	description varchar(255)," +								
+						"	direction varchar(40)," +
+						"	isObstacle integer," +
+						"	blockingExit integer," +
+						"	moveable integer," +
+						"	covered varchar(40)," +
+						"	unlockable integer," +
+						"	locked integer," +
+						"	isInteractable integer," +
+						"	canHoldItems integer," +
+						"	coverable integer," +
+						"	previouslyUnlocked integer," +
+						"	roomID integer," +
+						"	inventoryID integer," +
+						"	consumeItem integer," +		
+						"	unlockItemID integer" +		
+						")"
+					);	
+					stmtUnlckbleObjs.executeUpdate();
+					
+					System.out.println("unlockableObjects table created");		
+					return true;
+				} finally {
+					DBUtil.closeQuietly(stmtCmpdItms);
+					DBUtil.closeQuietly(stmtInvs);
+					DBUtil.closeQuietly(stmtItms);
+					DBUtil.closeQuietly(stmtObjPuzls);
+					DBUtil.closeQuietly(stmtPlybleObjs);
+					DBUtil.closeQuietly(stmtPlyrs);
+					DBUtil.closeQuietly(stmtPuzls);
+					DBUtil.closeQuietly(stmtRmObjs);
+					DBUtil.closeQuietly(stmtRms);
+					DBUtil.closeQuietly(stmtUnlckbleObjs);	
 				}
 			}
 		});
