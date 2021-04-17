@@ -1008,24 +1008,24 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				List<Item> items;
+				List<Room> rooms;
+				List<UnlockableObject> unlockableObjects;
 				List<CompoundItem> compoundItems;
 				List<Player> players;
-				List<Room> rooms;
 				List<RoomObject> roomObjects;
 				List<PlayableObject> playableObjects;
-				List<UnlockableObject> unlockableObjects;
 				List<Puzzle> puzzles;
 				List<ObjectPuzzle> objectPuzzles;
 				List<Connections> connections;
 				
 				try {
 					items = InitialData.getAllItems();
+					rooms = InitialData.getAllRooms();
+					unlockableObjects = InitialData.getAllUnlockableObjects();
 					compoundItems = InitialData.getAllCompoundItems();
 					players = InitialData.getAllPlayers();
-					rooms = InitialData.getAllRooms();
 					roomObjects = InitialData.getAllObjects();
 					playableObjects = InitialData.getAllPlayableObjects();
-					unlockableObjects = InitialData.getAllUnlockableObjects();
 					puzzles = InitialData.getAllPuzzles();
 					objectPuzzles = InitialData.getAllObjectPuzzles();
 					connections = InitialData.getAllConnections();
@@ -1094,7 +1094,7 @@ public class DerbyDatabase implements IDatabase {
 					insertCompoundItems.executeBatch();
 					
 					
-					insertPlayers = conn.prepareStatement("insert into players (actorID, roomID, inventoryID) values (?, ?, ?");
+					insertPlayers = conn.prepareStatement("insert into players (actorID, roomID, inventoryID) values (?, ?, ?)");
 					
 					for (Player player : players) {
 						insertPlayers.setInt(1, player.getActorID());
@@ -1106,7 +1106,7 @@ public class DerbyDatabase implements IDatabase {
 					insertPlayers.executeBatch();
 					
 					
-					insertRooms = conn.prepareStatement("insert into rooms (roomID, description, inventoryID) values (?, ?, ?");
+					insertRooms = conn.prepareStatement("insert into rooms (roomID, description, inventoryID) values (?, ?, ?)");
 					
 					for (Room room : rooms) {
 						insertRooms.setInt(1, room.getRoomID());
@@ -1177,32 +1177,32 @@ public class DerbyDatabase implements IDatabase {
 							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (UnlockableObject unlockableObject : unlockableObjects) {
-						insertRoomObjects.setInt(1, unlockableObject.getObjectID());
-						insertRoomObjects.setString(2, unlockableObject.getName());
-						insertRoomObjects.setString(3, unlockableObject.getDescription());
-						insertRoomObjects.setString(4, unlockableObject.getDirection());
-						insertRoomObjects.setInt(5, unlockableObject.isObstacle() ? 1 : 0);
-						insertRoomObjects.setInt(6, unlockableObject.isBlockingExit() ? 1 : 0);
-						insertRoomObjects.setInt(7, unlockableObject.isMoveable() ? 1 : 0);
-						insertRoomObjects.setString(8, unlockableObject.getCovering());
-						insertRoomObjects.setInt(9, unlockableObject.isUnlockable() ? 1 : 0);
-						insertRoomObjects.setInt(10, unlockableObject.isLocked() ? 1 : 0);
-						insertRoomObjects.setInt(11, unlockableObject.isInteractable() ? 1 : 0);
-						insertRoomObjects.setInt(12, unlockableObject.canHoldItems() ? 1 : 0);
-						insertRoomObjects.setInt(13, unlockableObject.isCoverable() ? 1 : 0);
-						insertRoomObjects.setInt(14, unlockableObject.wasPreviouslyUnlocked() ? 1 : 0);
-						insertRoomObjects.setInt(15, unlockableObject.getRoomID());
-						insertRoomObjects.setInt(16, unlockableObject.getInventoryID());
-						insertRoomObjects.setInt(17, unlockableObject.consumeItem() ? 1 : 0);
-						insertRoomObjects.setInt(18, unlockableObject.getUnlockItemID());
-						insertRoomObjects.addBatch();
+						insertUnlockableObjects.setInt(1, unlockableObject.getObjectID());
+						insertUnlockableObjects.setString(2, unlockableObject.getName());
+						insertUnlockableObjects.setString(3, unlockableObject.getDescription());
+						insertUnlockableObjects.setString(4, unlockableObject.getDirection());
+						insertUnlockableObjects.setInt(5, unlockableObject.isObstacle() ? 1 : 0);
+						insertUnlockableObjects.setInt(6, unlockableObject.isBlockingExit() ? 1 : 0);
+						insertUnlockableObjects.setInt(7, unlockableObject.isMoveable() ? 1 : 0);
+						insertUnlockableObjects.setString(8, unlockableObject.getCovering());
+						insertUnlockableObjects.setInt(9, unlockableObject.isUnlockable() ? 1 : 0);
+						insertUnlockableObjects.setInt(10, unlockableObject.isLocked() ? 1 : 0);
+						insertUnlockableObjects.setInt(11, unlockableObject.isInteractable() ? 1 : 0);
+						insertUnlockableObjects.setInt(12, unlockableObject.canHoldItems() ? 1 : 0);
+						insertUnlockableObjects.setInt(13, unlockableObject.isCoverable() ? 1 : 0);
+						insertUnlockableObjects.setInt(14, unlockableObject.wasPreviouslyUnlocked() ? 1 : 0);
+						insertUnlockableObjects.setInt(15, unlockableObject.getRoomID());
+						insertUnlockableObjects.setInt(16, unlockableObject.getInventoryID());
+						insertUnlockableObjects.setInt(17, unlockableObject.consumeItem() ? 1 : 0);
+						insertUnlockableObjects.setInt(18, unlockableObject.getUnlockItemID());
+						insertUnlockableObjects.addBatch();
 					}
 					
-					insertRoomObjects.executeBatch();
+					insertUnlockableObjects.executeBatch();
 					
 					
 					insertPuzzles = conn.prepareStatement("insert into puzzles (puzzleID, description, solution, hint, writtenSolution, unlockObstacle, solved, roomID) " +
-							"values (?, ?, ?, ?, ?, ?, ?, ?");
+							"values (?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (Puzzle puzzle : puzzles) {
 						insertPuzzles.setInt(1, puzzle.getPuzzleID());
@@ -1219,8 +1219,8 @@ public class DerbyDatabase implements IDatabase {
 					insertPuzzles.executeBatch();
 					
 					
-					insertObjectPuzzles = conn.prepareStatement("insert into puzzles (puzzleID, description, solution, hint, solved, writtenSolution, unlockObstacle, roomID, objectID, itemID) " +
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+					insertObjectPuzzles = conn.prepareStatement("insert into objectPuzzles (puzzleID, description, solution, hint, solved, writtenSolution, unlockObstacle, roomID, objectID, itemID) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (ObjectPuzzle objectPuzzle : objectPuzzles) {
 						insertObjectPuzzles.setInt(1, objectPuzzle.getPuzzleID());
@@ -1273,9 +1273,9 @@ public class DerbyDatabase implements IDatabase {
 		DerbyDatabase db = new DerbyDatabase();
 		db.createTables();
 		
-		System.out.println("Loading initial data...");
+		System.out.println("\nLoading initial data...");
 		db.loadInitialData();
 		
-		System.out.println("Library DB successfully initialized!");
+		System.out.println("\nText Based Adventure Game DB successfully initialized!");
 	}
 }

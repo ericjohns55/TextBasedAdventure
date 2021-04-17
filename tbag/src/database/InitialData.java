@@ -20,6 +20,10 @@ import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 public class InitialData {
+	private static List<Item> items = null;
+	private static List<Room> rooms = null;
+	private static List<UnlockableObject> unlockableObjects = null;
+	
 	public static List<Item> getAllItems() throws IOException {
 		List<Item> itemList = new ArrayList<Item>();
 		ReadCSV readItems = new ReadCSV("items.csv");
@@ -57,6 +61,9 @@ public class InitialData {
 			}
 			
 			System.out.println("itemList loaded");
+			
+			items = itemList;
+			
 			return itemList;
 		} finally {
 			readItems.close();
@@ -67,9 +74,7 @@ public class InitialData {
 		List<CompoundItem> compoundItemList = new ArrayList<CompoundItem>();
 		ReadCSV readCompoundItems = new ReadCSV("compoundItems.csv");
 		
-		try {
-			int itemID = 1;
-			
+		try {			
 			while (true) {
 				List<String> itemRow = readCompoundItems.next();
 				
@@ -78,10 +83,10 @@ public class InitialData {
 				}
 				
 				Iterator<String> iter = itemRow.iterator();
-				Integer.parseInt(iter.next());
 				
 				// name, weight, breakable, breakItem
 				
+				int itemID = Integer.parseInt(iter.next());
 				String name = iter.next();
 				String description = iter.next();
 				double weight = Double.parseDouble(iter.next());
@@ -99,7 +104,7 @@ public class InitialData {
 				boolean breakable = Integer.parseInt(iter.next()) == 1;
 				
 				CompoundItem item = new CompoundItem(name, weight, breakable, null);
-				item.setItemID(itemID++);
+				item.setItemID(itemID);
 				item.setDescription(description);
 				item.setInteractable(interactable);
 				item.setCanBePickedUp(canBePickedUp);
@@ -111,7 +116,7 @@ public class InitialData {
 				item.setPourable(pourable);
 				item.setLocationID(locationID);
 				item.setInventoryID(inventoryID);
-				item.setBreakItem(getAllItems().get(breakItemID));
+				item.setBreakItem(items.get(breakItemID));
 				item.setBreakable(breakable);
 			}
 			
@@ -148,7 +153,7 @@ public class InitialData {
 				playerList.add(player);
 			}
 			
-			System.out.println("actorList loaded");
+			System.out.println("playerList loaded");
 			return playerList;
 		} finally {
 			readItems.close();
@@ -160,8 +165,6 @@ public class InitialData {
 		ReadCSV readItems = new ReadCSV("rooms.csv");
 		
 		try {
-			int roomID = 1;
-			
 			while (true) {
 				List<String> itemRow = readItems.next();
 				
@@ -172,17 +175,20 @@ public class InitialData {
 				Iterator<String> iter = itemRow.iterator();
 				
 
-				Integer.parseInt(iter.next());
+				int roomID = Integer.parseInt(iter.next());
+				String description = iter.next();
+				int inventoryID = Integer.parseInt(iter.next());
 				
-				
-				Room room = new Room(iter.next(), roomID++);
-				
-				// connections, items, objects, puzzles
+				Room room = new Room(description, roomID);
+				room.setInventoryID(inventoryID);
 				
 				roomList.add(room);
 			}
 			
 			System.out.println("roomList loaded");
+			
+			rooms = roomList;
+			
 			return roomList;
 		} finally {
 			readItems.close();
@@ -193,9 +199,7 @@ public class InitialData {
 		List<RoomObject> roomObjectList = new ArrayList<RoomObject>();
 		ReadCSV readItems = new ReadCSV("roomObjects.csv");
 		
-		try {
-			int objectID = 1;
-			
+		try {			
 			while (true) {
 				List<String> itemRow = readItems.next();
 				
@@ -204,8 +208,8 @@ public class InitialData {
 				}
 				
 				Iterator<String> iter = itemRow.iterator();
-				Integer.parseInt(iter.next());
 				
+				int objectID = Integer.parseInt(iter.next());
 				String name = iter.next();
 				String description = iter.next();
 				String direction = iter.next();
@@ -231,7 +235,7 @@ public class InitialData {
 				roomObject.setCoverable(coverable);
 				roomObject.setPreviouslyUnlocked(previouslyUnlocked);
 				roomObject.setInventoryID(inventoryID);
-				roomObject.setObjectID(objectID++);
+				roomObject.setObjectID(objectID);
 				
 				roomObjectList.add(roomObject);
 			}
@@ -248,9 +252,7 @@ public class InitialData {
 		List<PlayableObject> playableObjectList = new ArrayList<PlayableObject>();
 		ReadCSV readItems = new ReadCSV("playableObjects.csv");
 		
-		try {
-			int objectID = 1;
-			
+		try {			
 			while (true) {
 				List<String> itemRow = readItems.next();
 				
@@ -259,8 +261,9 @@ public class InitialData {
 				}
 				
 				Iterator<String> iter = itemRow.iterator();
-				Integer.parseInt(iter.next());
 				
+				
+				int objectID = Integer.parseInt(iter.next());
 				String name = iter.next();
 				String description = iter.next();
 				String direction = iter.next();
@@ -292,7 +295,7 @@ public class InitialData {
 				playableObject.setCoverable(coverable);
 				playableObject.setPreviouslyUnlocked(previouslyUnlocked);
 				playableObject.setInventoryID(inventoryID);
-				playableObject.setObjectID(objectID++);
+				playableObject.setObjectID(objectID);
 				playableObject.setPlayedNotes(playedNotes);
 				
 				playableObjectList.add(playableObject);
@@ -340,7 +343,12 @@ public class InitialData {
 				boolean consumeItem = Integer.parseInt(iter.next()) == 1;
 				int unlockItemID = Integer.parseInt(iter.next());
 				
-				UnlockableObject unlockableObject = new UnlockableObject(name, description, direction, blockingExit, getAllItems().get(unlockItemID), roomID);
+				Item unlockItem = null;
+				if (items.size() >= unlockItemID) {
+					unlockItem = items.get(unlockItemID);
+				}
+				
+				UnlockableObject unlockableObject = new UnlockableObject(name, description, direction, blockingExit, unlockItem, roomID);
 				unlockableObject.cover(covered);
 				unlockableObject.setObstacle(isObstacle);
 				unlockableObject.setMoveable(moveable);
@@ -359,6 +367,9 @@ public class InitialData {
 			}
 			
 			System.out.println("unlockableObjectsList loaded");
+			
+			unlockableObjects = unlockableObjectsList;
+			
 			return unlockableObjectsList;
 		} finally {
 			readItems.close();
@@ -370,8 +381,6 @@ public class InitialData {
 		ReadCSV readItems = new ReadCSV("puzzles.csv");
 		
 		try {
-			int puzzleID = 1;
-			
 			while (true) {
 				List<String> itemRow = readItems.next();
 				
@@ -380,20 +389,19 @@ public class InitialData {
 				}
 				
 				Iterator<String> iter = itemRow.iterator();
-				Integer.parseInt(iter.next());
-				
+
+				int roomID = Integer.parseInt(iter.next());
 				String description = iter.next();
 				String solution = iter.next();
 				String hint = iter.next();
 				boolean writtenSolution = Integer.parseInt(iter.next()) == 1;
 				String unlockObstacle = iter.next();
 				boolean solved = Integer.parseInt(iter.next()) == 1;
-				int roomID = Integer.parseInt(iter.next());
 				
 				Puzzle puzzle = new Puzzle(description, solution, hint, writtenSolution, unlockObstacle, roomID);
 				puzzle.setSolved(solved);
 				
-				puzzle.setPuzzleID(puzzleID++);
+				puzzle.setPuzzleID(roomID);
 				
 				puzzlesList.add(puzzle);
 			}
@@ -407,11 +415,9 @@ public class InitialData {
 	
 	public static List<ObjectPuzzle> getAllObjectPuzzles() throws IOException {
 		List<ObjectPuzzle> objectPuzzlesList = new ArrayList<ObjectPuzzle>();
-		ReadCSV readItems = new ReadCSV("objectPuzzle.csv");
+		ReadCSV readItems = new ReadCSV("objectPuzzles.csv");
 		
 		try {
-			int puzzleID = 1;
-			
 			while (true) {
 				List<String> itemRow = readItems.next();
 				
@@ -420,8 +426,8 @@ public class InitialData {
 				}
 				
 				Iterator<String> iter = itemRow.iterator();
-				Integer.parseInt(iter.next());
 				
+				int puzzleID = Integer.parseInt(iter.next());
 				String description = iter.next();
 				String solution = iter.next();
 				String hint = iter.next();
@@ -432,14 +438,12 @@ public class InitialData {
 				int objectID = Integer.parseInt(iter.next());
 				int itemID = Integer.parseInt(iter.next());
 				
-				ObjectPuzzle puzzle = new ObjectPuzzle(description, solution, hint, getAllObjects().get(objectID), getAllItems().get(itemID), unlockObstacle, roomID);
-				puzzle.setPuzzleID(puzzleID++);
+				ObjectPuzzle puzzle = new ObjectPuzzle(description, solution, hint, unlockableObjects.get(5), items.get(8), unlockObstacle, roomID);
+				puzzle.setPuzzleID(puzzleID);
 				puzzle.setWrittenSolution(writtenSolution);
 				puzzle.setSolved(solved);
 				
 				objectPuzzlesList.add(puzzle);
-				
-				return objectPuzzlesList;
 			}
 			
 			System.out.println("objectPuzzlesList loaded");
@@ -469,11 +473,9 @@ public class InitialData {
 
 				Connections connections = new Connections(locationID);
 				connections.setConnectionID(locationID);
-				connections.addConnection(direction, getAllRooms().get(destinationID));
+				connections.addConnection(direction, rooms.get(destinationID - 1));
 				
 				connectionsList.add(connections);
-				
-				return connectionsList;
 			}
 			
 			System.out.println("connectionsList loaded");
