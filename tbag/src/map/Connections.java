@@ -5,6 +5,8 @@ import java.util.HashMap;
 public class Connections {
 	private HashMap<String, Room> connectionsMap;
 	private int connectionID;
+	private int destinationID;
+	private String direction;
 	
 	public Connections(int roomID) {
 		this.connectionsMap = new HashMap<String, Room>();
@@ -13,6 +15,9 @@ public class Connections {
 	
 	public void addConnection(String direction, Room destination) {
 		connectionsMap.put(direction, destination);
+		
+		this.destinationID = destination.getRoomID();
+		this.direction = direction;
 	}
 	
 	public boolean hasConnection(String direction) {
@@ -42,5 +47,21 @@ public class Connections {
 
 	public HashMap<String, Room> getConnectionsMap() {
 		return connectionsMap;
+	}
+
+	public int getDestinationID() {
+		return destinationID;
+	}
+
+	public void setDestinationID(int destinationID) {
+		this.destinationID = destinationID;
+	}
+
+	public String getDirection() {
+		return direction != null ? direction : "";
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
 	}
 }

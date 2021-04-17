@@ -1,5 +1,6 @@
 package database;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,16 +9,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import actor.Actor;
 import actor.Player;
 import game.Game;
 import items.CompoundItem;
 import items.Inventory;
 import items.Item;
+import map.Connections;
 import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
+import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 // REFERENCED FROM LIBRARY EXAMPLE
@@ -88,7 +90,7 @@ public class DerbyDatabase implements IDatabase {
 	// TODO: Change it here and in SQLDemo.java under CS320_LibraryExample_Lab06->edu.ycp.cs320.sqldemo
 	// TODO: DO NOT PUT THE DB IN THE SAME FOLDER AS YOUR PROJECT - that will cause conflicts later w/Git
 	private Connection connect() throws SQLException {
-		Connection conn = DriverManager.getConnection("jdbc:derby:C:/CS320-2019-LibraryExample-DB/library.db;create=true");		
+		Connection conn = DriverManager.getConnection("jdbc:derby:C:/CS320-Windows98-DB/tbag.db;create=true");		
 		
 		// Set autocommit() to false to allow the execution of
 		// multiple queries/statements as part of the same transaction.
@@ -587,7 +589,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
-	public List<Player> findAllPlayers() {
+	public List<Player> getAllPlayers() {
 		return executeTransaction(new Transaction<List<Player>>() {
 			@Override
 			public List<Player> execute(Connection conn) throws SQLException {
@@ -788,7 +790,8 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmtPuzls = null;	
 				PreparedStatement stmtRmObjs = null;
 				PreparedStatement stmtRms = null;
-				PreparedStatement stmtUnlckbleObjs = null;				
+				PreparedStatement stmtUnlckbleObjs = null;	
+				PreparedStatement stmtCnnctns = null;				
 			
 				try {
 					stmtCmpdItms = conn.prepareStatement(
@@ -972,6 +975,15 @@ public class DerbyDatabase implements IDatabase {
 					);	
 					stmtUnlckbleObjs.executeUpdate();
 					
+					stmtCnnctns = conn.prepareStatement(
+						"create table connections (" +
+						"	locationID integer," +
+						"	destinationID integer," +
+						"	direction varchar(40)" +
+						")"
+					);
+					stmtCnnctns.executeUpdate();
+					
 					System.out.println("unlockableObjects table created");		
 					return true;
 				} finally {
@@ -985,8 +997,285 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmtRmObjs);
 					DBUtil.closeQuietly(stmtRms);
 					DBUtil.closeQuietly(stmtUnlckbleObjs);	
+					DBUtil.closeQuietly(stmtCnnctns);
 				}
 			}
 		});
+	}
+	
+	public void loadInitialData() {
+		executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				List<Item> items;
+				List<CompoundItem> compoundItems;
+				List<Player> players;
+				List<Room> rooms;
+				List<RoomObject> roomObjects;
+				List<PlayableObject> playableObjects;
+				List<UnlockableObject> unlockableObjects;
+				List<Puzzle> puzzles;
+				List<ObjectPuzzle> objectPuzzles;
+				List<Connections> connections;
+				
+				try {
+					items = InitialData.getAllItems();
+					compoundItems = InitialData.getAllCompoundItems();
+					players = InitialData.getAllPlayers();
+					rooms = InitialData.getAllRooms();
+					roomObjects = InitialData.getAllObjects();
+					playableObjects = InitialData.getAllPlayableObjects();
+					unlockableObjects = InitialData.getAllUnlockableObjects();
+					puzzles = InitialData.getAllPuzzles();
+					objectPuzzles = InitialData.getAllObjectPuzzles();
+					connections = InitialData.getAllConnections();
+				} catch (IOException e) {
+					throw new SQLException("Couldn't read initial data", e);
+				}
+
+				PreparedStatement insertItems = null;
+				PreparedStatement insertCompoundItems = null;
+				PreparedStatement insertPlayers = null;
+				PreparedStatement insertRooms = null;
+				PreparedStatement insertRoomObjects = null;
+				PreparedStatement insertPlayableObjects = null;
+				PreparedStatement insertUnlockableObjects = null;
+				PreparedStatement insertPuzzles = null;
+				PreparedStatement insertObjectPuzzles = null;
+				PreparedStatement insertConnections = null;
+				
+				try {
+					insertItems = conn.prepareStatement("insert into items (itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, inventoryID) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					
+					for (Item item : items) {
+						insertItems.setInt(1, item.getItemID());
+						insertItems.setString(2, item.getName());
+						insertItems.setString(3, item.getDescription());
+						insertItems.setDouble(4, item.getWeight());
+						insertItems.setInt(5, item.isInteractable() ? 1 : 0);
+						insertItems.setInt(6, item.canBePickedUp() ? 1 : 0);
+						insertItems.setInt(7, item.consumeOnUse() ? 1 : 0);
+						insertItems.setInt(8, item.inInventory() ? 1 : 0);
+						insertItems.setInt(9, item.isEquipped() ? 1 : 0);
+						insertItems.setInt(10, item.isEquippable() ? 1 : 0);
+						insertItems.setInt(11, item.isReadable() ? 1 : 0);
+						insertItems.setInt(12, item.isPourable() ? 1 : 0);
+						insertItems.setInt(13, item.getLocationID());
+						insertItems.addBatch();
+					}
+					
+					insertItems.executeBatch();
+					
+					
+					insertCompoundItems = conn.prepareStatement("insert into compoundItems (itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, locationID, inventoryID, breakItemID, breakable) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
+					
+					for (CompoundItem compoundItem : compoundItems) {
+						insertCompoundItems.setInt(1, compoundItem.getItemID());
+						insertCompoundItems.setString(2, compoundItem.getName());
+						insertCompoundItems.setString(3, compoundItem.getDescription());
+						insertCompoundItems.setDouble(4, compoundItem.getWeight());
+						insertCompoundItems.setInt(5, compoundItem.isInteractable() ? 1 : 0);
+						insertCompoundItems.setInt(6, compoundItem.canBePickedUp() ? 1 : 0);
+						insertCompoundItems.setInt(7, compoundItem.consumeOnUse() ? 1 : 0);
+						insertCompoundItems.setInt(8, compoundItem.inInventory() ? 1 : 0);
+						insertCompoundItems.setInt(9, compoundItem.isEquipped() ? 1 : 0);
+						insertCompoundItems.setInt(10, compoundItem.isEquippable() ? 1 : 0);
+						insertCompoundItems.setInt(11, compoundItem.isReadable() ? 1 : 0);
+						insertCompoundItems.setInt(12, compoundItem.isPourable() ? 1 : 0);
+						insertCompoundItems.setInt(13, compoundItem.getLocationID());
+						insertCompoundItems.setInt(14, compoundItem.getInventoryID());
+						insertCompoundItems.setInt(15, compoundItem.getBreakItem().getItemID());
+						insertCompoundItems.setInt(16, compoundItem.isBreakable() ? 1 : 0);
+						insertCompoundItems.addBatch();
+					}
+					
+					insertCompoundItems.executeBatch();
+					
+					
+					insertPlayers = conn.prepareStatement("insert into players (actorID, roomID, inventoryID) values (?, ?, ?");
+					
+					for (Player player : players) {
+						insertPlayers.setInt(1, player.getActorID());
+						insertPlayers.setInt(2, player.getRoomID());
+						insertPlayers.setInt(3, player.getInventoryID());
+						insertPlayers.addBatch();
+					}
+					
+					insertPlayers.executeBatch();
+					
+					
+					insertRooms = conn.prepareStatement("insert into rooms (roomID, description, inventoryID) values (?, ?, ?");
+					
+					for (Room room : rooms) {
+						insertRooms.setInt(1, room.getRoomID());
+						insertRooms.setString(2, room.getDescription());
+						insertRooms.setInt(3, room.getInventoryID());
+						insertRooms.addBatch();
+					}
+					
+					insertRooms.executeBatch();
+					
+					
+					insertRoomObjects = conn.prepareStatement("insert into roomObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID) " + 
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					
+					for (RoomObject roomObject : roomObjects) {
+						insertRoomObjects.setInt(1, roomObject.getObjectID());
+						insertRoomObjects.setString(2, roomObject.getName());
+						insertRoomObjects.setString(3, roomObject.getDescription());
+						insertRoomObjects.setString(4, roomObject.getDirection());
+						insertRoomObjects.setInt(5, roomObject.isObstacle() ? 1 : 0);
+						insertRoomObjects.setInt(6, roomObject.isBlockingExit() ? 1 : 0);
+						insertRoomObjects.setInt(7, roomObject.isMoveable() ? 1 : 0);
+						insertRoomObjects.setString(8, roomObject.getCovering());
+						insertRoomObjects.setInt(9, roomObject.isUnlockable() ? 1 : 0);
+						insertRoomObjects.setInt(10, roomObject.isLocked() ? 1 : 0);
+						insertRoomObjects.setInt(11, roomObject.isInteractable() ? 1 : 0);
+						insertRoomObjects.setInt(12, roomObject.canHoldItems() ? 1 : 0);
+						insertRoomObjects.setInt(13, roomObject.isCoverable() ? 1 : 0);
+						insertRoomObjects.setInt(14, roomObject.wasPreviouslyUnlocked() ? 1 : 0);
+						insertRoomObjects.setInt(15, roomObject.getRoomID());
+						insertRoomObjects.setInt(16, roomObject.getInventoryID());
+						insertRoomObjects.addBatch();
+					}
+					
+					insertRoomObjects.executeBatch();
+					
+					
+					insertPlayableObjects = conn.prepareStatement("insert into playableObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID, isInstrument, playedNotes, requiredNotes) " + 
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					
+					for (PlayableObject playableObject : playableObjects) {
+						insertPlayableObjects.setInt(1, playableObject.getObjectID());
+						insertPlayableObjects.setString(2, playableObject.getName());
+						insertPlayableObjects.setString(3, playableObject.getDescription());
+						insertPlayableObjects.setString(4, playableObject.getDirection());
+						insertPlayableObjects.setInt(5, playableObject.isObstacle() ? 1 : 0);
+						insertPlayableObjects.setInt(6, playableObject.isBlockingExit() ? 1 : 0);
+						insertPlayableObjects.setInt(7, playableObject.isMoveable() ? 1 : 0);
+						insertPlayableObjects.setString(8, playableObject.getCovering());
+						insertPlayableObjects.setInt(9, playableObject.isUnlockable() ? 1 : 0);
+						insertPlayableObjects.setInt(10, playableObject.isLocked() ? 1 : 0);
+						insertPlayableObjects.setInt(11, playableObject.isInteractable() ? 1 : 0);
+						insertPlayableObjects.setInt(12, playableObject.canHoldItems() ? 1 : 0);
+						insertPlayableObjects.setInt(13, playableObject.isCoverable() ? 1 : 0);
+						insertPlayableObjects.setInt(14, playableObject.wasPreviouslyUnlocked() ? 1 : 0);
+						insertPlayableObjects.setInt(15, playableObject.getRoomID());
+						insertPlayableObjects.setInt(16, playableObject.getInventoryID());
+						insertPlayableObjects.setInt(17, playableObject.isInstrument() ? 1 : 0);
+						insertPlayableObjects.setString(18, playableObject.getPlayedNotes());
+						insertPlayableObjects.setString(19, String.valueOf(playableObject.getRequiredNotes()));
+						insertPlayableObjects.addBatch();
+					}
+					
+					insertPlayableObjects.executeBatch();
+					
+					
+					insertUnlockableObjects = conn.prepareStatement("insert into unlockableObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID, consumeItem, unlockItemID) " + 
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					
+					for (UnlockableObject unlockableObject : unlockableObjects) {
+						insertRoomObjects.setInt(1, unlockableObject.getObjectID());
+						insertRoomObjects.setString(2, unlockableObject.getName());
+						insertRoomObjects.setString(3, unlockableObject.getDescription());
+						insertRoomObjects.setString(4, unlockableObject.getDirection());
+						insertRoomObjects.setInt(5, unlockableObject.isObstacle() ? 1 : 0);
+						insertRoomObjects.setInt(6, unlockableObject.isBlockingExit() ? 1 : 0);
+						insertRoomObjects.setInt(7, unlockableObject.isMoveable() ? 1 : 0);
+						insertRoomObjects.setString(8, unlockableObject.getCovering());
+						insertRoomObjects.setInt(9, unlockableObject.isUnlockable() ? 1 : 0);
+						insertRoomObjects.setInt(10, unlockableObject.isLocked() ? 1 : 0);
+						insertRoomObjects.setInt(11, unlockableObject.isInteractable() ? 1 : 0);
+						insertRoomObjects.setInt(12, unlockableObject.canHoldItems() ? 1 : 0);
+						insertRoomObjects.setInt(13, unlockableObject.isCoverable() ? 1 : 0);
+						insertRoomObjects.setInt(14, unlockableObject.wasPreviouslyUnlocked() ? 1 : 0);
+						insertRoomObjects.setInt(15, unlockableObject.getRoomID());
+						insertRoomObjects.setInt(16, unlockableObject.getInventoryID());
+						insertRoomObjects.setInt(17, unlockableObject.consumeItem() ? 1 : 0);
+						insertRoomObjects.setInt(18, unlockableObject.getUnlockItemID());
+						insertRoomObjects.addBatch();
+					}
+					
+					insertRoomObjects.executeBatch();
+					
+					
+					insertPuzzles = conn.prepareStatement("insert into puzzles (puzzleID, description, solution, hint, writtenSolution, unlockObstacle, solved, roomID) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?");
+					
+					for (Puzzle puzzle : puzzles) {
+						insertPuzzles.setInt(1, puzzle.getPuzzleID());
+						insertPuzzles.setString(2, puzzle.getDescription());
+						insertPuzzles.setString(3, puzzle.getSolution());
+						insertPuzzles.setString(4, puzzle.getHint());
+						insertPuzzles.setInt(5, puzzle.isWrittenSolution() ? 1 : 0);
+						insertPuzzles.setString(6, puzzle.getUnlockObstacle());
+						insertPuzzles.setInt(7, puzzle.isSolved() ? 1 : 0);
+						insertPuzzles.setInt(8, puzzle.getRoomID());
+						insertPuzzles.addBatch();
+					}
+					
+					insertPuzzles.executeBatch();
+					
+					
+					insertObjectPuzzles = conn.prepareStatement("insert into puzzles (puzzleID, description, solution, hint, solved, writtenSolution, unlockObstacle, roomID, objectID, itemID) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+					
+					for (ObjectPuzzle objectPuzzle : objectPuzzles) {
+						insertObjectPuzzles.setInt(1, objectPuzzle.getPuzzleID());
+						insertObjectPuzzles.setString(2, objectPuzzle.getDescription());
+						insertObjectPuzzles.setString(3, objectPuzzle.getSolution());
+						insertObjectPuzzles.setString(4, objectPuzzle.getHint());
+						insertObjectPuzzles.setInt(5, objectPuzzle.isSolved() ? 1 : 0);
+						insertObjectPuzzles.setInt(6, objectPuzzle.isWrittenSolution() ? 1 : 0);
+						insertObjectPuzzles.setString(7, objectPuzzle.getUnlockObstacle());
+						insertObjectPuzzles.setInt(8, objectPuzzle.getRoomID());
+						insertObjectPuzzles.setInt(9, objectPuzzle.getObjectID());
+						insertObjectPuzzles.setInt(10, objectPuzzle.getItemID());
+						insertObjectPuzzles.addBatch();
+					}
+					
+					insertObjectPuzzles.executeBatch();
+					
+					
+					insertConnections = conn.prepareStatement("insert into connections (locationID, destinationID, direction) values (?, ?, ?)");
+					
+					for (Connections connection : connections) {
+						insertConnections.setInt(1, connection.getConnectionID());
+						insertConnections.setInt(2, connection.getDestinationID());
+						insertConnections.setString(3, connection.getDirection());
+						insertConnections.addBatch();
+					}
+					
+					insertConnections.executeBatch();
+					
+					return true;
+				} finally {
+					DBUtil.closeQuietly(insertItems);
+					DBUtil.closeQuietly(insertCompoundItems);
+					DBUtil.closeQuietly(insertPlayers);
+					DBUtil.closeQuietly(insertRooms);
+					DBUtil.closeQuietly(insertRoomObjects);
+					DBUtil.closeQuietly(insertPlayableObjects);
+					DBUtil.closeQuietly(insertUnlockableObjects);
+					DBUtil.closeQuietly(insertPuzzles);
+					DBUtil.closeQuietly(insertObjectPuzzles);
+					DBUtil.closeQuietly(insertConnections);
+				}
+			}
+		});
+	}
+	
+	// The main method creates the database tables and loads the initial data.
+	public static void main(String[] args) throws IOException {
+		System.out.println("Creating tables...");
+		DerbyDatabase db = new DerbyDatabase();
+		db.createTables();
+		
+		System.out.println("Loading initial data...");
+		db.loadInitialData();
+		
+		System.out.println("Library DB successfully initialized!");
 	}
 }

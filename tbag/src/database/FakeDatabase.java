@@ -70,7 +70,7 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public List<Player> findAllPlayers() {
+	public List<Player> getAllPlayers() {
 		// TODO Auto-generated method stub
 		return null;
 	}

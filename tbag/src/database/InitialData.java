@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import actor.Actor;
+import actor.Player;
 import game.Game;
 import items.CompoundItem;
 import items.Item;
@@ -62,7 +63,7 @@ public class InitialData {
 		}
 	}
 	
-	public List<CompoundItem> getAllCompoundItems() throws IOException {
+	public static List<CompoundItem> getAllCompoundItems() throws IOException {
 		List<CompoundItem> compoundItemList = new ArrayList<CompoundItem>();
 		ReadCSV readCompoundItems = new ReadCSV("compoundItems.csv");
 		
@@ -121,9 +122,9 @@ public class InitialData {
 		}
 	}
 	
-	public List<Actor> getAllActors() throws IOException {
-		List<Actor> actorList = new ArrayList<Actor>();
-		ReadCSV readItems = new ReadCSV("actor.csv");
+	public static List<Player> getAllPlayers() throws IOException {
+		List<Player> playerList = new ArrayList<Player>();
+		ReadCSV readItems = new ReadCSV("players.csv");
 		
 		try {
 			int actorID = 1;
@@ -140,21 +141,21 @@ public class InitialData {
 				
 				int roomID = Integer.parseInt(iter.next());
 				
-				Actor actor = new Actor(new Game(), roomID);
-				actor.setInventoryID(Integer.parseInt(iter.next()));
-				actor.setActorID(actorID);
+				Player player = new Player(new Game(), roomID);
+				player.setInventoryID(Integer.parseInt(iter.next()));
+				player.setActorID(actorID);
 				
-				actorList.add(actor);
+				playerList.add(player);
 			}
 			
 			System.out.println("actorList loaded");
-			return actorList;
+			return playerList;
 		} finally {
 			readItems.close();
 		}
 	}
 	
-	public List<Room> getAllRooms() throws IOException {
+	public static List<Room> getAllRooms() throws IOException {
 		List<Room> roomList = new ArrayList<Room>();
 		ReadCSV readItems = new ReadCSV("rooms.csv");
 		
@@ -188,7 +189,7 @@ public class InitialData {
 		}
 	}
 	
-	public List<RoomObject> getAllObjects() throws IOException {
+	public static List<RoomObject> getAllObjects() throws IOException {
 		List<RoomObject> roomObjectList = new ArrayList<RoomObject>();
 		ReadCSV readItems = new ReadCSV("roomObjects.csv");
 		
@@ -242,7 +243,7 @@ public class InitialData {
 		}
 	}
 	
-	public List<PlayableObject> getAllPlayableObjects() throws IOException {
+	public static List<PlayableObject> getAllPlayableObjects() throws IOException {
 
 		List<PlayableObject> playableObjectList = new ArrayList<PlayableObject>();
 		ReadCSV readItems = new ReadCSV("playableObjects.csv");
@@ -304,7 +305,7 @@ public class InitialData {
 		}
 	}
 	
-	public List<UnlockableObject> getAllUnlockableObjects() throws IOException {
+	public static List<UnlockableObject> getAllUnlockableObjects() throws IOException {
 		List<UnlockableObject> unlockableObjectsList = new ArrayList<UnlockableObject>();
 		ReadCSV readItems = new ReadCSV("unlockableObjects.csv");
 		
@@ -364,7 +365,7 @@ public class InitialData {
 		}
 	}
 	
-	public List<Puzzle> getAllPuzzles() throws IOException {
+	public static List<Puzzle> getAllPuzzles() throws IOException {
 		List<Puzzle> puzzlesList = new ArrayList<Puzzle>();
 		ReadCSV readItems = new ReadCSV("puzzles.csv");
 		
@@ -404,7 +405,7 @@ public class InitialData {
 		}
 	}
 	
-	public List<ObjectPuzzle> getAllObjectPuzzles() throws IOException {
+	public static List<ObjectPuzzle> getAllObjectPuzzles() throws IOException {
 		List<ObjectPuzzle> objectPuzzlesList = new ArrayList<ObjectPuzzle>();
 		ReadCSV readItems = new ReadCSV("objectPuzzle.csv");
 		
@@ -448,7 +449,7 @@ public class InitialData {
 		}
 	}
 	
-	public List<Connections> getAllConnections() throws IOException {
+	public static List<Connections> getAllConnections() throws IOException {
 		List<Connections> connectionsList = new ArrayList<Connections>();
 		ReadCSV readItems = new ReadCSV("connections.csv");
 		
