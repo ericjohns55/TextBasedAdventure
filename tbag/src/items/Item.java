@@ -13,6 +13,9 @@ public class Item {
 	private boolean readable;
 	private boolean pourable;
 	
+	private boolean lightable;
+	private boolean isLit;
+	
 	public Item(String name, double weight) {
 		this.name = name;
 		this.weight = weight;
@@ -25,6 +28,9 @@ public class Item {
 		this.isEquipped = false;
 		this.readable = false;
 		this.pourable = false;
+		this.isLit = false;
+		this.lightable = false;
+		
 	}
 	
 	public Item(String name) {
@@ -135,4 +141,23 @@ public class Item {
 	public void setEquippable(boolean equippable) {
 		this.equippable = equippable;
 	}
+
+	public boolean isLightable() {
+		return lightable;
+	}
+
+	public void setLightable(boolean lightable) {
+		this.lightable = lightable;
+	}
+
+	public boolean isLit() {
+		return isLit;
+	}
+
+	public void setLit(boolean isLit) {
+		this.isLit = isLit;
+	}
+	
+	
+	
 }

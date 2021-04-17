@@ -14,6 +14,9 @@ import puzzle.Puzzle;
 public class RoomGeneration {
 	public static void generateRooms(HashMap<Integer, Room> rooms) {
 		// 24 rooms and an exit 
+		
+		// Look command requires item : room 10
+		
 		Room room1 = new Room("You are in a room with a westward door containing nothing but a table.", 1);
 		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There is a door to the west and there appears to be some sensory pad contained in the room...", 2);
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
@@ -28,11 +31,11 @@ public class RoomGeneration {
 		Room room8 = new Room("You are in a living room with a westward door and a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
 		
 		Room room9 = new Room("You are in a room with metal walls and a hellhound in front of a door to the north.", 9);
-		Room room8 = new Room("You are in a room where everthing appears to be upside down. There appears to be a desk and a bed on the ceiling with a blurry painting on the wall.", 10);
+		Room room10 = new Room("You are in a room where everthing appears to be upside down. There appears to be a desk and a bed on the ceiling with a blurry painting on the wall as well as a keypad on the door.", 10);
 		Room room11 = new Room("You are in a room, on the wall there is a sign that says \"There is nothing wrong here\". "
 				+ "This room is very clean, quiet, and cold; and you can't help but to feel like you're not alone as you hear murmurs in the walls. On a table in the exact center of the room there is a computer that says \"What is the capital of New Jersey?\" on the screen.", 11);
-		Room room8 = new Room("You are in a room where it is so dark that you can not see a thing.", 12);
-		Room room8 = new Room("Last current room", 13);
+		Room room12 = new Room("You are in a room with a lit candle that has a door to the south.", 12);
+		Room room13 = new Room("Last current room", 13);
 		
 		
 		
@@ -74,6 +77,8 @@ public class RoomGeneration {
 		room12.addExit("west", room11);
 		room12.addExit("south", room13);
 
+		room13.addExit("north", room12);
+		
 		
 		
 		// Room 1
@@ -315,44 +320,93 @@ public class RoomGeneration {
 		// Upside down room
 
 		
-		Item circularShard = new Item("circular shard", 0.6);
-		circularShard.setDescription("This shard of glass is circular.");
+		Item circularGlassShard = new Item("circular glass shard", 0.6);
+		circularGlassShard.setDescription("This shard of glass is circular.");
 
-		room10.addItem("circular shard", circularShard);		
+		room10.addItem("circular glass shard", circularGlassShard);		
 		
-		Item rectangularShard = new Item("rectangular shard", 0.6);
-		rectangularShard.setDescription("This shard of glass is rectangular.");
+		Item rectangularGlassShard = new Item("rectangular glass shard", 0.6);
+		rectangularGlassShard.setDescription("This shard of glass is rectangular.");
 
-		room10.addItem("rectangular shard", rectangularShard);
+		room10.addItem("rectangular glass shard", rectangularGlassShard);
 		
-		Item jaggedShard = new Item("jagged shard", 0.6);
-		jaggedShard.setDescription("This shard of glass is jagged.");
+		Item jaggedGlassShard = new Item("jagged glass shard", 0.6);
+		jaggedGlassShard.setDescription("This shard of glass is jagged.");
 
-		room10.addItem("jagged shard", jaggedShard);
+		room10.addItem("jagged glass shard", jaggedGlassShard);
 		
-		Item triangularShard = new Item("triangular shard", 0.6);
-		triangularShard.setDescription("This shard of glass is triangular.");
+		Item triangularGlassShard = new Item("triangular glass shard", 0.6);
+		triangularGlassShard.setDescription("This shard of glass is triangular.");
 
-		room10.addItem("triangular shard", triangularShard);
+		room10.addItem("triangular glass shard", triangularGlassShard);
 
 		
-		// Need to add a blurryPainting object to look at
+		
+		Item lighter = new Item("lighter", 0.3);
+		lighter.setDescription("This is a lighter with about 1 flicker left.");
+
+		room10.addItem("lighter", lighter);
+		
+		Item glasses = new Item("glasses", 0.6);
+		glasses.setDescription("This is a pair of glasses.");
+
+		room10.addItem("glasses", glasses);
+		
+		Item redBall = new Item("red ball", 0.8);
+		redBall.setDescription("This is a red ball.");
+
+		room10.addItem("red ball", redBall);
+		
+		
+		
+		// Need to add a blurryPainting object to look at. 
+		
+		// If the object can't be looked at now then set the items not be able to be seen either, almost like 
+		// the dark room stuff. Have to set it to be locked so the item (the code) cant be seen
+		
+		UnlockableObject painting = new UnlockableObject("painting", "862451", "north", true, "triangular glass shard");
+		painting.setCanBeLookedAtNow(false);
+		painting.setLocked(true);
+		painting.setCanHoldItems(true);
+		room10.addObject("painting", painting);
+		
+		Item code = new Item("code");
+		code.setReadable(true);
+		code.setCanBePickedUp(false);
+		code.setDescription("862451");
+		
+		painting.getInventory().addItem("code", code);
+
+		
+		// Desk and bed objects 
+		RoomObject desk10 = new RoomObject("desk", "This desk is on the ceiling.", "north", false, false, false);
+		desk10.setCanHoldItems(false);
+		desk10.setInteractable(false);
+		room10.addObject("desk", desk10);
+		
+		RoomObject bed10 = new RoomObject("bed", "This bed is on the ceiling.", "north", false, false, false);
+		bed10.setCanHoldItems(false);
+		bed10.setInteractable(false);
+		room10.addObject("bed", bed10);
 		
 		
 		//public ObjectPuzzle(String description, String solution, String hint, RoomObject object, Item requiredItem, String unlockObstacle) {
-		
-		ObjectPuzzle upsideDownRoomPuzzle = new ObjectPuzzle("Look at a painting with a glass shard.", "Play 'Crumbling Land'", "This shard of glass is a well known geometric shape.", blurryPainting, triangularShard, "room10Door");
-		room10.setPuzzle(upsideDownRoomPuzzle);
+		Puzzle secretCode = new Puzzle("Read a secret code.", "862451", "Try reading the painting with a popular geometric shape.", true, "writtenObstacle");
+		room10.setPuzzle(secretCode);
+	
 		
 		UnlockableObject room10Door = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
 		room10Door.setLocked(true);
 		room10.addObject("room10Door", room10Door);
 		
 		
+		
+		
+		
 		// Room 11
-		RoomObject table11 = new RoomObject("Table", "A table that can hold things!", "north", false, false, false);
+		RoomObject table11 = new RoomObject("table", "A table that can hold things!", "north", false, false, false);
 		table11.setCanHoldItems(true);
-		room11.addObject("table", table11);
+		room11.addObject("table11", table11);
 		
 		Puzzle newJersey = new Puzzle("Geography problem.", "Trenton", "There's a name in the solution.", true, "writtenObstacle");
 		room11.setPuzzle(newJersey);
@@ -364,18 +418,40 @@ public class RoomGeneration {
 		
 		
 		
+		
+		
 		// Room 12
-		Item redKey = new Item("redKey");
+		
+		// So the room starts out dark and needs an item to "light" an unlockable object to be able to reveal the room items (
+		// in this case a red key) and advance. I set the opposite in here 
+		
+		room12.setCanSee(false);
+		
+		
+		// Thinking the key and door will be revealed once the candle is lit and in the room.
+		// Candle would be room object since it needs the lighter to illuminate the room
+		// LightableObject candle = new LightableObject("candle", "Looks like you need an object to light it.", "north", true, "lighter");
+		
+		Item candle = new Item("candle");
+		candle.setWeight(0.8);
+		candle.setLightable(true);
+		candle.setLit(false);
+		candle.setDescription("This red key seems to be able to unlock a door.");
+
+		room12.addItem("candle", candle);
+		
+		Item redKey = new Item("red key");
 		redKey.setWeight(0.1);
 		redKey.setDescription("This red key seems to be able to unlock a door.");
-
-		room12.addItem("red key", redKey);
 		
-		UnlockableObject room12Door = new UnlockableObject("door", "Probably leads to another room...", "south", true, "key");
+		room12.addItem("red key", redKey);
+
+	
+		UnlockableObject room12Door = new UnlockableObject("door", "Probably leads to another room but you might need a key...", "south", true, "red key");
 		room12Door.setLocked(true);
 		room12.addObject("room12Door", room12Door);
 		
-		room12.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
+		room12.setPuzzle(new Puzzle("Dark Room", "candle", "Might need something from a previous room to light something in here.", false, "room12Door"));
 
 		
 		

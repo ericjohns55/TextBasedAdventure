@@ -1,5 +1,6 @@
 package junit;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
@@ -62,15 +63,18 @@ public class TestUnlockableObject {
 	
 	
 	
-	// One test from testRoomObject
+	
 	@Test
-	public void testSetDirection() {
-		unlockableObject.setDirection("p");
-		assertEquals("p", unlockableObject.getDirection());
+	public void testGetCanBeLookedAtNow() {
+		assertTrue(unlockableObject.getCanBeLookedAtNow() == true);
 	}
 	
 	
-	
+	@Test
+	public void testSetCanBeLookedAtNow() {
+		unlockableObject.setCanBeLookedAtNow(false);
+		assertTrue(unlockableObject.getCanBeLookedAtNow() == false);;
+	}
 	
 	
 	

@@ -15,6 +15,8 @@ public class Room {
 	private String description; 
 	private int roomID;
 	
+	private boolean canSee;
+	
 	// Each room has to have a puzzle as well
 	
 	public Room(String description, int roomID) {
@@ -23,6 +25,7 @@ public class Room {
 		exits = new HashMap<String, Room>();
 		this.description = description;
 		this.roomID = roomID;
+		this.canSee = true;
 	}
 	
 
@@ -141,4 +144,15 @@ public class Room {
 	public void setPuzzle(Puzzle puzzle) {
 		this.puzzle = puzzle;
 	}
+	
+	public void setCanSee(boolean canSee)
+	{
+		this.canSee = canSee;
+	}
+	
+	public boolean getCanSee()
+	{
+		return canSee;
+	}
+	
 }

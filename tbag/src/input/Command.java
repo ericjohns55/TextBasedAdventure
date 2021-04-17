@@ -103,10 +103,47 @@ public class Command {
 					case "examine":
 					case "look":
 						if (noun == null || noun == "" || noun.equals("room")) {
-							output = room.getDescription();
+							
+							
+							if (room.getCanSee() == false)
+							{
+								Item candle = room.getItem("candle");
+								
+								if (inventory.contains(candle))
+								{
+									if (candle.isLit() == true)
+									{
+										output = room.getDescription();
+									}
+								}
+								
+								else
+								{
+									output = "This room is dark, you need something to see.";
+								}
+							}
+							
+							else
+							{	
+								output = room.getDescription();
+							}
+							
+							
 						} else {
 							if (room.hasItem(noun)) {
-								output = room.getItem(noun).getDescription();
+								
+								
+								if (room.getCanSee() == false)
+								{	
+									output = "The room is too dark to see items.";
+								}
+								
+								else
+								{
+									output = room.getItem(noun).getDescription();
+
+								}
+								
 							} else if (inventory.contains(noun)) {
 								output = inventory.getItem(noun).getDescription();
 							} else if (room.hasObject(noun)) {
@@ -125,6 +162,33 @@ public class Command {
 						}
 						
 						break;
+						
+					case "light":
+						if (noun.equals("candle")) {
+							
+							Item candle = room.getItem("candle");
+
+							Item lighter = room.getItem("lighter");
+							
+							if (inventory.contains(candle) && inventory.contains(lighter))
+							{
+								candle.setLit(true);
+							}
+					
+							
+							// Under here is dummy code now
+						} else if (room.hasObject(noun)) {
+							if (room.getObject(noun).isLocked()) {
+								output = "This " + room.getObject(noun).getName() + " is locked.";
+							} else {
+								output = room.getObject(noun).getInventory().listItems(noun);
+							}
+						}
+						
+						break;	
+												
+						
+						
 					case "open":
 						if (noun.equals("inventory")) {
 							output = inventory.openInventory();
