@@ -15,14 +15,14 @@ public class CutCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output = null;
-		
+	public void execute() {		
 		String noun = getNoun();
 		String location = getLocation();
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
+		
+		Game game = getGame();
 		
 		if (location != null) {
 			if (room.hasObject(location)) {
@@ -38,27 +38,26 @@ public class CutCommand extends UserCommand {
 								
 								for (String identifier : items.keySet()) {
 									object.getInventory().addItem(identifier, items.get(identifier));
-									System.out.println("Adding " + identifier);
 								}
 								
 								object.getInventory().removeItem(noun);
 								item.getInventory().emptyInventory();
 								
-								output = "You break apart the " + noun + " and dump the contents on the " + location + ".";
+								game.setOutput("You break apart the " + noun + " and dump the contents on the " + location + ".");
 							} else {
-								output = "You do not possess the needed item to cut this.";
+								game.setOutput("You do not possess the needed item to cut this.");
 							}
 						} else {
-							output = "You cannot cut this item.";
+							game.setOutput("You cannot cut this item.");
 						}
 					} else {
-						output = "Cannot cut this item.";
+						game.setOutput("Cannot cut this item.");
 					}
 				} else {
-					output = "That " + location + " does not countain a " + noun + ".";
+					game.setOutput("That " + location + " does not countain a " + noun + ".");
 				}
 			} else {
-				output = "That location does not exist.";
+				game.setOutput("That location does not exist.");
 			}
 		} else {
 			if (room.hasItem(noun)) {
@@ -76,20 +75,18 @@ public class CutCommand extends UserCommand {
 							room.removeItem(noun);
 							item.getInventory().emptyInventory();
 							
-							output = "You break apart the " + noun + " and dumb the contents on the floor.";
+							game.setOutput("You break apart the " + noun + " and dumb the contents on the floor.");
 						} else {
-							output = "You do not possess the needed item to cut this.";
+							game.setOutput("You do not possess the needed item to cut this.");
 						}
 					} else {
-						output = "You cannot cut this item.";
+						game.setOutput("You cannot cut this item.");
 					}
 				}
 			} else {
-				output = "The " + noun + " item does not exist.";
+				game.setOutput("The " + noun + " item does not exist.");
 			}
 		}
-		
-		return output;
 	}
 
 }

@@ -1271,7 +1271,7 @@ public class DerbyDatabase implements IDatabase {
 	public static void main(String[] args) throws IOException {
 		System.out.println("Creating tables...");
 		DerbyDatabase db = new DerbyDatabase();
-		db.createTables();
+//		db.createTables();
 		
 		System.out.println("\nLoading initial data...");
 		db.loadInitialData();

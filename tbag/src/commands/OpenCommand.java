@@ -10,26 +10,23 @@ public class OpenCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		Room room = getRoom();
 		Inventory inventory = getInventory();
+		Game game = getGame();
 		
 		if (noun.equals("inventory")) {
-			output = inventory.openInventory();
+			game.setOutput(inventory.openInventory());
 		} else if (room.hasObject(noun)) {
 			if (room.getObject(noun).isLocked()) {
-				output = "This " + room.getObject(noun).getName() + " is locked.";
+				game.setOutput("This " + room.getObject(noun).getName() + " is locked.");
 			} else {
-				output = room.getObject(noun).getInventory().listItems(noun);
+				game.setOutput(room.getObject(noun).getInventory().listItems(noun));
 			}
 		} else {
-			output = "Could not find " + noun + "to open.";
+			game.setOutput("Could not find " + noun + "to open.");
 		}
-		
-		return output;
 	}
 
 }

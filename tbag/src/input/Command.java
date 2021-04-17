@@ -85,9 +85,7 @@ public class Command {
 		return replace;
 	}
 	
-	public String execute() {
-		String output = null;
-		
+	public void execute() {
 		System.out.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
 		
 		if (verb != null) {
@@ -95,64 +93,68 @@ public class Command {
 				switch (verb) {
 					case "examine":
 					case "look":
-						output = new LookCommand(game, verb, noun, location).getOutput();						
+						new LookCommand(game, verb, noun, location).execute();						
 						break;
 					case "open":
-						output = new OpenCommand(game, verb, noun, location).getOutput();	
+						new OpenCommand(game, verb, noun, location).execute();	
 						break;
 					case "list":
-						output = new ListCommand(game, verb, noun, location).getOutput();						
+						new ListCommand(game, verb, noun, location).execute();						
 						break;
 					case "grab":
 					case "take":
-						output = new TakeCommand(game, verb, noun, location).getOutput();						
+						new TakeCommand(game, verb, noun, location).execute();						
 						break;
 					case "place":
 					case "drop":
-						output = new DropCommand(game, verb, noun, location).getOutput();					
+						new DropCommand(game, verb, noun, location).execute();					
 						break;
 					case "move":
 					case "walk":
-						output = new WalkCommand(game, verb, noun, location).getOutput();						
+						new WalkCommand(game, verb, noun, location).execute();						
 						break;
 					case "unlock":
-						output = new UnlockCommand(game, verb, noun, location).getOutput();						
+						new UnlockCommand(game, verb, noun, location).execute();						
 						break;
 					case "solve":
 					case "type":
-						output = new TypeCommand(game, verb, noun, location).getOutput();						
+						new TypeCommand(game, verb, noun, location).execute();						
 						break;
 					case "read":
-						output = new ReadCommand(game, verb, noun, location).getOutput();						
+						new ReadCommand(game, verb, noun, location).execute();						
 						break;
 					case "push":
-						output = new PushCommand(game, verb, noun, location).getOutput();						
+						new PushCommand(game, verb, noun, location).execute();						
 						break;
 					case "play":
-						output = new PlayCommand(game, verb, noun, location).getOutput();						
+						new PlayCommand(game, verb, noun, location).execute();						
 						break;
 					case "cut":
-						output = new CutCommand(game, verb, noun, location).getOutput();						
+						new CutCommand(game, verb, noun, location).execute();						
 						break;
 					case "pour":
-						output = new PourCommand(game, verb, noun, location).getOutput();						
+						new PourCommand(game, verb, noun, location).execute();						
 						break;
 					case "hint":
-						output = new HintCommand(game, verb, noun, location).getOutput();
+						new HintCommand(game, verb, noun, location).execute();
 						break;
 				}
 			} else {
 				if (VALID_COMMANDS.contains(verb)) {
-					output = "Missing argument for command \"" + verb + "\"";
+					game.setOutput("Missing argument for command \"" + verb + "\"");
 				} else {
-					output = "Unknown command.";
+					game.setOutput("Unknown command.");
 				}
 			}
 		} else {
-			output = "Unknown command.";
+			game.setOutput("Unknown command.");
 		}
 		
-		return output != null ? output.trim() : invalidCommand;
+		if (game.getOutput() == "") {
+			game.setOutput(invalidCommand);
+		} else {
+			game.setOutput(game.getOutput().trim());
+		}
 	}
 	
 	public String getBreakdown() {

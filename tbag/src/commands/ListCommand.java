@@ -10,26 +10,25 @@ public class ListCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
+	public void execute() {
 		String output;
 		
 		String noun = getNoun();
 		Room room = getRoom();
 		Inventory inventory = getInventory();
+		Game game = getGame();
 		
 		if (noun == null || noun.equals("room")) {
-			output = "This room has a " + room.listItems();
+			game.setOutput("This room has a " + room.listItems());
 		} else if (noun.equals("inventory")) {
-			output = inventory.openInventory();
+			game.setOutput(inventory.openInventory());
 		} else if (noun.equals("objects")) {
-			output = room.listObjects();
+			game.setOutput(room.listObjects());
 		} else if (room.hasObject(noun)) {
-			output = room.getObject(noun).getInventory().listItems();
+			game.setOutput(room.getObject(noun).getInventory().listItems());
 		} else {
-			output = "Could not find " + noun + " to list.";
+			game.setOutput("Could not find " + noun + " to list.");
 		}
-		
-		return output;
 	}
 
 }

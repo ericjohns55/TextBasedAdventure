@@ -11,35 +11,32 @@ public class LookCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output;
-
+	public void execute() {
 		String noun = getNoun();
 		Room room = getRoom();
 		Inventory inventory = getInventory();
+		Game game = getGame();
 		
 		if (noun == null || noun == "" || noun.equals("room")) {
-			output = room.getDescription();
+			game.setOutput(room.getDescription());
 		} else {
 			if (room.hasItem(noun)) {
-				output = room.getItem(noun).getDescription();
+				game.setOutput(room.getItem(noun).getDescription());
 			} else if (inventory.contains(noun)) {
-				output = inventory.getItem(noun).getDescription();
+				game.setOutput(inventory.getItem(noun).getDescription());
 			} else if (room.hasObject(noun)) {
 				RoomObject object = room.getObject(noun);
 				
 				if (object.isLocked()) {
-					output = "This object is locked, I cannot see what is inside.";
+					game.setOutput("This object is locked, I cannot see what is inside.");
 				} else {
-					output = room.getObject(noun).getDescription();
+					game.setOutput(room.getObject(noun).getDescription());
 				}
 			}
 			
 			else {
-				output = "That item doesn't exist!";
+				game.setOutput("That item doesn't exist!");
 			}
 		}
-		
-		return output;
 	}
 }

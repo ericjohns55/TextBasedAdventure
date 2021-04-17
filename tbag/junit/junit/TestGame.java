@@ -34,7 +34,8 @@ public class TestGame {
 	
 	@Test
 	public void testBadCommand() {
-		String feedback = game.runCommand("eat chocolate");
+		game.runCommand("eat chocolate");
+		String feedback = game.getOutput();
 		assertEquals(feedback, Command.invalidCommand);
 	}
 }

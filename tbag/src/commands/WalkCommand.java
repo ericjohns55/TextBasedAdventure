@@ -12,19 +12,18 @@ public class WalkCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output = null;
-		
+	public void execute() {
 		String noun = getNoun();
 		
 		Player player = getPlayer();
 		Room room = getRoom();
+		Game game = getGame();
 				
 		if (room.getAllObjects().size() == 0) {
 			if (room.hasExit(noun)) {
-				output = moveRooms(player, room, noun);
+				moveRooms(player, room, noun);
 			} else {
-				output = "You cannot move this direction.";
+				game.setOutput("You cannot move this direction.");
 			}
 		} else {
 			boolean foundObstacleInPath = false;
@@ -39,29 +38,27 @@ public class WalkCommand extends UserCommand {
 							UnlockableObject door = (UnlockableObject) roomObject;
 							
 							if (door.isLocked()) {
-								output = "This door appears to be locked... perhaps there is something in the room that can help you.";
+								game.setOutput("This door appears to be locked... perhaps there is something in the room that can help you.");
 							} else {
-								output = moveRooms(player, room, noun);
+								moveRooms(player, room, noun);
 							}
 						} else {
-							output = "A " + roomObject.getName() + " is blocking your path!";
+							game.setOutput("A " + roomObject.getName() + " is blocking your path!");
 						}
 					} else {
-						output = moveRooms(player, room, noun);
+						moveRooms(player, room, noun);
 					}									
 				}
 			}
 			
 			if (!foundObstacleInPath) {
 				if (room.hasExit(noun)) {
-					output = moveRooms(player, room, noun);
+					moveRooms(player, room, noun);
 				} else {
-					output = "There is not an exit here.";
+					game.setOutput("There is not an exit here.");
 				}
 			}
 		}
-		
-		return output;
 	}
 	
 	private String moveRooms(Player player, Room room, String direction) {
@@ -71,7 +68,7 @@ public class WalkCommand extends UserCommand {
 		player.setRoomID(roomID);
 		
 		String output = "You walk " + noun + "\n\n";
-		output += player.getRoom().getDescription();
+		getGame().addOutput(player.getRoom().getDescription());
 		
 		return output;
 	}

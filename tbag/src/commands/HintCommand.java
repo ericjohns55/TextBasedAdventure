@@ -8,8 +8,7 @@ public class HintCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output = getPuzzle().getHint();
-		return output;
+	public void execute() {
+		getGame().setOutput(getPuzzle().getHint());
 	}
 }

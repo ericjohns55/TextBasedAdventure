@@ -10,13 +10,12 @@ public class PushCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		String location = getLocation();
 		
 		Room room = getRoom();
+		Game game = getGame();
 		
 		if (room.hasObject(noun)) {
 			RoomObject object = room.getObject(noun);
@@ -25,20 +24,17 @@ public class PushCommand extends UserCommand {
 				if (location != null) {
 					object.setDirection(location);
 					
-					output = "Pushed " + object.getName() + " " + location;
+					game.setOutput("Pushed " + object.getName() + " " + location);
 				} else {
 					object.setDirection(object.getDirection() + "-left");	// will eventually do better placements.
 					
-					output = "Moved " + object.getName() + " out of the way.";
+					game.setOutput("Moved " + object.getName() + " out of the way.");
 				}
 			} else {
-				output = "Cannot push a " + object.getName() + ".";
+				game.setOutput("Cannot push a " + object.getName() + ".");
 			}
 		} else {
-			output = "Cannot find " + noun + " to move.";
+			game.setOutput("Cannot find " + noun + " to move.");
 		}
-		
-		return output;
 	}
-
 }

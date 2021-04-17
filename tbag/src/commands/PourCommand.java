@@ -13,15 +13,14 @@ public class PourCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		String location = getLocation();
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
 		Puzzle puzzle = getPuzzle();
+		Game game = getGame();
 		
 		if (location != null) {
 			if (room.hasObject(location)) {
@@ -34,7 +33,7 @@ public class PourCommand extends UserCommand {
 							if (!object.isCovered()) {
 								object.cover(noun);
 								
-								output = "You poured the " + noun + " on the " + location + ".";
+								game.setOutput("You poured the " + noun + " on the " + location + ".");
 								
 								if (item.consumeOnUse()) {
 									inventory.removeItem(noun);
@@ -45,29 +44,27 @@ public class PourCommand extends UserCommand {
 									
 									if (solutionObject.isLocked()) {
 										solutionObject.setLocked(false);
-										output += "\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!";
+										game.addOutput("\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!");
 									}
 								}
 							} else {
-								output = "This object is already covered.";
+								game.setOutput("This object is already covered.");
 							}
 						} else {
-							output = "Cannot pour " + noun + " on " + location + ".";
+							game.setOutput("Cannot pour " + noun + " on " + location + ".");
 						}
 					} else {
-						output = "You cannot pour a " + noun + ".";
+						game.setOutput("You cannot pour a " + noun + ".");
 					}
 				} else {
-					output = "You do not possess a " + noun + ".";
+					game.setOutput("You do not possess a " + noun + ".");
 				}
 			} else {
-				output = "A " + location + " does not exist in your room.";
+				game.setOutput("A " + location + " does not exist in your room.");
 			}
 		} else {
-			output = "I am not sure where to pour that.";
+			game.setOutput("I am not sure where to pour that.");
 		}
-		
-		return output;
 	}
 
 }

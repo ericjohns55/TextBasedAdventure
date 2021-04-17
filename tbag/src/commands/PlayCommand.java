@@ -15,22 +15,21 @@ public class PlayCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		String location = getLocation();
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
 		Puzzle puzzle = getPuzzle();
+		Game game = getGame();
 		
 		if (location != null) {
 			if (room.hasObject(location)) {
 				if (room.getObject(location) instanceof PlayableObject) {
 					PlayableObject object = (PlayableObject) room.getObject(location);
 					
-					output = "You played " + noun + " on the " + location + ".";
+					game.setOutput("You played " + noun + " on the " + location + ".");
 					
 					boolean unlock = false;
 					
@@ -40,14 +39,14 @@ public class PlayCommand extends UserCommand {
 								unlock = true;
 							}
 						} else {
-							output = "You entered an invalid note.";
+							game.setOutput("You entered an invalid note.");
 						}
 					} else {
 						if (inventory.contains(noun)) {
 							Item toDrop = inventory.removeItem(noun);
 							object.getInventory().addItem(noun, toDrop);
 							
-							output = "Played " + noun + " on the " + location + ".";
+							game.setOutput("Played " + noun + " on the " + location + ".");
 							
 							if (puzzle instanceof ObjectPuzzle) {
 								ObjectPuzzle obstaclePuzzle = (ObjectPuzzle) puzzle;
@@ -57,7 +56,7 @@ public class PlayCommand extends UserCommand {
 								}
 							}
 						} else {
-							output = "You do not have that item!";
+							game.setOutput("You do not have that item!");
 						}
 					}
 					
@@ -67,20 +66,17 @@ public class PlayCommand extends UserCommand {
 						if (toUnlock.isLocked()) {
 							toUnlock.setLocked(false);
 							
-							output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.";
+							game.addOutput("\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.");
 						}
 					}
 				} else {
-					output = "You cannot play anything on that!";
+					game.setOutput("You cannot play anything on that!");
 				}
 			} else {
-				output = "Could not find a " + location + ".";
+				game.setOutput("Could not find a " + location + ".");
 			}
 		} else {
-			output = "Not sure where you want me to play that...";
+			game.setOutput("Not sure where you want me to play that...");
 		}
-		
-		return output;
 	}
-
 }

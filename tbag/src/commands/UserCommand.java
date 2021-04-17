@@ -31,7 +31,7 @@ public abstract class UserCommand {
 		this.puzzle = room.getPuzzle();
 	}	
 	
-	public abstract String getOutput();
+	public abstract void execute();
 
 	public Game getGame() {
 		return game;

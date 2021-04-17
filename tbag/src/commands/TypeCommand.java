@@ -11,13 +11,12 @@ public class TypeCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		
 		Puzzle puzzle = getPuzzle();
 		Room room = getRoom();
+		Game game = getGame();
 		
 		if (puzzle.isWrittenSolution()) {
 			if (!puzzle.isSolved()) {
@@ -28,21 +27,18 @@ public class TypeCommand extends UserCommand {
 					
 					if (obstacle.isLocked()) {
 						obstacle.setLocked(false);
-						output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open!";
+						game.setOutput("A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open!");
 					} else {
-						output = "You typed " + noun + ".";
+						game.setOutput("You typed " + noun + ".");
 					}
 				} else {
-					output = noun + " is not correct.";
+					game.setOutput(noun + " is not correct.");
 				}
 			} else {
-				output = "You already solved this puzzle!";
+				game.setOutput("You already solved this puzzle!");
 			}						
 		} else {
-			output = "Could not find anything to solve...";
+			game.setOutput("Could not find anything to solve...");
 		}
-		
-		return output;
 	}
-
 }

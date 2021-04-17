@@ -12,13 +12,12 @@ public class UnlockCommand extends UserCommand {
 	}
 
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
+		Game game = getGame();
 		
 		if (room.hasObject(noun)) {
 			RoomObject roomObject = room.getObject(noun);
@@ -35,24 +34,21 @@ public class UnlockCommand extends UserCommand {
 								inventory.removeItem(unlockableObject.getUnlockItem());
 							}
 							
-							output = "You successfully unlocked the " + unlockableObject.getName() + ".";
+							game.setOutput("You successfully unlocked the " + unlockableObject.getName() + ".");
 						} else {
-							output = "You do not have the required item to unlock this " + unlockableObject.getName() + ".";
+							game.setOutput("You do not have the required item to unlock this " + unlockableObject.getName() + ".");
 						}
 					} else {
-						output = "Not implemented.";
+						game.setOutput("Not implemented.");
 					}
 				} else {
-					output = "This is already unlocked.";
+					game.setOutput("This is already unlocked.");
 				}
 			} else {
-				output = "You cannot unlock that!";
+				game.setOutput("You cannot unlock that!");
 			}
 		} else {
-			output = "This obstacle does not exist...";
+			game.setOutput("This obstacle does not exist...");
 		}
-		
-		return output;
 	}
-
 }
