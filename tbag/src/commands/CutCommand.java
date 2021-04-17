@@ -10,10 +10,6 @@ import map.Room;
 import map.RoomObject;
 
 public class CutCommand extends UserCommand {
-	public CutCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {		
 		String noun = getNoun();

@@ -8,10 +8,6 @@ import map.RoomObject;
 import puzzle.Puzzle;
 
 public class TakeCommand extends UserCommand {
-	public TakeCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {		
 		String noun = getNoun();

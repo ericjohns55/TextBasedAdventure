@@ -7,10 +7,6 @@ import map.RoomObject;
 import map.UnlockableObject;
 
 public class WalkCommand extends UserCommand {
-	public WalkCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {
 		String noun = getNoun();

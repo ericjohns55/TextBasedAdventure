@@ -6,10 +6,6 @@ import map.RoomObject;
 import puzzle.Puzzle;
 
 public class TypeCommand extends UserCommand {
-	public TypeCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {
 		String noun = getNoun();

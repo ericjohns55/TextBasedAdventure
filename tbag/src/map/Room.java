@@ -133,6 +133,10 @@ public class Room {
 		// See if the "identifier" coming in is present in the items map
 		return inventory.contains(identifier);
 	}
+	
+	public boolean hasItems() {
+		return !inventory.isEmpty();
+	}
 
 	public Puzzle getPuzzle() {
 		return puzzle;

@@ -10,10 +10,6 @@ import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 public class PlayCommand extends UserCommand {
-	public PlayCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {
 		String noun = getNoun();

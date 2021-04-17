@@ -8,10 +8,6 @@ import map.RoomObject;
 import puzzle.Puzzle;
 
 public class DropCommand extends UserCommand {
-	public DropCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {		
 		String noun = getNoun();

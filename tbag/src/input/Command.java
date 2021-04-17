@@ -2,6 +2,7 @@ package input;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,8 +14,7 @@ public class Command {
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
-	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
-			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint"));
+	private HashMap<String, UserCommand> commands;
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -27,6 +27,28 @@ public class Command {
 	public Command(String input, Game game) {
 		this.input = replaceSynonyms(input);
 		this.game = game;
+		
+		commands = new HashMap<String, UserCommand>();
+		commands.put("examine", new LookCommand());
+		commands.put("look", new LookCommand());
+		commands.put("open", new OpenCommand());
+		commands.put("list", new ListCommand());
+		commands.put("grab", new TakeCommand());
+		commands.put("take", new TakeCommand());
+		commands.put("place", new DropCommand());
+		commands.put("drop", new DropCommand());
+		commands.put("move", new WalkCommand());
+		commands.put("walk", new WalkCommand());
+		commands.put("unlock", new UnlockCommand());
+		commands.put("type", new TypeCommand());
+		commands.put("solve", new TypeCommand());
+		commands.put("read", new ReadCommand());
+		commands.put("push", new PushCommand());
+		commands.put("play", new PlayCommand());
+		commands.put("cut", new CutCommand());
+		commands.put("pour", new PourCommand());
+		commands.put("hint", new HintCommand());
+		
 		parseCommands();
 	}
 	
@@ -88,63 +110,18 @@ public class Command {
 	public void execute() {
 		System.out.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
 		
+		// eat chocolate
 		if (verb != null) {
-			if (noun != null || SINGLE_WORD_COMMANDS.contains(verb)) {
-				switch (verb) {
-					case "examine":
-					case "look":
-						new LookCommand(game, verb, noun, location).execute();						
-						break;
-					case "open":
-						new OpenCommand(game, verb, noun, location).execute();	
-						break;
-					case "list":
-						new ListCommand(game, verb, noun, location).execute();						
-						break;
-					case "grab":
-					case "take":
-						new TakeCommand(game, verb, noun, location).execute();						
-						break;
-					case "place":
-					case "drop":
-						new DropCommand(game, verb, noun, location).execute();					
-						break;
-					case "move":
-					case "walk":
-						new WalkCommand(game, verb, noun, location).execute();						
-						break;
-					case "unlock":
-						new UnlockCommand(game, verb, noun, location).execute();						
-						break;
-					case "solve":
-					case "type":
-						new TypeCommand(game, verb, noun, location).execute();						
-						break;
-					case "read":
-						new ReadCommand(game, verb, noun, location).execute();						
-						break;
-					case "push":
-						new PushCommand(game, verb, noun, location).execute();						
-						break;
-					case "play":
-						new PlayCommand(game, verb, noun, location).execute();						
-						break;
-					case "cut":
-						new CutCommand(game, verb, noun, location).execute();						
-						break;
-					case "pour":
-						new PourCommand(game, verb, noun, location).execute();						
-						break;
-					case "hint":
-						new HintCommand(game, verb, noun, location).execute();
-						break;
+			if (commands.containsKey(verb)) {
+				if (noun != null || SINGLE_WORD_COMMANDS.contains(verb)) {
+					UserCommand command = commands.get(verb);
+					command.loadInputandGame(game, verb, noun, location);
+					command.execute();
+				} else {
+					game.setOutput("Missing argument for command \"" + verb + "\"");
 				}
 			} else {
-				if (VALID_COMMANDS.contains(verb)) {
-					game.setOutput("Missing argument for command \"" + verb + "\"");
-				} else {
-					game.setOutput("Unknown command.");
-				}
+				game.setOutput("Unknown command.");
 			}
 		} else {
 			game.setOutput("Unknown command.");

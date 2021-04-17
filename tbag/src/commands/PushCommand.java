@@ -5,10 +5,6 @@ import map.Room;
 import map.RoomObject;
 
 public class PushCommand extends UserCommand {
-	public PushCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {
 		String noun = getNoun();

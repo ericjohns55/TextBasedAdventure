@@ -5,10 +5,6 @@ import items.Inventory;
 import items.Item;
 
 public class ReadCommand extends UserCommand {
-	public ReadCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {
 		String noun = getNoun();

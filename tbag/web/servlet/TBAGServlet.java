@@ -11,7 +11,7 @@ import game.Game;
 
 public class TBAGServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private Game game = new Game();
+	private Game game = new Game(7);
 	private boolean firstRun = true;
 	private String pastInputs = "";
 	

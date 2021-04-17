@@ -5,10 +5,6 @@ import items.Inventory;
 import map.Room;
 
 public class OpenCommand extends UserCommand {
-	public OpenCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {
 		String noun = getNoun();

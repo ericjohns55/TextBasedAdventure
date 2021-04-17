@@ -43,6 +43,28 @@ public class TestCommandLogic {
 	@Test
 	public void testList() {
 		game = new Game(1);
+		
+		game.runCommand("list table");
+		String expectedOutput = "This does not contain any items.";
+		String commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+		
+		game.runCommand("list room");
+		expectedOutput = "This room has a key";
+		commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+		
+		game = new Game(7);
+		
+		game.runCommand("list table");
+		expectedOutput = "This object has a lamb heart, note, butcher knife";
+		commandOutput = game.getOutput();
+		
+		game.runCommand("list room");
+		expectedOutput = "This room does not contain any items.";
+		commandOutput = game.getOutput();
 	}
 	
 	@Test

@@ -36,6 +36,6 @@ public class TestGame {
 	public void testBadCommand() {
 		game.runCommand("eat chocolate");
 		String feedback = game.getOutput();
-		assertEquals(feedback, Command.invalidCommand);
+		assertEquals(feedback, "Unknown command.");
 	}
 }

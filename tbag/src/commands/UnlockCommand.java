@@ -7,10 +7,6 @@ import map.RoomObject;
 import map.UnlockableObject;
 
 public class UnlockCommand extends UserCommand {
-	public UnlockCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
 	public void execute() {
 		String noun = getNoun();
