@@ -24,7 +24,7 @@ public class Command {
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
 	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
-			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint"));
+			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint", "feed"));
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -105,6 +105,7 @@ public class Command {
 						if (noun == null || noun == "" || noun.equals("room")) {
 							
 							
+							
 							if (room.getCanSee() == false)
 							{
 								Item candle = room.getItem("candle");
@@ -113,10 +114,16 @@ public class Command {
 								{
 									if (candle.isLit() == true)
 									{
+										room.setCanSee(true);
 										output = room.getDescription();
 									}
+									// When you have a candle, but its not lit
+									else
+									{
+										output = "This room is dark, you need to light something to see.";
+									}
 								}
-								
+								// If you dont have a candle but the room is dark
 								else
 								{
 									output = "This room is dark, you need something to see.";
@@ -132,7 +139,7 @@ public class Command {
 						} else {
 							if (room.hasItem(noun)) {
 								
-								
+								// These 2 are for when the room is dark so we dont want items to be seen
 								if (room.getCanSee() == false)
 								{	
 									output = "The room is too dark to see items.";
@@ -149,6 +156,19 @@ public class Command {
 							} else if (room.hasObject(noun)) {
 								RoomObject object = room.getObject(noun);
 								
+								
+								if (noun == "painting")
+								{	
+									UnlockableObject painting = (UnlockableObject) object;
+									
+									if (painting.getCanBeLookedAtNow() == false && inventory.contains("triangular glass shard"))
+									{
+										painting.setCanBeLookedAtNow(true);
+										painting.setLocked(false);
+									}
+								
+								}
+								
 								if (object.isLocked()) {
 									output = "This object is locked, I cannot see what is inside.";
 								} else {
@@ -162,33 +182,7 @@ public class Command {
 						}
 						
 						break;
-						
-					case "light":
-						if (noun.equals("candle")) {
-							
-							Item candle = room.getItem("candle");
-
-							Item lighter = room.getItem("lighter");
-							
-							if (inventory.contains(candle) && inventory.contains(lighter))
-							{
-								candle.setLit(true);
-							}
-					
-							
-							// Under here is dummy code now
-						} else if (room.hasObject(noun)) {
-							if (room.getObject(noun).isLocked()) {
-								output = "This " + room.getObject(noun).getName() + " is locked.";
-							} else {
-								output = room.getObject(noun).getInventory().listItems(noun);
-							}
-						}
-						
-						break;	
-												
-						
-						
+	
 					case "open":
 						if (noun.equals("inventory")) {
 							output = inventory.openInventory();
@@ -288,10 +282,15 @@ public class Command {
 												RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
 												if (obstacle.isLocked()) {
 													obstacle.setLocked(false);
-													output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.";
+													
+						
+														output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.";
+
+													
 												}
 											}
 										}
+										
 									} else {
 										output = "This object cannot hold that...";
 									}
@@ -486,8 +485,9 @@ public class Command {
 										
 										if (toUnlock.isLocked()) {
 											toUnlock.setLocked(false);
+									
+												output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.";
 											
-											output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.";
 										}
 									}
 								} else {
@@ -591,7 +591,18 @@ public class Command {
 													
 													if (solutionObject.isLocked()) {
 														solutionObject.setLocked(false);
-														output += "\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!";
+														
+														if (room.getRoomID() == 8)
+														{
+															output += "\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open! Revealing a set of stairs going up!";
+
+														}
+														
+														else
+														{
+															output += "\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!";
+
+														}
 													}
 												}
 											} else {
@@ -616,6 +627,69 @@ public class Command {
 						break;
 					case "hint":
 						output = room.getPuzzle().getHint();
+						break;
+						
+					case "light":
+						if (noun.equals("candle")) {
+							
+							Item candle = room.getItem("candle");
+
+							Item lighter = room.getItem("lighter");
+							
+							if (inventory.contains(candle) && inventory.contains(lighter))
+							{
+								candle.setLit(true);
+								output = "The candle is lit!";
+							}
+							
+							if (inventory.contains(candle))
+							{
+								output = "You may need an item to light this.";
+							}
+							
+						// For when the object is either not in the inventory or not a candle
+						} else {
+							if (inventory.contains(noun)) {
+								output = "This " + inventory.getItem(noun).getName() + " can not be lit.";
+							} else {
+								output = "This " + noun + " is not in your inventory. Try picking it up and lighting it.";
+							}
+						}
+						
+						break;
+						
+					case "feed":	
+						
+						if (noun.equals("hellhound"))
+						{
+		
+									if (inventory.contains("meat"))
+									{	
+										RoomObject object = room.getObject("hellhound");
+						
+										UnlockableObject hellhound = (UnlockableObject) object;
+						
+									
+										hellhound.setLocked(false);
+								
+								
+										Item removed = inventory.removeItem("meat");
+										removed.setInInventory(false);
+									}
+									
+								
+									else
+									{
+										output = "You do not have what is needed to feed the hellhound.";
+									}
+								
+							
+						}
+							
+						else
+						{
+							output = "This " + noun + " can not be fed.";
+						}
 						break;
 				}
 			} else {

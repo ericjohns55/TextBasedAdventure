@@ -305,6 +305,7 @@ public class RoomGeneration {
 		// the weight sensor room. But I included the unlockable object for it above too with the parameter field
 		RoomObject hellhound = new RoomObject("hellhound", "Looks hungry for meat.", "north", false, false, false);
 		hellhound.setCanHoldItems(true);
+		hellhound.setLocked(true);
 		room9.addObject("hellhound", hellhound);
 		
 		
@@ -341,7 +342,6 @@ public class RoomGeneration {
 		room10.addItem("triangular glass shard", triangularGlassShard);
 
 		
-		
 		Item lighter = new Item("lighter", 0.3);
 		lighter.setDescription("This is a lighter with about 1 flicker left.");
 
@@ -357,6 +357,13 @@ public class RoomGeneration {
 
 		room10.addItem("red ball", redBall);
 		
+		Item candle = new Item("candle");
+		candle.setWeight(0.8);
+		candle.setLightable(true);
+		candle.setLit(false);
+		candle.setDescription("This candle looks like it can be lit.");
+
+		room10.addItem("candle", candle);
 		
 		
 		// Need to add a blurryPainting object to look at. 
@@ -432,13 +439,7 @@ public class RoomGeneration {
 		// Candle would be room object since it needs the lighter to illuminate the room
 		// LightableObject candle = new LightableObject("candle", "Looks like you need an object to light it.", "north", true, "lighter");
 		
-		Item candle = new Item("candle");
-		candle.setWeight(0.8);
-		candle.setLightable(true);
-		candle.setLit(false);
-		candle.setDescription("This red key seems to be able to unlock a door.");
-
-		room12.addItem("candle", candle);
+		
 		
 		Item redKey = new Item("red key");
 		redKey.setWeight(0.1);
