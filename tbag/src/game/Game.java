@@ -31,11 +31,14 @@ public class Game {
 		this.player = new Player(this, roomID);		// load player from DB, include inv
 		this.rooms = new HashMap<Integer, Room>();	// load current room from DB, including items and objects
 		this.output = "";
-
-		RoomGeneration.generateRooms(rooms);	// should disappear after db
 		
 		DatabaseProvider.setInstance(new DerbyDatabase());
-		db = DatabaseProvider.getInstance();		
+		db = DatabaseProvider.getInstance();	
+		
+		RoomGeneration roomGeneration = new RoomGeneration(db);
+		roomGeneration.generateRoom();
+
+		RoomGeneration.generateRooms(rooms);	// should disappear after db	
 	}
 
 	public Game() {

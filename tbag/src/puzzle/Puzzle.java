@@ -9,6 +9,7 @@ public class Puzzle {
 	private String unlockObstacle;
 	private int roomID;
 	private int puzzleID;
+	private int unlockObstacleID;
 	
 	public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle, int roomID) {
 		this.description = description;
@@ -83,5 +84,13 @@ public class Puzzle {
 
 	public void setPuzzleID(int puzzleID) {
 		this.puzzleID = puzzleID;
+	}
+
+	public int getUnlockObstacleID() {
+		return unlockObstacleID;
+	}
+
+	public void setUnlockObstacleID(int unlockObstacleID) {
+		this.unlockObstacleID = unlockObstacleID;
 	}
 }

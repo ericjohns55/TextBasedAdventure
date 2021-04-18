@@ -10,6 +10,7 @@ import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
+import puzzle.Puzzle;
 
 public interface IDatabase {
 	public Item getItemByID(int itemID);
@@ -19,7 +20,9 @@ public interface IDatabase {
 	public Inventory getInventoryByID(int id);
 	public List<RoomObject> findAllObjects(Room room);	
 	public List<Player> getAllPlayers();
+	public Puzzle getPuzzle(Room room);
 	
+	public Room getRoom(int roomID);
 	public Integer addItemToInventory(Inventory destinationInventory, Item item);
 	public Integer removeItemFromInventory(Inventory inventory, Item item);
 	public Integer toggleLocks(UnlockableObject object, boolean locked);

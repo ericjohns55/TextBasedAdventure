@@ -100,6 +100,51 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	@Override
+	public Room getRoom(int roomID) {
+		return executeTransaction(new Transaction<Room>() {
+			@Override
+			public Room execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement("select rooms.* from rooms where rooms.roomID = ?");
+					stmt.setInt(1, roomID);
+					
+					resultSet = stmt.executeQuery();
+					
+					Room room = null;
+					
+					while (resultSet.next()) {
+						int index = 1;
+						
+						int roomID = resultSet.getInt(index++);
+						String description = resultSet.getString(index++);
+						int inventoryID = resultSet.getInt(index++);
+						
+						room = new Room(description, roomID);
+						room.setInventoryID(inventoryID);
+						room.setInventory(getInventory(room));
+					}
+					
+					if (room != null) {
+						List<RoomObject> objects = findAllObjects(room);
+						
+						for (RoomObject object : objects) {
+							room.addObject(object.getName(), object);
+						}
+					}
+					
+					return room;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
+				}
+			}
+		});
+	}
+	
+	@Override
 	public Item getItemByID(int itemID) {
 		return executeTransaction(new Transaction<Item>() {
 			@Override
@@ -214,6 +259,69 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	@Override
+	public Puzzle getPuzzle(Room room) {
+		return executeTransaction(new Transaction<Puzzle>() {
+			@Override
+			public Puzzle execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				ResultSet resultSet = null;
+				ResultSet resultSet2 = null;
+				
+				try {
+					stmt = conn.prepareStatement("select puzzles.*" +
+							"from puzzles, rooms" + 
+								"where puzzles.roomID = ?"
+					);
+					
+					stmt.setInt(1, room.getRoomID());
+					
+					Puzzle puzzle = null;
+					
+					resultSet = stmt.executeQuery();
+					
+					while (resultSet.next()) {
+						int index = 1;
+						
+						int puzzleID = resultSet.getInt(index++);
+						String description = resultSet.getString(index++);
+						String solution = resultSet.getString(index++);
+						String hint = resultSet.getString(index++);
+						boolean writtenSolution = resultSet.getInt(index++) == 1;
+						String unlockObstacle = resultSet.getString(index++);	// TODO: UNLOCK ID INSTEAD
+						boolean solved = resultSet.getInt(index++) == 1;
+						int roomID = resultSet.getInt(index++);
+						
+						puzzle = new Puzzle(description, solution, hint, writtenSolution, unlockObstacle, roomID);
+						puzzle.setSolved(solved);
+						puzzle.setPuzzleID(puzzleID);
+					}
+					
+					if (puzzle == null) {
+						stmt2 = conn.prepareStatement("select objectPuzzles.*" +
+								"from objectPuzzles, rooms" + 
+									"where objectPuzzles.roomID = ?"
+						);
+						
+						stmt2.setInt(1, room.getRoomID());
+						
+						resultSet2 = stmt2.executeQuery();
+						
+						while (resultSet2.next()) {
+							int index = 1;
+						}
+					}
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(resultSet2);
+				}
+			}
+		}); 
+	}
 
 	@Override
 	public Inventory getInventory(RoomObject roomObject) {
@@ -226,10 +334,22 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet2 = null;
 				
 				try {
-					stmt = conn.prepareStatement(
-							"select items.itemID" + 
-								"from items, roomObjects" +
-									"where roomObjects.inventoryID = ? and items.inventoryID = roomObjects.inventoryID");	
+					if (roomObject instanceof UnlockableObject) {
+						stmt = conn.prepareStatement(
+								"select items.itemID" + 
+									"from items, unlockableObjects" +
+										"where unlockableObjects.inventoryID = ? and items.inventoryID = unlockableObjects.inventoryID");	
+					} else if (roomObject instanceof PlayableObject) {
+						stmt = conn.prepareStatement(
+								"select items.itemID" + 
+									"from items, playableObjects" +
+										"where playableObjects.inventoryID = ? and items.inventoryID = playableObjects.inventoryID");	
+					} else {
+						stmt = conn.prepareStatement(
+								"select items.itemID" + 
+									"from items, roomObjects" +
+										"where roomObjects.inventoryID = ? and items.inventoryID = roomObjects.inventoryID");	
+					}
 					
 					stmt.setInt(1, roomObject.getInventoryID());
 					
@@ -519,7 +639,11 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public List<RoomObject> execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				PreparedStatement stmt3 = null;
 				ResultSet resultSet = null;
+				ResultSet resultSet2 = null;
+				ResultSet resultSet3 = null;
 				
 				try {
 					stmt = conn.prepareStatement(
@@ -570,8 +694,123 @@ public class DerbyDatabase implements IDatabase {
 						object.setInventoryID(inventoryID);
 						object.setInventory(getInventoryByID(inventoryID));
 						
+						object.setInventory(getInventory(object));
+						
 						roomObjects.add(object);
 					}
+					
+					stmt2 = conn.prepareStatement(
+							"select unlockableObjects.*" +
+								"from unlockableObjects, rooms" + 
+									"where unlockableObjects.roomID = ?"
+					);	
+					
+					stmt2.setInt(1, room.getRoomID());
+					
+					resultSet2 = stmt2.executeQuery();
+					
+					while (resultSet2.next()) {
+						int index = 1;
+						
+						int objectID = resultSet2.getInt(index++);
+						String name = resultSet2.getString(index++);
+						String description = resultSet2.getString(index++);
+						String direction = resultSet2.getString(index++);
+						boolean isObstacle = resultSet2.getInt(index++) == 1;
+						boolean blockingExit = resultSet2.getInt(index++) == 1;
+						boolean moveable = resultSet2.getInt(index++) == 1;
+						String covered = resultSet2.getString(index++);
+						boolean unlockable = resultSet2.getInt(index++) == 1;
+						boolean locked = resultSet2.getInt(index++) == 1;
+						boolean interactable = resultSet2.getInt(index++) == 1;
+						boolean canHoldItems = resultSet2.getInt(index++) == 1;
+						boolean coverable = resultSet2.getInt(index++) == 1;
+						boolean previouslyUnlocked = resultSet2.getInt(index++) == 1;
+						int roomID = resultSet2.getInt(index++);
+						int inventoryID = resultSet2.getInt(index++);
+						boolean consumeItem = resultSet2.getInt(index++) == 1;
+						int unlockItemID = resultSet2.getInt(index++);
+						
+						Item unlockItem = null;
+						
+						if (unlockItemID != -1) {
+							unlockItem = getItemByID(unlockItemID);
+						}
+						
+						UnlockableObject object = new UnlockableObject(name, description, direction, blockingExit, unlockItem, roomID);
+						object.setObjectID(objectID);
+						object.setObstacle(isObstacle);
+						object.setMoveable(moveable);
+						object.cover(covered);
+						object.setUnlockable(unlockable);
+						object.setLocked(locked);
+						object.setInteractable(interactable);
+						object.setCanHoldItems(canHoldItems);
+						object.setCoverable(coverable);
+						object.setPreviouslyUnlocked(previouslyUnlocked);
+						object.setInventoryID(inventoryID);
+						object.setInventory(getInventoryByID(inventoryID));
+						object.setConsumeItem(consumeItem);
+						
+						object.setInventory(getInventory(object));
+						
+						roomObjects.add(object);
+					}
+					
+					stmt3 = conn.prepareStatement(
+							"select playableObjects.*" +
+								"from playableObjects, rooms" + 
+									"where playableObjects.roomID = ?"
+					);	
+					
+					stmt3.setInt(1, room.getRoomID());
+					
+					resultSet3 = stmt3.executeQuery();
+					
+					while (resultSet3.next()) {
+						int index = 1;
+						
+						int objectID = resultSet3.getInt(index++);
+						String name = resultSet3.getString(index++);
+						String description = resultSet3.getString(index++);
+						String direction = resultSet3.getString(index++);
+						boolean isObstacle = resultSet3.getInt(index++) == 1;
+						boolean blockingExit = resultSet3.getInt(index++) == 1;
+						boolean moveable = resultSet3.getInt(index++) == 1;
+						String covered = resultSet3.getString(index++);
+						boolean unlockable = resultSet3.getInt(index++) == 1;
+						boolean locked = resultSet3.getInt(index++) == 1;
+						boolean interactable = resultSet3.getInt(index++) == 1;
+						boolean canHoldItems = resultSet3.getInt(index++) == 1;
+						boolean coverable = resultSet3.getInt(index++) == 1;
+						boolean previouslyUnlocked = resultSet3.getInt(index++) == 1;
+						int roomID = resultSet3.getInt(index++);
+						int inventoryID = resultSet3.getInt(index++);
+						boolean isInstrument = resultSet3.getInt(index++) == 1;
+						String playedNotes = resultSet3.getString(index++);
+						String requiredNotes = resultSet3.getString(index++);
+						
+						PlayableObject object = new PlayableObject(name, description, direction, requiredNotes, isInstrument, roomID);
+						object.setObjectID(objectID);
+						object.cover(covered);
+						object.setUnlockable(unlockable);
+						object.setLocked(locked);
+						object.setInteractable(interactable);
+						object.setCanHoldItems(canHoldItems);
+						object.setCoverable(coverable);
+						object.setPreviouslyUnlocked(previouslyUnlocked);
+						object.setInventoryID(inventoryID);
+						object.setInventory(getInventoryByID(inventoryID));
+						object.setObstacle(isObstacle);
+						object.setBlockingExit(blockingExit);
+						object.setMoveable(moveable);
+						object.setPlayedNotes(playedNotes);
+						
+						object.setInventory(getInventory(object));
+						
+						roomObjects.add(object);
+					}
+					
 					
 					if (!found) {
 						System.out.println("Could not find any room objects.");
@@ -581,8 +820,12 @@ public class DerbyDatabase implements IDatabase {
 					
 					return roomObjects;
 				} finally {
-					DBUtil.closeQuietly(resultSet);
 					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(resultSet2);
+					DBUtil.closeQuietly(resultSet3);
 				}
 			}
 		});
@@ -953,7 +1196,7 @@ public class DerbyDatabase implements IDatabase {
 						"	hint varchar(255)," +
 						"	solved integer," +
 						"	writtenSolution integer," +
-						"	unlockObstacle varchar(40)," +
+						"	unlockObstacle integer," +
 						"	roomID integer," +
 						"	objectID integer," +
 						"	itemID integer" +
@@ -1008,7 +1251,7 @@ public class DerbyDatabase implements IDatabase {
 						"	solution varchar(255)," +
 						"	hint varchar(255)," +
 						"	writtenSolution integer," +
-						"	unlockObstacle varchar(40)," +
+						"	unlockObstacle integer," +
 						"	solved integer," +
 						"	roomID integer" +
 						")"
@@ -1311,7 +1554,7 @@ public class DerbyDatabase implements IDatabase {
 						insertPuzzles.setString(3, puzzle.getSolution());
 						insertPuzzles.setString(4, puzzle.getHint());
 						insertPuzzles.setInt(5, puzzle.isWrittenSolution() ? 1 : 0);
-						insertPuzzles.setString(6, puzzle.getUnlockObstacle());
+						insertPuzzles.setInt(6, puzzle.getUnlockObstacleID());
 						insertPuzzles.setInt(7, puzzle.isSolved() ? 1 : 0);
 						insertPuzzles.setInt(8, puzzle.getRoomID());
 						insertPuzzles.addBatch();
@@ -1330,7 +1573,7 @@ public class DerbyDatabase implements IDatabase {
 						insertObjectPuzzles.setString(4, objectPuzzle.getHint());
 						insertObjectPuzzles.setInt(5, objectPuzzle.isSolved() ? 1 : 0);
 						insertObjectPuzzles.setInt(6, objectPuzzle.isWrittenSolution() ? 1 : 0);
-						insertObjectPuzzles.setString(7, objectPuzzle.getUnlockObstacle());
+						insertObjectPuzzles.setInt(7, objectPuzzle.getUnlockObstacleID());
 						insertObjectPuzzles.setInt(8, objectPuzzle.getRoomID());
 						insertObjectPuzzles.setInt(9, objectPuzzle.getObjectID());
 						insertObjectPuzzles.setInt(10, objectPuzzle.getItemID());

@@ -23,6 +23,7 @@ public class InitialData {
 	private static List<Item> items = null;
 	private static List<Room> rooms = null;
 	private static List<UnlockableObject> unlockableObjects = null;
+	private static List<PlayableObject> playableObjects = null;
 	
 	public static List<Item> getAllItems() throws IOException {
 		List<Item> itemList = new ArrayList<Item>();
@@ -248,7 +249,6 @@ public class InitialData {
 	}
 	
 	public static List<PlayableObject> getAllPlayableObjects() throws IOException {
-
 		List<PlayableObject> playableObjectList = new ArrayList<PlayableObject>();
 		ReadCSV readItems = new ReadCSV("playableObjects.csv");
 		
@@ -300,6 +300,8 @@ public class InitialData {
 				
 				playableObjectList.add(playableObject);
 			}
+			
+			playableObjects = playableObjectList;
 			
 			System.out.println("playableObjectList loaded");
 			return playableObjectList;
@@ -395,10 +397,12 @@ public class InitialData {
 				String solution = iter.next();
 				String hint = iter.next();
 				boolean writtenSolution = Integer.parseInt(iter.next()) == 1;
-				String unlockObstacle = iter.next();
+				UnlockableObject unlockObstacle = getUnlockableObjectByID(Integer.parseInt(iter.next()));
 				boolean solved = Integer.parseInt(iter.next()) == 1;
 				
-				Puzzle puzzle = new Puzzle(description, solution, hint, writtenSolution, unlockObstacle, roomID);
+				String unlockObstacleName = unlockObstacle != null ? unlockObstacle.getName() : "";
+				
+				Puzzle puzzle = new Puzzle(description, solution, hint, writtenSolution, unlockObstacleName, roomID);
 				puzzle.setSolved(solved);
 				
 				puzzle.setPuzzleID(roomID);
@@ -432,13 +436,15 @@ public class InitialData {
 				String solution = iter.next();
 				String hint = iter.next();
 				boolean writtenSolution = Integer.parseInt(iter.next()) == 1;
-				String unlockObstacle = iter.next();
+				UnlockableObject unlockObstacle = getUnlockableObjectByID(Integer.parseInt(iter.next()));
 				boolean solved = Integer.parseInt(iter.next()) == 1;
 				int roomID = Integer.parseInt(iter.next());
 				int objectID = Integer.parseInt(iter.next());
 				int itemID = Integer.parseInt(iter.next());
 				
-				ObjectPuzzle puzzle = new ObjectPuzzle(description, solution, hint, unlockableObjects.get(5), items.get(8), unlockObstacle, roomID);
+				String unlockObstacleName = unlockObstacle != null ? unlockObstacle.getName() : "";
+
+				ObjectPuzzle puzzle = new ObjectPuzzle(description, solution, hint, getObjectByID(objectID), getItemByID(itemID), unlockObstacleName, roomID);
 				puzzle.setPuzzleID(puzzleID);
 				puzzle.setWrittenSolution(writtenSolution);
 				puzzle.setSolved(solved);
@@ -483,5 +489,35 @@ public class InitialData {
 		} finally {
 			readItems.close();
 		}
+	}
+	
+	private static UnlockableObject getUnlockableObjectByID(int objectID) {
+		for (UnlockableObject object : unlockableObjects) {
+			if (object.getObjectID() == objectID) {
+				return object;
+			}
+		}
+		
+		return null;
+	}
+	
+	private static Item getItemByID(int itemID) {
+		for (Item item : items) {
+			if (item.getItemID() == itemID) {
+				return item;
+			}
+		}
+		
+		return null;
+	}
+	
+	private static PlayableObject getObjectByID(int objectID) {
+		for (PlayableObject object : playableObjects) {
+			if (object.getObjectID() == objectID) {
+				return object;
+			}
+		}
+		
+		return null;
 	}
 }
