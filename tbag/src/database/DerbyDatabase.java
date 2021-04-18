@@ -658,10 +658,10 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
-	public Item removeItemFromInventory(Inventory destinationInventory, Item item) {
-		return executeTransaction(new Transaction<Item>() {
+	public Integer removeItemFromInventory(Inventory destinationInventory, Item item) {
+		return executeTransaction(new Transaction<Integer>() {
 			@Override
-			public Item execute(Connection conn) throws SQLException {
+			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				
 				try {
@@ -670,9 +670,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(1, destinationInventory.getInventoryID());
 					stmt.setInt(2, item.getItemID());
 
-					stmt.executeUpdate();
-					
-					return getItemByID(item.getItemID());
+					return stmt.executeUpdate();
 				} finally {
 					DBUtil.closeQuietly(stmt);
 				}
@@ -686,16 +684,25 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
 				
 				try {
 					stmt = conn.prepareStatement("update unlockableObjects set locked = ? where unlockableObjects.objectID = ?");
 
 					stmt.setInt(1, locked ? 1 : 0);
 					stmt.setInt(2, object.getObjectID());
+					
+					stmt.executeUpdate();
+					
+					stmt2 = conn.prepareStatement("update unlockableObjects set previouslyUnlocked = ? where unlockableObjects.objectID = ?");
+					
+					stmt2.setInt(1, !locked ? 1 : 0);
+					stmt2.setInt(2, object.getObjectID());
 
-					return stmt.executeUpdate();
+					return stmt2.executeUpdate();
 				} finally {
 					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
 				}
 			}
 		});
@@ -777,6 +784,100 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	@Override
+	public Integer consumeItem(Item item) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
+
+					stmt.setInt(1, -9999);
+					stmt.setInt(2, item.getItemID());
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Integer destroyCompoundItem(CompoundItem item) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("update compoundItems set inventoryID = ? where compoundItems.itemID = ?");
+
+					stmt.setInt(1, -9999);
+					stmt.setInt(2, item.getItemID());
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Integer playNotes(PlayableObject playableObject, String notes) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("update playableObjects set playedNotes = ? where playableObjects.objectID = ?");
+
+					stmt.setString(1, notes);
+					stmt.setInt(2, playableObject.getObjectID());
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+
+	@Override
+	public String getDescription(int roomID) {
+		return executeTransaction(new Transaction<String>() {
+			@Override
+			public String execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement("select rooms.description from rooms where rooms.roomID = ?");
+					
+					stmt.setInt(1, roomID);
+					
+					resultSet = stmt.executeQuery();
+					
+					String description = "";
+					
+					while (resultSet.next()) {
+						description = resultSet.getString(1);
+					}
+					
+					return description;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
+				}
+			}
+		});
+	}
+	
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override

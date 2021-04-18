@@ -171,4 +171,8 @@ public class Room {
 	public int getConnectionsID() {
 		return connections.getConnectionID();
 	}
+	
+	public Inventory getInventory() {
+		return inventory;
+	}
 }

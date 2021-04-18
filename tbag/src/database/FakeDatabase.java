@@ -82,7 +82,7 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public Item removeItemFromInventory(Inventory inventory, Item item) {
+	public Integer removeItemFromInventory(Inventory inventory, Item item) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -107,6 +107,30 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public Integer breakItem(CompoundItem compoundItem, Inventory destinationInventory) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer consumeItem(Item item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer destroyCompoundItem(CompoundItem item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer playNotes(PlayableObject playableObject, String notes) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getDescription(int roomID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
