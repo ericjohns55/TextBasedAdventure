@@ -2,7 +2,6 @@ package commands;
 
 import game.Game;
 import items.Inventory;
-import items.Item;
 import map.Room;
 import map.RoomObject;
 import puzzle.Puzzle;
@@ -21,33 +20,13 @@ public class DropCommand extends UserCommand {
 		
 		if (inventory.contains(noun)) {
 			if (location == null || location.equals("room") || location.equals("floor")) {
-				Item removed = inventory.removeItem(noun);
-				removed.setInInventory(false);
-				room.addItem(noun, removed);
-				game.setOutput("You dropped " + noun + " on the floor.");
+				game.dropItem(room, noun, getPlayer(), puzzle);
 			} else {
 				if (room.hasObject(location)) {
 					RoomObject roomObject = room.getObject(location);
 					
-					if (roomObject.canHoldItems()) {
-						Inventory objectInventory = roomObject.getInventory();
-						
-						Item toRemove = inventory.removeItem(noun);
-						objectInventory.addItem(noun, toRemove);
-						game.setOutput("You placed the " + noun + " on the " + location + "."); 
-						
-						if (puzzle.getDescription().equals("weightPuzzle")) {
-							double weightSolution = Double.parseDouble(puzzle.getSolution());
-							
-							if (objectInventory.getCurrentWeight() >= weightSolution) {
-								RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
-								if (obstacle.isLocked()) {
-									obstacle.setLocked(false);
-									obstacle.setPreviouslyUnlocked(true);
-									game.setOutput("A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.");
-								}
-							}
-						}
+					if (roomObject.canHoldItems()) {						
+						game.dropItem(roomObject, noun, getPlayer(), puzzle, location);
 					} else {
 						game.setOutput("This object cannot hold that...");
 					}

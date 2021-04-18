@@ -17,16 +17,9 @@ public class TypeCommand extends UserCommand {
 		if (puzzle.isWrittenSolution()) {
 			if (!puzzle.isSolved()) {
 				if (puzzle.getSolution().equals(noun)) {
-					puzzle.setSolved(true);
-					
 					RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());
 					
-					if (obstacle.isLocked()) {
-						obstacle.setLocked(false);
-						game.setOutput("A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open!");
-					} else {
-						game.setOutput("You typed " + noun + ".");
-					}
+					game.type(puzzle, obstacle, noun);
 				} else {
 					game.setOutput(noun + " is not correct.");
 				}

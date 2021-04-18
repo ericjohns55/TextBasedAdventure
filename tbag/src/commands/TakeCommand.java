@@ -14,7 +14,6 @@ public class TakeCommand extends UserCommand {
 		String location = getLocation();
 		
 		Room room = getRoom();
-		Inventory inventory = getInventory();
 		Puzzle puzzle = getPuzzle();
 		Game game = getGame();
 		
@@ -23,10 +22,7 @@ public class TakeCommand extends UserCommand {
 				Item toGrab = room.getItem(noun);
 				
 				if (toGrab != null) {
-					toGrab.setInInventory(true);
-					inventory.addItem(noun, toGrab);
-					room.removeItem(noun);
-					
+					game.take(room, toGrab, getPlayer(), noun);
 					game.setOutput("You picked up " + noun + ".");
 				} else {
 					game.setOutput("This item does not exist in your current room.");
@@ -46,24 +42,8 @@ public class TakeCommand extends UserCommand {
 					if (!roomObject.isLocked()) {
 						if (objectInventory.contains(noun)) {
 							Item toGrab = objectInventory.removeItem(noun);
-							inventory.addItem(noun, toGrab);
-							toGrab.setInInventory(true);
-							
-							game.setOutput("You picked up " + noun + ".");
-							
-							if (puzzle.getDescription().equals("weightPuzzle")) {
-								double weightSolution = Double.parseDouble(puzzle.getSolution());
-								
-								if (objectInventory.getCurrentWeight() < weightSolution) {
-									RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
-									
-									if (!obstacle.isLocked() && obstacle.wasPreviouslyUnlocked()) {
-										obstacle.setLocked(true);
-										obstacle.setPreviouslyUnlocked(false);
-										game.addOutput("\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " slams shut.");
-									}
-								}
-							}
+														
+							game.take(roomObject, toGrab, getPlayer(), puzzle, noun);
 						} else {
 							game.setOutput("This object does not have that item.");
 						}

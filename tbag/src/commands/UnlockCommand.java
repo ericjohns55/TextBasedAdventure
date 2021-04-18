@@ -2,6 +2,7 @@ package commands;
 
 import game.Game;
 import items.Inventory;
+import items.Item;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
@@ -22,14 +23,10 @@ public class UnlockCommand extends UserCommand {
 				if (roomObject.isLocked()) {
 					if (roomObject instanceof UnlockableObject) {
 						UnlockableObject unlockableObject = (UnlockableObject) roomObject;
+						Item unlockItem = unlockableObject.getUnlockItem();
 						
-						if (inventory.contains(unlockableObject.getUnlockItem())) {
-							unlockableObject.setLocked(false);
-							
-							if (unlockableObject.consumeItem()) {
-								inventory.removeItem(unlockableObject.getUnlockItem());
-							}
-							
+						if (inventory.contains(unlockItem)) {
+							game.unlock(unlockableObject, unlockItem, getPlayer());
 							game.setOutput("You successfully unlocked the " + unlockableObject.getName() + ".");
 						} else {
 							game.setOutput("You do not have the required item to unlock this " + unlockableObject.getName() + ".");

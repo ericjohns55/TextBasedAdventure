@@ -17,7 +17,7 @@ public class WalkCommand extends UserCommand {
 				
 		if (room.getAllObjects().size() == 0) {
 			if (room.hasExit(noun)) {
-				moveRooms(player, room, noun);
+				game.moveRooms(player, noun);
 			} else {
 				game.setOutput("You cannot move this direction.");
 			}
@@ -36,36 +36,24 @@ public class WalkCommand extends UserCommand {
 							if (door.isLocked()) {
 								game.setOutput("This door appears to be locked... perhaps there is something in the room that can help you.");
 							} else {
-								moveRooms(player, room, noun);
+								game.moveRooms(player, noun);
 							}
 						} else {
 							game.setOutput("A " + roomObject.getName() + " is blocking your path!");
 						}
 					} else {
-						moveRooms(player, room, noun);
+						game.moveRooms(player, noun);
 					}									
 				}
 			}
 			
 			if (!foundObstacleInPath) {
 				if (room.hasExit(noun)) {
-					moveRooms(player, room, noun);
+					game.moveRooms(player, noun);
 				} else {
 					game.setOutput("There is not an exit here.");
 				}
 			}
 		}
-	}
-	
-	private String moveRooms(Player player, Room room, String direction) {
-		String noun = getNoun();
-		
-		int roomID = room.getExit(noun).getRoomID();
-		player.setRoomID(roomID);
-		
-		String output = "You walk " + noun + "\n\n";
-		getGame().addOutput(player.getRoom().getDescription());
-		
-		return output;
 	}
 }

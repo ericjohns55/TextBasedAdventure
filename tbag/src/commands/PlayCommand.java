@@ -6,7 +6,6 @@ import items.Item;
 import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
-import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 public class PlayCommand extends UserCommand {
@@ -29,28 +28,13 @@ public class PlayCommand extends UserCommand {
 					
 					boolean unlock = false;
 					
-					if (object.isInstrument()) {
-						if (object.playNote(noun)) {
-							if (object.playedPassage()) {
-								unlock = true;
-							}
-						} else {
-							game.setOutput("You entered an invalid note.");
-						}
+					if (object.isInstrument()) {						
+						unlock = game.play(object, noun, puzzle);
 					} else {
 						if (inventory.contains(noun)) {
 							Item toDrop = inventory.removeItem(noun);
-							object.getInventory().addItem(noun, toDrop);
 							
-							game.setOutput("Played " + noun + " on the " + location + ".");
-							
-							if (puzzle instanceof ObjectPuzzle) {
-								ObjectPuzzle obstaclePuzzle = (ObjectPuzzle) puzzle;
-								
-								if (obstaclePuzzle.isSolved()) {
-									unlock = true;
-								}
-							}
+							unlock = game.play(object, toDrop, getPlayer(), puzzle, noun, location);
 						} else {
 							game.setOutput("You do not have that item!");
 						}
@@ -60,8 +44,7 @@ public class PlayCommand extends UserCommand {
 						RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
 						
 						if (toUnlock.isLocked()) {
-							toUnlock.setLocked(false);
-							
+							game.unlockObject(toUnlock, false);
 							game.addOutput("\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.");
 						}
 					}

@@ -26,23 +26,9 @@ public class PourCommand extends UserCommand {
 					
 					if (item.isPourable()) {
 						if (object.isCoverable()) {
-							if (!object.isCovered()) {
-								object.cover(noun);
-								
-								game.setOutput("You poured the " + noun + " on the " + location + ".");
-								
-								if (item.consumeOnUse()) {
-									inventory.removeItem(noun);
-								}
-								
-								if (puzzle.getSolution().equals(object.getCovering())) {
-									RoomObject solutionObject = room.getObject(puzzle.getUnlockObstacle());
-									
-									if (solutionObject.isLocked()) {
-										solutionObject.setLocked(false);
-										game.addOutput("\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!");
-									}
-								}
+							if (!object.isCovered()) {						
+								game.pour(object, item, getPlayer(), puzzle, noun);							
+								game.setOutput("You poured the " + noun + " on the " + location + ".");	
 							} else {
 								game.setOutput("This object is already covered.");
 							}

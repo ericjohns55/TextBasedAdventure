@@ -18,12 +18,10 @@ public class PushCommand extends UserCommand {
 			
 			if (object.isMoveable()) {
 				if (location != null) {
-					object.setDirection(location);
-					
+					game.push(object, location);
 					game.setOutput("Pushed " + object.getName() + " " + location);
-				} else {
-					object.setDirection(object.getDirection() + "-left");	// will eventually do better placements.
-					
+				} else {					
+					game.push(object, object.getDirection() + "-left");
 					game.setOutput("Moved " + object.getName() + " out of the way.");
 				}
 			} else {
