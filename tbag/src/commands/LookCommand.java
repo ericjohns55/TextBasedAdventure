@@ -25,6 +25,8 @@ public class LookCommand extends UserCommand {
 				output = room.getItem(noun).getDescription();
 			} else if (inventory.contains(noun)) {
 				output = inventory.getItem(noun).getDescription();
+			} else if (room.hasNpc(noun)) {
+				output = room.getNpc(noun).getDescription();
 			} else if (room.hasObject(noun)) {
 				RoomObject object = room.getObject(noun);
 				

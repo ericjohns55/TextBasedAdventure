@@ -20,9 +20,8 @@ public class TestNode {
 	public void setUp() {
 		nodeID = 0;
 		message = "Game?";
-		options = new ArrayList<Link>();
-		n = new Node(nodeID, message, options);
-		p = new Node(1, "Stop", options);
+		n = new Node(nodeID, message);
+		p = new Node(1, "Stop");
 	}
 	
 	@Test
@@ -39,8 +38,8 @@ public class TestNode {
 	public void testOptions() {
 		Link l = new Link(n, p, true, message);
 		Link l2 = new Link(n, p, false, message);
-		options.add(l);
-		options.add(l2);
+		n.addLink(l);
+		n.addLink(l2);
 		assertEquals(l,n.getAvailableLinks().get(0));
 		assertEquals(l2,n.getUnavailableLinks().get(0));
 	}

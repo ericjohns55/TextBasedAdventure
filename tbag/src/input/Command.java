@@ -9,12 +9,12 @@ import game.Game;
 import commands.*;
 
 public class Command {
-	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
+	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint", "y", "n"));
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
 	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
-			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint"));
+			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint", "talk", "y", "n"));
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -82,6 +82,8 @@ public class Command {
 		replace = replace.replace("right", "west");
 		replace = replace.replace("up", "north");
 		replace = replace.replace("down", "south");
+		replace = replace.replace("yes", "y");
+		replace = replace.replace("no", "n");
 		return replace;
 	}
 	
@@ -139,6 +141,15 @@ public class Command {
 						break;
 					case "hint":
 						output = new HintCommand(game, verb, noun, location).getOutput();
+						break;
+					case "talk":
+						output = new TalkCommand(game, verb, noun, location).getOutput();
+						break;
+					case "y":
+						output = new YesCommand(game, verb, noun, location).getOutput();
+						break;
+					case "n":
+						output = new NoCommand(game, verb, noun, location).getOutput();
 						break;
 				}
 			} else {

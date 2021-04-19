@@ -149,8 +149,7 @@ public class Room {
 	{
 		npcs.put(name, npc);
 	}
-	
-	//gets the rooms exit
+
 	public NPC getNpc(String name)
 	{
 		return npcs.get(name);

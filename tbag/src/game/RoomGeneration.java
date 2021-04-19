@@ -10,11 +10,14 @@ import map.RoomObject;
 import map.UnlockableObject;
 import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
+import actor.NPC;
+import dialogue.Link;
+import dialogue.Node;
 
 public class RoomGeneration {
 	public static void generateRooms(HashMap<Integer, Room> rooms) {
 		// 24 rooms and an exit 
-		Room room1 = new Room("You are in a room with a westward door containing nothing but a table.", 1);
+		Room room1 = new Room("You are in a room with a westward door containing nothing but a table. There is a guy named bob in the room too.", 1);
 		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There is a door to the west and there appears to be some sensory pad contained in the room...", 2);
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
 		Room room4 = new Room("You are in a room with a dresser (S), bed (E), and desk (W) but do not appear to see an exit.", 4);
@@ -68,6 +71,18 @@ public class RoomGeneration {
 		room1.addObject("table", table);
 
 		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false, ""));
+		
+		
+		NPC bob = new NPC(null, 1, "bob", "Just a nice guy.");
+		Node n = new Node(0, "Hi im Bob.");
+		Node p = new Node(1, "Then go");
+		Node o = new Node(2, "Then stop");
+		Link l = new Link(p, n, true, "Do you want to go?");
+		Link l2 = new Link(o, n, true, "Do you want to stop?");
+		n.addLink(l);
+		n.addLink(l2);
+		bob.setCurrentNode(n);
+		room1.addNpc(bob.getName(), bob);
 
 		// Room 2
 		Item banana = new Item("banana");

@@ -7,10 +7,10 @@ public class Node{
 	private String message;
 	private ArrayList<Link> options;
 	
-	public Node(int ID, String message, ArrayList<Link> options) {
+	public Node(int ID, String message) {
 		this.nodeID = ID;
 		this.message = message;
-		this.options = options;
+		options = new ArrayList<Link>();
 	}
 	public int getNodeID() {
 		return nodeID;
