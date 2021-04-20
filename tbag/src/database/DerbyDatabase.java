@@ -121,22 +121,26 @@ public class DerbyDatabase implements IDatabase {
 						int roomID = resultSet.getInt(index++);
 						String description = resultSet.getString(index++);
 						int inventoryID = resultSet.getInt(index++);
-						
+												
 						room = new Room(description, roomID);
 						room.setInventoryID(inventoryID);
 						room.setInventory(getInventory(room));
+						System.out.println("Created inventory");
 					}
 					
 					if (room != null) {
 						List<RoomObject> objects = findAllObjects(room);
 						
 						for (RoomObject object : objects) {
+							System.out.println("Added " + object.getName());
 							room.addObject(object.getName(), object);
 						}
 						
 						room.setPuzzle(getPuzzle(room));
+						System.out.println("Added puzzle");
 						
 						room.setConnections(getAllConnections(room.getRoomID()));
+						System.out.println("Added connections");
 					}
 					
 					
@@ -159,8 +163,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"select items.*" + 
-								"from items" +
+							"select items.* " + 
+								"from items " +
 									"where items.itemID = ?");	
 					
 					stmt.setInt(1, itemID);
@@ -231,8 +235,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"select roomObjects.*" +
-								"from roomObjects" + 
+							"select roomObjects.* " +
+								"from roomObjects " + 
 									"where roomObjects.objectID = ?"
 					);	
 					
@@ -282,8 +286,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					if (!found) {
 						stmt2 = conn.prepareStatement(
-								"select unlockableObjects.*" +
-									"from unlockableObjects" + 
+								"select unlockableObjects.* " +
+									"from unlockableObjects " + 
 										"where unlockableObjects.objectID = ?"
 						);	
 						
@@ -344,8 +348,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					if (!found) {
 						stmt3 = conn.prepareStatement(
-								"select playableObjects.*" +
-									"from playableObjects" + 
+								"select playableObjects.* " +
+									"from playableObjects " + 
 										"where playableObjects.objectID = ?"
 						);	
 						
@@ -427,8 +431,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"select items.itemID" + 
-								"from items, inventories" +
+							"select items.itemID " + 
+								"from items, inventories " +
 									"where inventories.inventoryID = ? and items.inventoryID = inventories.inventoryID");	
 					
 					stmt.setInt(1, player.getInventoryID());
@@ -475,8 +479,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"select unlockableObjects.*" +
-								"from unlockableObjects" + 
+							"select unlockableObjects.* " +
+								"from unlockableObjects " + 
 									"where unlockableObjects.objectID = ?"
 					);	
 					
@@ -552,8 +556,8 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet2 = null;
 				
 				try {
-					stmt = conn.prepareStatement("select puzzles.*" +
-							"from puzzles, rooms" + 
+					stmt = conn.prepareStatement("select puzzles.* " +
+							"from puzzles, rooms " + 
 								"where puzzles.roomID = ?"
 					);
 					
@@ -584,8 +588,8 @@ public class DerbyDatabase implements IDatabase {
 					}
 					
 					if (puzzle == null) {
-						stmt2 = conn.prepareStatement("select objectPuzzles.*" +
-								"from objectPuzzles, rooms" + 
+						stmt2 = conn.prepareStatement("select objectPuzzles.* " +
+								"from objectPuzzles, rooms " + 
 									"where objectPuzzles.roomID = ?"
 						);
 						
@@ -637,8 +641,8 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet = null;
 				
 				try {
-					stmt = conn.prepareStatement("select connections.*" +
-							"from connections, rooms" +
+					stmt = conn.prepareStatement("select connections.* " +
+							"from connections, rooms " +
 								"where rooms.roomID = ? and connections.locationID = rooms.roomID");
 					stmt.setInt(1, roomID);
 					
@@ -678,27 +682,26 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					if (roomObject instanceof UnlockableObject) {
 						stmt = conn.prepareStatement(
-								"select items.itemID" + 
-									"from items, unlockableObjects" +
+								"select items.itemID " + 
+									"from items, unlockableObjects " +
 										"where unlockableObjects.inventoryID = ? and items.inventoryID = unlockableObjects.inventoryID");	
 					} else if (roomObject instanceof PlayableObject) {
 						stmt = conn.prepareStatement(
-								"select items.itemID" + 
-									"from items, playableObjects" +
+								"select items.itemID " + 
+									"from items, playableObjects " +
 										"where playableObjects.inventoryID = ? and items.inventoryID = playableObjects.inventoryID");	
 					} else {
 						stmt = conn.prepareStatement(
-								"select items.itemID" + 
-									"from items, roomObjects" +
+								"select items.itemID " + 
+									"from items, roomObjects " +
 										"where roomObjects.inventoryID = ? and items.inventoryID = roomObjects.inventoryID");	
 					}
 					
 					stmt.setInt(1, roomObject.getInventoryID());
 					
+					resultSet = stmt.executeQuery();
 					
 					Inventory inventory = new Inventory();
-					
-					resultSet = stmt.executeQuery();
 					
 					boolean found = false;
 					
@@ -715,13 +718,13 @@ public class DerbyDatabase implements IDatabase {
 					}
 					
 					if (!found) {
-						System.out.println("Could not populate inventory.");
+						System.out.println("Inventory empty or failed to populate.");
 					}
 					
 					
 					stmt2 = conn.prepareStatement(
-							"select compoundItems.*" + 
-								"from compoundItems, roomObjects" +
+							"select compoundItems.* " + 
+								"from compoundItems, roomObjects " +
 									"where roomObjects.inventoryID = ? and compoundItems.inventoryID = roomObjects.inventoryID");	
 					
 					stmt2.setInt(1, roomObject.getInventoryID());
@@ -789,8 +792,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"select items.itemID" + 
-								"from items, rooms" +
+							"select items.itemID " + 
+								"from items, rooms " +
 									"where rooms.inventoryID = ? and items.inventoryID = rooms.inventoryID");	
 					
 					stmt.setInt(1, room.getInventoryID());
@@ -819,8 +822,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					
 					stmt2 = conn.prepareStatement(
-							"select compoundItems.*" + 
-								"from compoundItems, rooms" +
+							"select compoundItems.* " + 
+								"from compoundItems, rooms " +
 									"where rooms.inventoryID = ? and compoundItems.inventoryID = rooms.inventoryID");	
 					
 					stmt2.setInt(1, room.getInventoryID());
@@ -888,8 +891,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"select items.itemID" + 
-								"from items, inventories" +
+							"select items.itemID " + 
+								"from items, inventories " +
 									"where inventories.inventoryID = ? and items.inventoryID = inventories.inventoryID");	
 					
 					stmt.setInt(1, id);
@@ -913,13 +916,13 @@ public class DerbyDatabase implements IDatabase {
 					}
 					
 					if (!found) {
-						System.out.println("Could not populate inventory.");
+						System.out.println("Inventory empty or failed to populate (ID: " + id + ").");
 					}
 					
 					
 					stmt2 = conn.prepareStatement(
-							"select compoundItems.*" + 
-								"from compoundItems, inventories" +
+							"select compoundItems.* " + 
+								"from compoundItems, inventories " +
 									"where inventories.inventoryID = ? and compoundItems.inventoryID = inventories.inventoryID");	
 					
 					stmt2.setInt(1, id);
@@ -989,9 +992,9 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement(
-							"select roomObjects.*" +
-								"from roomObjects, rooms" + 
-									"where roomObjects.roomID = ?"
+							"select roomObjects.* " +
+								"from roomObjects, rooms " + 
+									"where roomObjects.roomID = ? and roomObjects.roomID = rooms.roomID"
 					);	
 					
 					stmt.setInt(1, room.getRoomID());
@@ -1036,15 +1039,13 @@ public class DerbyDatabase implements IDatabase {
 						object.setInventoryID(inventoryID);
 						object.setInventory(getInventoryByID(inventoryID));
 						
-						object.setInventory(getInventory(object));
-						
 						roomObjects.add(object);
 					}
 					
 					stmt2 = conn.prepareStatement(
-							"select unlockableObjects.*" +
-								"from unlockableObjects, rooms" + 
-									"where unlockableObjects.roomID = ?"
+							"select unlockableObjects.* " +
+								"from unlockableObjects, rooms " + 
+									"where unlockableObjects.roomID = ? and unlockableObjects.roomID = rooms.roomID"
 					);	
 					
 					stmt2.setInt(1, room.getRoomID());
@@ -1094,15 +1095,13 @@ public class DerbyDatabase implements IDatabase {
 						object.setInventory(getInventoryByID(inventoryID));
 						object.setConsumeItem(consumeItem);
 						
-						object.setInventory(getInventory(object));
-						
 						roomObjects.add(object);
 					}
 					
 					stmt3 = conn.prepareStatement(
-							"select playableObjects.*" +
-								"from playableObjects, rooms" + 
-									"where playableObjects.roomID = ?"
+							"select playableObjects.* " +
+								"from playableObjects, rooms " + 
+									"where playableObjects.roomID = ? and playableObjects.roomID = rooms.roomID"
 					);	
 					
 					stmt3.setInt(1, room.getRoomID());
@@ -1147,8 +1146,6 @@ public class DerbyDatabase implements IDatabase {
 						object.setBlockingExit(blockingExit);
 						object.setMoveable(moveable);
 						object.setPlayedNotes(playedNotes);
-						
-						object.setInventory(getInventory(object));
 						
 						roomObjects.add(object);
 					}
@@ -1960,7 +1957,7 @@ public class DerbyDatabase implements IDatabase {
 //		db.createTables();
 		
 		System.out.println("\nLoading initial data...");
-		db.loadInitialData();
+//		db.loadInitialData();
 		
 		System.out.println("\nText Based Adventure Game DB successfully initialized!");
 	}
