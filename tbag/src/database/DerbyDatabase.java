@@ -209,7 +209,9 @@ public class DerbyDatabase implements IDatabase {
 					}
 					
 					if (!found) {
-						System.out.println("Could not find any item with that ID");
+						if (!(itemID == 9999 || itemID == -1)) {
+							System.out.println("Could not find any item with that ID (" + itemID + ").");
+						}
 					}
 					
 					return item;
@@ -380,7 +382,7 @@ public class DerbyDatabase implements IDatabase {
 							boolean isInstrument = resultSet3.getInt(index++) == 1;
 							String playedNotes = resultSet3.getString(index++);
 							String requiredNotes = resultSet3.getString(index++);
-							
+														
 							PlayableObject object = new PlayableObject(name, description, direction, requiredNotes, isInstrument, roomID);
 							object.setObjectID(objectID);
 							object.cover(covered);
@@ -398,6 +400,8 @@ public class DerbyDatabase implements IDatabase {
 							object.setPlayedNotes(playedNotes);
 							
 							object.setInventory(getInventory(object));
+							
+							return object;
 						}
 					}
 					
@@ -600,16 +604,16 @@ public class DerbyDatabase implements IDatabase {
 						while (resultSet2.next()) {
 							int index = 1;
 							
-							int puzzleID = resultSet.getInt(index++);
-							String description = resultSet.getString(index++);
-							String solution = resultSet.getString(index++);
-							String hint = resultSet.getString(index++);
-							boolean solved = resultSet.getInt(index++) == 1;
-							boolean writtenSolution = resultSet.getInt(index++) == 1;
-							int unlockObstacle = resultSet.getInt(index++);	
-							int roomID = resultSet.getInt(index++);
-							int objectID = resultSet.getInt(index++);
-							int itemID = resultSet.getInt(index++);
+							int puzzleID = resultSet2.getInt(index++);
+							String description = resultSet2.getString(index++);
+							String solution = resultSet2.getString(index++);
+							String hint = resultSet2.getString(index++);
+							boolean solved = resultSet2.getInt(index++) == 1;
+							boolean writtenSolution = resultSet2.getInt(index++) == 1;
+							int unlockObstacle = resultSet2.getInt(index++);	
+							int roomID = resultSet2.getInt(index++);
+							int objectID = resultSet2.getInt(index++);
+							int itemID = resultSet2.getInt(index++);
 							
 							RoomObject object = getUnlockableObjectByID(unlockObstacle);
 							String unlockName = object != null ? object.getName() : null;
@@ -817,7 +821,7 @@ public class DerbyDatabase implements IDatabase {
 					}
 					
 					if (!found) {
-						System.out.println("Could not populate inventory.");
+						System.out.println("Room inventory empty or could not populate.");
 					}
 					
 					
@@ -892,8 +896,8 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement(
 							"select items.itemID " + 
-								"from items, inventories " +
-									"where inventories.inventoryID = ? and items.inventoryID = inventories.inventoryID");	
+								"from items " +
+									"where items.inventoryID = ?");	
 					
 					stmt.setInt(1, id);
 					
@@ -915,15 +919,11 @@ public class DerbyDatabase implements IDatabase {
 						inventory.addItem(item.getName(), item);
 					}
 					
-					if (!found) {
-						System.out.println("Inventory empty or failed to populate (ID: " + id + ").");
-					}
-					
 					
 					stmt2 = conn.prepareStatement(
 							"select compoundItems.* " + 
-								"from compoundItems, inventories " +
-									"where inventories.inventoryID = ? and compoundItems.inventoryID = inventories.inventoryID");	
+								"from compoundItems " +
+									"where compoundItems.inventoryID = ?");	
 					
 					stmt2.setInt(1, id);
 					
@@ -931,6 +931,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					while (resultSet2.next()) {						
 						int index = 1;
+						
+						found = true;
 						
 						int itemID = resultSet.getInt(index++);
 						String name = resultSet.getString(index++);
@@ -967,6 +969,10 @@ public class DerbyDatabase implements IDatabase {
 						item.setBreakItem(breakItem);
 						
 						inventory.addItem(name, item);
+					}
+
+					if (!found) {
+						System.out.println("Inventory empty or failed to populate (ID: " + id + ").");
 					}
 					
 					return inventory;
@@ -1055,6 +1061,8 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet2.next()) {
 						int index = 1;
 						
+						found = true;
+						
 						int objectID = resultSet2.getInt(index++);
 						String name = resultSet2.getString(index++);
 						String description = resultSet2.getString(index++);
@@ -1110,6 +1118,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					while (resultSet3.next()) {
 						int index = 1;
+						
+						found = true;
 						
 						int objectID = resultSet3.getInt(index++);
 						String name = resultSet3.getString(index++);

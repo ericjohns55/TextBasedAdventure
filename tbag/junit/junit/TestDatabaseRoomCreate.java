@@ -10,12 +10,14 @@ import database.IDatabase;
 import map.Room;
 
 public class TestDatabaseRoomCreate {
+	// manually check rooms to see console output on creation
+	
 	@Test
 	public void generateRoom() {
 		DatabaseProvider.setInstance(new DerbyDatabase());
 		IDatabase db = DatabaseProvider.getInstance();	
 		
-		Room room = db.getRoom(3);
-		assertEquals(3, room.getRoomID());
+		Room room = db.getRoom(6);
+		assertEquals(6, room.getRoomID());
 	}
 }
