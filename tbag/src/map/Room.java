@@ -11,7 +11,7 @@ public class Room {
 	// Each room has to have a set items in the room
 	private Puzzle puzzle;
 	private HashMap<String, RoomObject> objects;
-	private HashMap<String, NPC> npcs;
+	private NPC npc = null;
 	private HashMap<String, Item> items;
 	private HashMap<String, Room> exits;
 	private String description; 
@@ -23,7 +23,6 @@ public class Room {
 		objects = new HashMap<String, RoomObject>(); 
 		items = new HashMap<String, Item>();
 		exits = new HashMap<String, Room>();
-		npcs = new HashMap<String, NPC>();
 		this.description = description;
 		this.roomID = roomID;
 	}
@@ -145,18 +144,24 @@ public class Room {
 		this.puzzle = puzzle;
 	}
 
-	public void addNpc(String name, NPC npc)
+	public void addNpc(NPC npc)
 	{
-		npcs.put(name, npc);
+		this.npc = npc;
 	}
 
-	public NPC getNpc(String name)
+	public NPC getNpc()
 	{
-		return npcs.get(name);
+		return npc;
 	}
 	
-	public boolean hasNpc(String name) {
-		return npcs.containsKey(name);
+	public boolean hasNpc() 
+	{
+		if (npc == null) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 }

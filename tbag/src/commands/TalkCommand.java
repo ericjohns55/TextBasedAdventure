@@ -13,19 +13,23 @@ public class TalkCommand extends UserCommand {
 	public String getOutput() {
 		String output;
 		
+		Room room = getRoom();
 		String location = getLocation();
 		
-		Room room = getRoom();
-		
-		if (room.hasNpc(location)) {
-			NPC npc = room.getNpc(location);
-			if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
-				output = npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " (Y) \n" + npc.getCurrentNode().getAvailableLinks().get(1).getOption() + " (N) \n";
-				npc.setTalkedTo(true);
+		if (room.hasNpc()) {
+			NPC npc = room.getNpc();
+			if(location.equals(npc.getName())) {
+				if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
+					output = npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " (Y) \n" + npc.getCurrentNode().getAvailableLinks().get(1).getOption() + " (N) \n";
+					npc.setTalkedTo(true);
+				}
+				else {
+					output = npc.getCurrentNode().getMessage();
+					npc.setTalkedTo(true);
+				}
 			}
 			else {
-				output = npc.getCurrentNode().getMessage();
-				npc.setTalkedTo(true);
+				output = "There is no one named " + location + " in this room.";
 			}
 		}
 		else {

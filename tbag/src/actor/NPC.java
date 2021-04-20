@@ -2,6 +2,8 @@ package actor;
 
 import dialogue.Node;
 import game.Game;
+import items.Item;
+import map.RoomObject;
 
 public class NPC extends Actor {
 	private String name;
@@ -9,13 +11,17 @@ public class NPC extends Actor {
 	private Node currentNode;
 	private boolean talkedTo;
 	private boolean done;
+	private RoomObject unlockObstacle;
+	private Item requiredItem;
 	
-	public NPC(Game game, int roomID, String name, String description) {
+	public NPC(Game game, int roomID, String name, String description, Item requiredItem, RoomObject unlockObstacle) {
 		super(game, roomID);
 		this.name = name;
 		this.description = description;
 		talkedTo = false;
 		done = false;
+		this.unlockObstacle = unlockObstacle;
+		this.requiredItem = requiredItem;
 		
 	}
 
@@ -58,7 +64,26 @@ public class NPC extends Actor {
 	public void setDone(boolean done) {
 		this.done = done;
 	}
+
+	public RoomObject getUnlockObstacle() {
+		return unlockObstacle;
+	}
+
+	public void setUnlockObstacle(RoomObject unlockObstacle) {
+		this.unlockObstacle = unlockObstacle;
+	}
+
+	public Item getRequiredItem() {
+		return requiredItem;
+	}
+
+	public void setRequiredItem(Item requiredItem) {
+		this.requiredItem = requiredItem;
+	}
 	
+	public boolean isSolved() {
+		return this.getInventory().contains(requiredItem);
+	}
 }
 
 

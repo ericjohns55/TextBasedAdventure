@@ -1,5 +1,6 @@
 package commands;
 
+import actor.NPC;
 import game.Game;
 import items.Inventory;
 import items.Item;
@@ -22,6 +23,7 @@ public class TakeCommand extends UserCommand {
 		Room room = getRoom();
 		Inventory inventory = getInventory();
 		Puzzle puzzle = getPuzzle();
+		NPC npc = room.getNpc();
 		
 		if (location == null || location.equals("room") || location.equals("floor")) {
 			if (room.hasItem(noun)) {
@@ -41,7 +43,28 @@ public class TakeCommand extends UserCommand {
 			} else {
 				output = "This item does not exist in your current room.";
 			}
-		} else {
+		} 
+		else if (room.hasNpc() && location.equals(npc.getName())) {
+			if (npc.getInventory().contains(noun)) {
+				Item toGrab = npc.getInventory().getItem(noun);
+				
+				if (toGrab != null) {
+					toGrab.setInInventory(true);
+					inventory.addItem(noun, toGrab);
+					npc.getInventory().removeItem(noun);
+					
+					output = "You picked up " + noun + ".";
+				} else {
+					output = npc.getName() + " doesn't have that item.";
+				}
+			}
+			else if (noun == null) {
+				output = "Please specify an item.";
+			} else {
+				output = npc.getName() + " doesn't have that item.";
+			} 
+		}
+		else {
 			if (room.hasObject(location)) {
 				RoomObject roomObject = room.getObject(location);
 				
@@ -78,6 +101,8 @@ public class TakeCommand extends UserCommand {
 				} else {
 					output = "This object does not possess any items.";
 				}
+			} else if (room.hasNpc() && !location.equals(npc.getName())) {
+				output = "There is no one named " + location + " in this room.";
 			} else {
 				output = "Could not find that object.";
 			}

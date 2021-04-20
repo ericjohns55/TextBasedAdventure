@@ -20,13 +20,15 @@ public class LookCommand extends UserCommand {
 		
 		if (noun == null || noun == "" || noun.equals("room")) {
 			output = room.getDescription();
-		} else {
+		} 
+		else if (room.hasNpc() && noun.equals(room.getNpc().getName())) {
+			output = room.getNpc().getDescription();
+		}
+		else {
 			if (room.hasItem(noun)) {
 				output = room.getItem(noun).getDescription();
 			} else if (inventory.contains(noun)) {
 				output = inventory.getItem(noun).getDescription();
-			} else if (room.hasNpc(noun)) {
-				output = room.getNpc(noun).getDescription();
 			} else if (room.hasObject(noun)) {
 				RoomObject object = room.getObject(noun);
 				

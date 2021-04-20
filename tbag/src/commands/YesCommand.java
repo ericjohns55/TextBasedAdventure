@@ -13,11 +13,12 @@ public class YesCommand extends UserCommand {
 	public String getOutput() {
 		String output;
 		
+		
 		Room room = getRoom();
 		
 		
-		if (room.hasNpc("bob")) {
-			NPC npc = room.getNpc("bob");
+		if (room.hasNpc()) {
+			NPC npc = room.getNpc();
 			if (!npc.isDone()) {
 				if(npc.isTalkedTo()) {
 					npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(0).getNextNode());

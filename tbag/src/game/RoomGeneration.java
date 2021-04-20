@@ -17,7 +17,7 @@ import dialogue.Node;
 public class RoomGeneration {
 	public static void generateRooms(HashMap<Integer, Room> rooms) {
 		// 24 rooms and an exit 
-		Room room1 = new Room("You are in a room with a westward door containing nothing but a table. There is a guy named bob in the room too.", 1);
+		Room room1 = new Room("You are in a room with a westward door containing nothing but a table.", 1);
 		Room room2 = new Room("You are in a dimly lit kitchen with some random items laying about. There is a door to the west and there appears to be some sensory pad contained in the room...", 2);
 		Room room3 = new Room("You are in a room with a keypad on the door to the south and a chest on the other side of the room.", 3);
 		Room room4 = new Room("You are in a room with a dresser (S), bed (E), and desk (W) but do not appear to see an exit.", 4);
@@ -29,7 +29,8 @@ public class RoomGeneration {
 		Room room7 = new Room("You walk into a dining room area and in front of the head seat of the table sits a lamb heart on a plate with "
 				+ "a butcher knife and a note next to it. There is a door on the northern wall of the room.", 7);
 		Room room8 = new Room("You move into a living room with a westward door and a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
-		Room room9 = new Room("Last current room", 9);
+		Room room9 = new Room("Big Room with a guy named bob in it and a door to the north.", 9);
+		Room room10 = new Room("Last current room.", 10);
 
 		room1.addExit("west", room2);
 
@@ -53,6 +54,9 @@ public class RoomGeneration {
 
 		room8.addExit("south", room7);
 		room8.addExit("west", room9);
+		
+		room9.addExit("east", room8);
+		room9.addExit("west", room10);
 
 
 
@@ -72,17 +76,6 @@ public class RoomGeneration {
 
 		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false, ""));
 		
-		
-		NPC bob = new NPC(null, 1, "bob", "Just a nice guy.");
-		Node n = new Node(0, "Hi im Bob.");
-		Node p = new Node(1, "Then go");
-		Node o = new Node(2, "Then stop");
-		Link l = new Link(p, n, true, "Do you want to go?");
-		Link l2 = new Link(o, n, true, "Do you want to stop?");
-		n.addLink(l);
-		n.addLink(l2);
-		bob.setCurrentNode(n);
-		room1.addNpc(bob.getName(), bob);
 
 		// Room 2
 		Item banana = new Item("banana");
@@ -276,6 +269,32 @@ public class RoomGeneration {
 		room8.addObject("room8Door", room8Door);
 
 		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
+		
+		// Room 9
+		Item cake = new Item("cake");
+		cake.setWeight(0.3);
+		cake.setDescription("apple pie.");
+		room9.addItem("cake", cake);
+		
+		UnlockableObject room9Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
+		room9Door.setLocked(true);
+		room9.addObject("room9Door", room9Door);
+		
+		NPC bob = new NPC(null, 1, "bob", "Just a nice guy.", cake, room9Door);
+		Node n = new Node(0, "Hi im Bob.");
+		Node p = new Node(1, "There you go.");
+		Node o = new Node(2, "Then stop");
+		Link l = new Link(p, n, true, "Do you want my pie?");
+		Link l2 = new Link(o, n, true, "Do you want to stop?");
+		n.addLink(l);
+		n.addLink(l2);
+		bob.setCurrentNode(n);
+		
+		Item pie = new Item("pie");
+		pie.setWeight(0.3);
+		pie.setDescription("apple pie.");
+		bob.getInventory().addItem("pie", pie);
+		room9.addNpc(bob);
 
 		rooms.put(1, room1);
 		rooms.put(2, room2);
@@ -285,6 +304,7 @@ public class RoomGeneration {
 		rooms.put(6, room6);
 		rooms.put(7, room7);
 		rooms.put(8, room8);
-		rooms.put(9, room9);		
+		rooms.put(9, room9);
+		rooms.put(10, room10);
 	}
 }

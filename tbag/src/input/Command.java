@@ -14,7 +14,7 @@ public class Command {
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
 	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
-			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint", "talk", "y", "n"));
+			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint", "talk", "y", "n", "give"));
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -150,6 +150,9 @@ public class Command {
 						break;
 					case "n":
 						output = new NoCommand(game, verb, noun, location).getOutput();
+						break;
+					case "give":
+						output = new GiveCommand(game, verb, noun, location).getOutput();
 						break;
 				}
 			} else {

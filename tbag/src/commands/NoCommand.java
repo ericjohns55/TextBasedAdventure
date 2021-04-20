@@ -15,8 +15,8 @@ public class NoCommand extends UserCommand {
 		
 		Room room = getRoom();
 		
-		if (room.hasNpc("bob")) {
-			NPC npc = room.getNpc("bob");
+		if (room.hasNpc()) {
+			NPC npc = room.getNpc();
 			if (!npc.isDone()) {
 				if(npc.isTalkedTo()) {
 					npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(1).getNextNode());
