@@ -22,6 +22,10 @@ public class Actor {
 		this.inventoryID = 0;
 	}
 	
+	public Actor(int roomID) {
+		this(null, roomID);
+	}
+	
 	public void equipItem(String identifier, Item toAdd) {
 		if (toAdd.inInventory() && toAdd.isEquippable()) {
 			inventory.removeItem(identifier);

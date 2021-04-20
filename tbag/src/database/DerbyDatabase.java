@@ -154,6 +154,45 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	@Override
+	public Player getPlayer(int playerID) {
+		return executeTransaction(new Transaction<Player>() {
+			@Override
+			public Player execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement("select players.* from players where players.actorID = ?");
+					stmt.setInt(1, playerID);
+					
+					resultSet = stmt.executeQuery();
+					
+					Player player = null;
+					
+					while (resultSet.next()) {
+						int index = 1;
+						
+						int actorID = resultSet.getInt(index++);
+						int roomID = resultSet.getInt(index++);
+						int inventoryID = resultSet.getInt(index++);
+												
+						player = new Player(roomID);
+						player.setActorID(actorID);
+						player.setInventoryID(inventoryID);
+						player.setInventory(getInventoryByID(inventoryID));
+						System.out.println("Created inventory");
+					}
+					
+					return player;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
+				}
+			}
+		});
+	}
+	
+	@Override
 	public Item getItemByID(int itemID) {
 		return executeTransaction(new Transaction<Item>() {
 			@Override

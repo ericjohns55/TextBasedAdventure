@@ -27,6 +27,7 @@ public interface IDatabase {
 	public UnlockableObject getUnlockableObjectByID(int objectID);
 	
 	public Room getRoom(int roomID);
+	public Player getPlayer(int playerID);
 	public Integer addItemToInventory(Inventory destinationInventory, Item item);
 	public Integer removeItemFromInventory(Inventory inventory, Item item);
 	public Integer toggleLocks(UnlockableObject object, boolean locked);

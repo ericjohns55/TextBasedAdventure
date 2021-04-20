@@ -4,12 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import actor.Player;
 import database.DatabaseProvider;
 import database.DerbyDatabase;
 import database.IDatabase;
 import map.Room;
 
-public class TestDatabaseRoomCreate {
+public class TestValidateDatabase {
 	// manually check rooms to see console output on creation
 	
 	@Test
@@ -19,5 +20,14 @@ public class TestDatabaseRoomCreate {
 		
 		Room room = db.getRoom(6);
 		assertEquals(6, room.getRoomID());
+	}
+	
+	@Test
+	public void grabPlayer() {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		IDatabase db = DatabaseProvider.getInstance();	
+		
+		Player player = db.getPlayer(1);
+		assertEquals(1, player.getActorID());
 	}
 }
