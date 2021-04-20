@@ -114,8 +114,9 @@ public class Command {
 								{
 									if (inventory.getItem("candle").isLit() == true)
 									{
+								
 										room.setCanSee(true);
-										output = room.getDescription();
+										output = "You are in a bright room.";
 									}
 									// When you have a candle, but its not lit
 									else
@@ -138,32 +139,47 @@ public class Command {
 							
 						} else {
 							if (room.hasItem(noun)) {
+									
 								
-					
 									output = room.getItem(noun).getDescription();
 
-								
-								
 							} else if (inventory.contains(noun)) {
 								output = inventory.getItem(noun).getDescription();
 							} else if (room.hasObject(noun)) {
 								RoomObject object = room.getObject(noun);
 								
-								
-								if (noun == "painting")
-								{	
+								if (object.isLocked()) {
+									
+									
+									
 									UnlockableObject painting = (UnlockableObject) object;
 									
-									if (painting.getCanBeLookedAtNow() == false && inventory.contains("triangular glass shard"))
-									{
-										painting.setCanBeLookedAtNow(true);
-										painting.setLocked(false);
+									if (painting.getCanBeLookedAtNow() == false)
+									{	
+										
+										// So this checks if our unlockable object is an object where you need something to look at it with
+										// and checking if you have what it needs in your inventory
+										if (inventory.contains(painting.getUnlockItem()))
+										{
+											painting.setCanBeLookedAtNow(true);
+											painting.setLocked(false);
+										}
+										
+										else
+										{
+											painting.setCanBeLookedAtNow(false);
+											painting.setLocked(true);
+											output = "You do not have what is needed to see this object.";
+											
+										}
+									
 									}
-								
-								}
-								
-								if (object.isLocked()) {
-									output = "This object is locked, I cannot see what is inside.";
+									
+									else
+									{	
+										output = "This object is locked, I cannot see what is inside.";
+									}
+									
 								} else {
 									output = room.getObject(noun).getDescription();
 								}
@@ -190,7 +206,23 @@ public class Command {
 						break;
 					case "list":
 						if (noun == null || noun.equals("room")) {
-							output = "This room has a " + room.listItems();
+							
+							if (room.getCanSee() == false)
+							{
+								output = "This room is too dark to see items.";
+							}
+							
+							if (room.listItems() == null)
+							{
+								output = "This room doesn't have any items!";
+							}
+							
+							if (room.getCanSee() == true)
+							{	
+								output = "This room has a " + room.listItems();
+							}
+							
+							
 						} else if (noun.equals("inventory")) {
 							output = inventory.openInventory();
 						} else if (noun.equals("objects")) {
@@ -268,9 +300,13 @@ public class Command {
 										objectInventory.addItem(noun, toRemove);
 										output = "You placed the " + noun + " on the " + location + "."; 
 										
+										// We will want to use the "cadaverPuzzle" in here
+										
+										
+										
 										if (puzzle.getDescription().equals("weightPuzzle")) {
 											double weightSolution = Double.parseDouble(puzzle.getSolution());
-											
+
 											if (objectInventory.getCurrentWeight() >= weightSolution) {
 												RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
 												if (obstacle.isLocked()) {
@@ -632,12 +668,15 @@ public class Command {
 							
 							if (inventory.getItem(noun).isLit() == false && inventory.getItem(inventory.listItems()).producesFire() == true)
 							{
-								inventory.getItem(noun).setLit(true);
+								
 								output = "The " + noun + " is lit!";
 							}
 							
 							if (inventory.getItem(noun).isLit() == false && inventory.contains("lighter"))
 							{
+								inventory.getItem(noun).setLit(true);
+								room.setCanSee(true);
+								
 								output = "The " + noun + " is lit!";
 							}
 							
