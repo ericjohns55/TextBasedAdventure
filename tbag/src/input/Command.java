@@ -108,11 +108,11 @@ public class Command {
 							
 							if (room.getCanSee() == false)
 							{
-								Item candle = room.getItem("candle");
+								//Item candle = room.getItem("candle");
 								
-								if (inventory.contains(candle))
+								if (inventory.contains("candle"))
 								{
-									if (candle.isLit() == true)
+									if (inventory.getItem("candle").isLit() == true)
 									{
 										room.setCanSee(true);
 										output = room.getDescription();
@@ -139,17 +139,10 @@ public class Command {
 						} else {
 							if (room.hasItem(noun)) {
 								
-								// These 2 are for when the room is dark so we dont want items to be seen
-								if (room.getCanSee() == false)
-								{	
-									output = "The room is too dark to see items.";
-								}
-								
-								else
-								{
+					
 									output = room.getItem(noun).getDescription();
 
-								}
+								
 								
 							} else if (inventory.contains(noun)) {
 								output = inventory.getItem(noun).getDescription();
@@ -630,25 +623,36 @@ public class Command {
 						break;
 						
 					case "light":
-						if (noun.equals("candle")) {
-							
-							Item candle = room.getItem("candle");
+						if (inventory.getItem(noun).isLightable()) 
+						{
 
-							Item lighter = room.getItem("lighter");
+							// Set the lighter to "can light" and check if anything from the inventory  
 							
-							if (inventory.contains(candle) && inventory.contains(lighter))
+							
+							
+							if (inventory.getItem(noun).isLit() == false && inventory.getItem(inventory.listItems()).producesFire() == true)
 							{
-								candle.setLit(true);
-								output = "The candle is lit!";
+								inventory.getItem(noun).setLit(true);
+								output = "The " + noun + " is lit!";
 							}
 							
-							if (inventory.contains(candle))
+							if (inventory.getItem(noun).isLit() == false && inventory.contains("lighter"))
 							{
-								output = "You may need an item to light this.";
+								output = "The " + noun + " is lit!";
 							}
+							
+							if (inventory.getItem(noun).isLit() == true)
+							{
+								output = "This item is already lit.";
+							}
+							
 							
 						// For when the object is either not in the inventory or not a candle
-						} else {
+						} 
+						
+						
+						
+						else {
 							if (inventory.contains(noun)) {
 								output = "This " + inventory.getItem(noun).getName() + " can not be lit.";
 							} else {
@@ -656,41 +660,101 @@ public class Command {
 							}
 						}
 						
-						break;
-						
-					case "feed":	
-						
-						if (noun.equals("hellhound"))
+							break;
+
+						case "feed":
+						// Okay so Im assuming location must take account for the preposition and articles happening
+						// So it would be like "feed meat to the hellhound" for the commands 
+						if (location != null) 
 						{
-		
-									if (inventory.contains("meat"))
-									{	
-										RoomObject object = room.getObject("hellhound");
-						
-										UnlockableObject hellhound = (UnlockableObject) object;
-						
+							if (room.hasObject(location)) 
+							{
+								if (room.getObject(location) instanceof RoomObject) 
+								{
+									RoomObject object = (RoomObject) room.getObject(location);
 									
-										hellhound.setLocked(false);
-								
-								
-										Item removed = inventory.removeItem("meat");
-										removed.setInInventory(false);
-									}
+									output = "You fed " + noun + " to the " + location + ".";
 									
-								
-									else
+									boolean unlock = false;
+									
+									if (object.canBeFed() == true) 
 									{
-										output = "You do not have what is needed to feed the hellhound.";
+										
+										if (inventory.contains(noun)) 
+										{
+											// This transfers the object 
+											Item toDrop = inventory.removeItem(noun);
+											object.getInventory().addItem(noun, toDrop);
+											
+											output = "Fed " + noun + " to the " + location + ".";
+											
+											
+											if (puzzle instanceof ObjectPuzzle) 
+											{
+												ObjectPuzzle obstaclePuzzle = (ObjectPuzzle) puzzle;
+												
+												if (obstaclePuzzle.isSolved()) 
+												{
+													unlock = true;
+												}
+												
+											}
+											
+										} 
+										
+										else 
+										{
+											output = "You do not have that item!";
+										}
 									}
+									
+									if (unlock) 
+									{
+										RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
+										
+										if (toUnlock.isLocked()) 
+										{
+											toUnlock.setLocked(false);
+									
+												output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.";
+											
+										}
+									}
+									
+								} 
 								
+								else 
+								{
+									output = "You can't feed that!";
+								}
+								
+							} 
 							
-						}
+							else 
+							{
+								output = "Could not find a " + location + ".";
+							}
 							
-						else
-						{
-							output = "This " + noun + " can not be fed.";
+						} 
+						
+						else {
+							output = "Not sure what you want me to feed...";
 						}
+						
 						break;
+						
+						
+						
+						
+						
+						
+							
+						
+						
+						
+						
+						
+						
 				}
 			} else {
 				if (VALID_COMMANDS.contains(verb)) {

@@ -15,6 +15,7 @@ public class Item {
 	
 	private boolean lightable;
 	private boolean isLit;
+	private boolean producesFire;
 	
 	public Item(String name, double weight) {
 		this.name = name;
@@ -30,6 +31,7 @@ public class Item {
 		this.pourable = false;
 		this.isLit = false;
 		this.lightable = false;
+		this.producesFire = false;
 		
 	}
 	
@@ -158,6 +160,12 @@ public class Item {
 		this.isLit = isLit;
 	}
 	
-	
+	public boolean producesFire() {
+		return producesFire;
+	}
+
+	public void setProducesFire(boolean producesFire) {
+		this.producesFire = producesFire;
+	}
 	
 }

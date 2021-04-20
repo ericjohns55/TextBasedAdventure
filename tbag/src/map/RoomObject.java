@@ -17,7 +17,9 @@ public class RoomObject {
 	private boolean moveable;
 	private boolean isObstacle;
 	private boolean coverable;
-
+	
+	private boolean canBeFed;
+	
 	private Inventory inventory;
 	
 	public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable) {
@@ -35,6 +37,7 @@ public class RoomObject {
 		this.canHoldItems = false;
 		this.locked = false;
 		this.coverable = false;
+		this.canBeFed = false;
 		
 		this.covered = "";
 		
@@ -150,4 +153,13 @@ public class RoomObject {
 	public boolean isCovered() {
 		return covered != "";
 	}
+	
+	public boolean canBeFed() {
+		return canBeFed;
+	}
+	
+	public void setCanBeFed(boolean canBeFed) {
+		this.canBeFed = canBeFed;
+	}
+	
 }

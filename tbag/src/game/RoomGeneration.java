@@ -295,17 +295,9 @@ public class RoomGeneration {
 		
 		
 		// Room 9 
-		//public UnlockableObject(String name, String description, String direction, boolean blockingExit, String unlockItem)
-		// UnlockableObject hellhound = new UnlockableObject("hellhound", "Looks hungry for meat.", "north", true, "meat");
-		// hellhound.setCanHoldItems(true);
-		// hellhound.setLocked(true);
-		
-		// public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable)
-		// I made the hellhound a roomobject instead of a unlockable object because I feel like it would act the same as 
-		// the weight sensor room. But I included the unlockable object for it above too with the parameter field
 		RoomObject hellhound = new RoomObject("hellhound", "Looks hungry for meat.", "north", false, false, false);
 		hellhound.setCanHoldItems(true);
-		hellhound.setLocked(true);
+		hellhound.setCanBeFed(true);
 		room9.addObject("hellhound", hellhound);
 		
 		
@@ -319,8 +311,6 @@ public class RoomGeneration {
 		
 		// Room 10
 		// Upside down room
-
-		
 		Item circularGlassShard = new Item("circular glass shard", 0.6);
 		circularGlassShard.setDescription("This shard of glass is circular.");
 
@@ -343,6 +333,8 @@ public class RoomGeneration {
 
 		
 		Item lighter = new Item("lighter", 0.3);
+		lighter.setProducesFire(true);
+		
 		lighter.setDescription("This is a lighter with about 1 flicker left.");
 
 		room10.addItem("lighter", lighter);
@@ -453,6 +445,133 @@ public class RoomGeneration {
 		room12.addObject("room12Door", room12Door);
 		
 		room12.setPuzzle(new Puzzle("Dark Room", "candle", "Might need something from a previous room to light something in here.", false, "room12Door"));
+
+/*		
+		
+		// Room 13
+		Room room13 = new Room("You are in a room with an undead doorman.", 13);
+
+
+
+		Item stickyGloves = new Item("sticky gloves");
+		stickyGloves.setWeight(0.5);
+		stickyGloves.setDescription("These sticky gloves can be good for climbing.");
+		room18.addItem("sticky gloves", stickyGloves);
+
+
+
+		// Room 14
+		Room room14 = new Room("You are in a bedroom with a bed and a nightstand.", 14);
+
+		room14.addExit("north", room13);
+		room15.addExit("west", room15);
+		
+		// "You are in a bedroom with a bed, pillow, blanket, nightstand, lamp, and glass of water."
+
+
+		Item butcherKnife = new Item("butcher knife", 1.2);
+		butcherKnife.setDescription("This butcher knife is used for cutting.");
+
+		Item blackKey = new Item("black key", 0.1);
+		blackKey.setDescription("This small black key seems to be able to unlock something...");
+
+		Item meat = new Item("meat", 1.0);
+		meat.setDescription("Could be used to eat or feed something?");
+
+		CompoundItem lambHeart = new CompoundItem("lamb heart", 2.0, true, "butcher knife");
+		lambHeart.setDescription("A lamb heart; suspiciously heavy.");
+		lambHeart.getInventory().addItem("black key", blackKey);
+		lambHeart.getInventory().addItem("meat", meat);
+
+		Item finger = new Item("finger", 0.3);
+		finger.setDescription("It's a severed finger!");
+		
+		Item pillow = new Item("pillow");
+		pillow.setWeight(1.7);
+		pillow.containsItems
+		lemonJuice.setDescription("This is a standard pillow, there might be something inside.");
+		room14.addItem("pillow", pillow);
+		
+		
+		CompoundItem lambHeart = new CompoundItem("finger", 1.7, true, "");
+		pillow.setDescription("This pillow seems a little lopsided.");
+		pillow.getInventory().addItem("finger", finger);
+		
+
+		Item blanket = new Item("blanket");
+		blanket.setWeight(1.2);
+		blanket.setDescription("This blanket could keep you warm.");
+		room14.addItem("blanket", blanket);
+
+		Item lamp = new Item("lamp");
+		lamp.setWeight(2.3);
+		lamp.setDescription("An object to see in the dark.");
+		room14.addItem("lamp", lamp);
+
+		Item waterGlass = new Item("water glass");
+		waterGlass.setWeight(0.5);
+		waterGlass.setDescription("This glass has water in it.");
+		room14.addItem("water glass", waterGlass);
+
+		ObjectPuzzle puzzle = new ObjectPuzzle("Find severed finger for pad.", "Play 'Crumbling Land'", "Zabriskie Point sountrack", recordPlayer, record1, "room6Door");
+		room14.setPuzzle(puzzle);
+
+		UnlockableObject room14Door = new UnlockableObject("door", "Probably leads to another room...", "north", true, "none");
+		room14Door.setLocked(true);
+		room14.addObject("room14Door", room14Door);
+
+		
+		
+		
+		
+		// Room 15
+		Room room15 = new Room("You are in a room with a keypad. On the kepad are a standard set of numbers but the 1, 3, 6, and 8 buttons are clearly worn.", 15);
+
+		Puzzle guess = new Puzzle("Guess the order.", "6381","The first number is 6 and there are no repeats.", true, "writtenObstacle");
+
+		room15.setPuzzle(guess);
+		UnlockableObject room15Door = new UnlockableObject("door", "Probably leads to another room...", "north", true, "none");
+		room15Door.setLocked(true);
+		room15.addObject("room15Door", room15Door);
+
+		// Room 16
+		Room room16 = new Room("You are in a room where to the north there is a greasy ladder going through the ceiling.", 16);
+
+		ObjectPuzzle ladder = new ObjectPuzzle("Climb ladder using an item.", "Climb ladder using 'sticky gloves'", "You may need an item from another room.", ladder, stickyGloves, "room16Door");
+		room16.setPuzzle(ladder);
+
+		// Room 17
+
+
+
+
+		// Room 18
+		// Potion room
+		RoomObject pot = new RoomObject("pot", "Holder of liquids", "north", true, true, false);
+		pot.setCoverable(true);
+		room8.addObject("pentagram", pentagram);
+
+		Item lemonJuice = new Item("lemon juice");
+		lemonJuice.setWeight(0.3);
+		lemonJuice.setDescription("This lemon juice looks like it can be mixed in with something.");
+		room18.addItem("lemon juice", lemonJuice);
+
+		Item bile = new Item("bile");
+		bile.setWeight(0.3);
+		bile.setDescription("This bile looks like it can be mixed in with something.")
+		room18.addItem("bile", bile);
+
+		Item chickenBlood = new Item("chicken blood");
+		chickenBlood.setWeight(0.3);
+		chickenBlood.setDescription("This chicken blood looks like it can be mixed in with something.")
+		room18.addItem("chicken blood", chickenBlood);
+
+		Item redKey = new Item("red key");
+		redKey.setWeight(0.1);
+		redKey.setDescription("This red key seems to be able to unlock a door.");
+		room18.addItem("red key", redKey);
+
+*/
 
 		
 		
