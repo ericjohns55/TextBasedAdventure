@@ -265,8 +265,8 @@ public class Game {
 		}
 	}
 	
-	public void moveRooms(Player player, String direction) {		
-		int roomID = player.getRoom().getExit(direction).getRoomID();
+	public void moveRooms(Player player, String direction) {
+		int roomID = player.getRoom().getExit(direction);
 		player.setRoomID(roomID);	
 		
 		db.moveRooms(player, roomID);  // update roomID in database

@@ -3,20 +3,20 @@ package map;
 import java.util.HashMap;
 
 public class Connections {
-	private HashMap<String, Room> connectionsMap;
+	private HashMap<String, Integer> connectionsMap;
 	private int connectionID;
 	private int destinationID;
 	private String direction;
 	
 	public Connections(int roomID) {
-		this.connectionsMap = new HashMap<String, Room>();
+		this.connectionsMap = new HashMap<String, Integer>();
 		this.connectionID = roomID;
 	}
 	
-	public void addConnection(String direction, Room destination) {
+	public void addConnection(String direction, int destination) {
 		connectionsMap.put(direction, destination);
 		
-		this.destinationID = destination.getRoomID();
+		this.destinationID = destination;
 		this.direction = direction;
 	}
 	
@@ -24,7 +24,7 @@ public class Connections {
 		return connectionsMap.containsKey(direction);
 	}
 	
-	public Room getConnection(String direction) {
+	public int getConnection(String direction) {
 		return connectionsMap.get(direction);
 	}
 	
@@ -45,7 +45,7 @@ public class Connections {
 		this.connectionID = connectionID;
 	}
 
-	public HashMap<String, Room> getConnectionsMap() {
+	public HashMap<String, Integer> getConnectionsMap() {
 		return connectionsMap;
 	}
 

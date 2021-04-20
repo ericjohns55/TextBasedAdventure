@@ -2,11 +2,9 @@ package database;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import actor.Actor;
 import actor.Player;
 import game.Game;
 import items.CompoundItem;
@@ -21,7 +19,6 @@ import puzzle.Puzzle;
 
 public class InitialData {
 	private static List<Item> items = null;
-	private static List<Room> rooms = null;
 	private static List<UnlockableObject> unlockableObjects = null;
 	private static List<PlayableObject> playableObjects = null;
 	
@@ -187,8 +184,6 @@ public class InitialData {
 			}
 			
 			System.out.println("roomList loaded");
-			
-			rooms = roomList;
 			
 			return roomList;
 		} finally {
@@ -479,7 +474,7 @@ public class InitialData {
 
 				Connections connections = new Connections(locationID);
 				connections.setConnectionID(locationID);
-				connections.addConnection(direction, rooms.get(destinationID - 1));
+				connections.addConnection(direction, destinationID);
 				
 				connectionsList.add(connections);
 			}

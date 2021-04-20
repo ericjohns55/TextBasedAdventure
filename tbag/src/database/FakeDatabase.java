@@ -9,6 +9,7 @@ import game.Game;
 import items.CompoundItem;
 import items.Inventory;
 import items.Item;
+import map.Connections;
 import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
@@ -17,6 +18,8 @@ import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 public class FakeDatabase implements IDatabase {
+	// lmao if you think im actually gonna implement any of this
+	
 	List<Item> items;
 	List<CompoundItem> compoundItems;
 	
@@ -131,6 +134,36 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public String getDescription(int roomID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RoomObject getRoomObjectByID(int objectID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Connections getAllConnections(int roomID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Puzzle getPuzzle(Room room) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UnlockableObject getUnlockableObjectByID(int objectID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Room getRoom(int roomID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

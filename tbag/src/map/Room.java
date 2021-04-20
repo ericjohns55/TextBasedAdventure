@@ -73,11 +73,11 @@ public class Room {
 	//sets the rooms exit
 	public void addExit(String direction, Room destination)
 	{
-		connections.addConnection(direction, destination);
+		connections.addConnection(direction, destination.getRoomID());
 	}
 	
 	//gets the rooms exit
-	public Room getExit(String direction)
+	public int getExit(String direction)
 	{
 		return connections.getConnection(direction);
 	}
