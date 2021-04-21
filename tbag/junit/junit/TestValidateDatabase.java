@@ -29,5 +29,7 @@ public class TestValidateDatabase {
 		
 		Player player = db.getPlayer(1);
 		assertEquals(1, player.getActorID());
+		
+		System.out.println("--------------------" + player.getInventoryID());
 	}
 }

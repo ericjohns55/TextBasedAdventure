@@ -16,10 +16,7 @@ public class Item {
 	private int itemID;
 	private int locationID;
 	
-	public Item(String name, double weight) {
-		this.itemID = 10; // TODO: FIX
-		this.locationID = 0;
-		
+	public Item(String name, double weight) {		
 		this.name = name;
 		this.weight = weight;
 		this.isInteractable = false;

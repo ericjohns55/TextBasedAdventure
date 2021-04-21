@@ -167,4 +167,10 @@ public class FakeDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Integer destroyItem(Item item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

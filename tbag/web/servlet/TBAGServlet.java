@@ -11,16 +11,16 @@ import game.Game;
 
 public class TBAGServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private Game game = new Game();
 	private boolean firstRun = true;
 	private String pastInputs = "";
+	private int moves = 0;
 	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {			
 		if (firstRun) {
 			firstRun = !firstRun;
 			
-			req.setAttribute("story", game.getPlayer().getRoom().getDescription());
+			req.setAttribute("story", "Start game?");
 			req.setAttribute("moves", "Moves: 0");
 			req.setAttribute("score", "Score: 0");
 			req.setAttribute("timeText", "Time Left: ");
@@ -32,10 +32,11 @@ public class TBAGServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
+		Game game = new Game();
+		
 		if (req.getParameter("submit").equals("Clear Game")) {
 			req.setAttribute("story", game.getPlayer().getRoom().getDescription());
-			
-			game.resetMoves();
+			moves = 0;
 		} else {
 			String text = req.getParameter("userInput");
 			String story = req.getParameter("story");
@@ -55,7 +56,7 @@ public class TBAGServlet extends HttpServlet {
 			req.setAttribute("duration", req.getParameter("duration"));
 		}
 		
-		req.setAttribute("moves", "Moves: " + game.getMoves());
+		req.setAttribute("moves", "Moves: " + ++moves);
 		req.setAttribute("score", "Score: 0");
 		req.setAttribute("timeText", "Time Left: ");
 

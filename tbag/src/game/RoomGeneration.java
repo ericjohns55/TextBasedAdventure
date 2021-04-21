@@ -19,10 +19,6 @@ public class RoomGeneration {
 		this.db = db;
 	}
 	
-	public void generateRoom() {
-		
-	}
-	
 	public static void generateRooms(HashMap<Integer, Room> rooms) {
 		// 24 rooms and an exit 
 		Room room1 = new Room("You are in a room with a westward door containing nothing but a table.", 1);

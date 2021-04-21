@@ -14,7 +14,6 @@ public class CompoundItem extends Item {
 		this.inventory = new Inventory();
 		this.breakable = breakable;
 		this.breakItem = breakItem;
-		this.inventoryID = 0;
 	}
 	
 	public Inventory getInventory() {

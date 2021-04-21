@@ -14,7 +14,6 @@ public class Inventory {
 	public Inventory() {
 		items = new HashMap<String, Item>();
 		emptyItem = new Item("emptyItem");
-		this.inventoryID = 0;
 	}
 	
 	public int getInventoryID() {

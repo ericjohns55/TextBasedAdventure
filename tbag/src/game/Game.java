@@ -19,30 +19,28 @@ import items.Inventory;
 import items.Item;
 
 public class Game {
-	private HashMap<Integer, Room> rooms;
-	private int moves;
+	
 	private Player player;
+	private Room room;
+	
 	private String output;
 	
 	private IDatabase db;
 	
-	public Game(int roomID) {
-		this.moves = 0;	// probs store this in servlet
-		this.player = new Player(this, roomID);		// load player from DB, include inv
-		this.rooms = new HashMap<Integer, Room>();	// load current room from DB, including items and objects
-		this.output = "";
-		
+	public Game() {
 		DatabaseProvider.setInstance(new DerbyDatabase());
 		db = DatabaseProvider.getInstance();	
 		
-		RoomGeneration roomGeneration = new RoomGeneration(db);
-		roomGeneration.generateRoom();
-
-		RoomGeneration.generateRooms(rooms);	// should disappear after db	
+		this.player = db.getPlayer(1);
+		this.player.setGame(this);
+		this.room = db.getRoom(player.getRoomID());
+		this.output = "";
 	}
-
-	public Game() {
-		this(1);
+	
+	public Game(int roomID) {
+		this();
+		player.setRoomID(roomID);
+		room = db.getRoom(roomID);
 	}
 	
 	public void setOutput(String output) {
@@ -65,23 +63,18 @@ public class Game {
 		this.output = "";
 		Command command = new Command(input, this);
 		command.execute();
-		moves++;
 	}
 	
-	public void addRoom(Room room) {
-		rooms.put(room.getRoomID(), room);
+//	public void addRoom(Room room) {
+//		rooms.put(room.getRoomID(), room);
+//	}
+	
+	public Room getRoom() {
+		return room;
 	}
 
 	public Room getRoom(int ID) {
-		return rooms.get(ID);
-	}
-	
-	public int getMoves() {
-		return moves;
-	}
-	
-	public void resetMoves() {
-		moves = 0;
+		return db.getRoom(ID);
 	}
 	
 	public void unlock(UnlockableObject object, Item unlockItem, Player player) {
@@ -90,6 +83,7 @@ public class Game {
 		
 		if (object.consumeItem()) {
 			player.getInventory().removeItem(unlockItem);	// remove item from inventory in DB
+			db.destroyItem(unlockItem);
 		}
 	}
 	
@@ -158,9 +152,14 @@ public class Game {
 	
 	public void dropItem(Room room, String item, Player player, Puzzle puzzle) {
 		Item removed = player.getInventory().removeItem(item);
-		removed.setInInventory(false);
-		room.addItem(item, removed);
+		room.getInventory().addItem(item, removed);
+		System.out.println(room.listItems());
 		db.removeItemFromInventory(room.getInventory(), removed); // update DB inventory ID
+		
+		if (room.getInventory().contains(item)) {
+			System.out.println("what the fuck");
+		}
+		
 		setOutput("You dropped " + item + " on the floor.");	
 	}
 	
@@ -265,7 +264,7 @@ public class Game {
 		}
 	}
 	
-	public void moveRooms(Player player, String direction) {
+	public void moveRooms(Player player, String direction) {		
 		int roomID = player.getRoom().getExit(direction);
 		player.setRoomID(roomID);	
 		

@@ -125,7 +125,7 @@ public class DerbyDatabase implements IDatabase {
 						room = new Room(description, roomID);
 						room.setInventoryID(inventoryID);
 						room.setInventory(getInventory(room));
-						System.out.println("Created inventory");
+						System.out.println("Created room inventory");
 					}
 					
 					if (room != null) {
@@ -180,7 +180,7 @@ public class DerbyDatabase implements IDatabase {
 						player.setActorID(actorID);
 						player.setInventoryID(inventoryID);
 						player.setInventory(getInventoryByID(inventoryID));
-						System.out.println("Created inventory");
+						System.out.println("Created player inventory");
 					}
 					
 					return player;
@@ -600,7 +600,7 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement("select puzzles.* " +
-							"from puzzles, rooms " + 
+							"from puzzles " + 
 								"where puzzles.roomID = ?"
 					);
 					
@@ -621,6 +621,8 @@ public class DerbyDatabase implements IDatabase {
 						int unlockObstacle = resultSet.getInt(index++);	
 						boolean solved = resultSet.getInt(index++) == 1;
 						int roomID = resultSet.getInt(index++);
+
+						System.out.println(resultSet.getInt("roomID"));
 						
 						RoomObject object = getUnlockableObjectByID(unlockObstacle);
 						String unlockName = object != null ? object.getName() : null;
@@ -1296,12 +1298,20 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
-
+//					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
+					stmt = conn.prepareStatement("select * from items where items.inventoryID = ?");
+					
 					stmt.setInt(1, destinationInventory.getInventoryID());
-					stmt.setInt(2, item.getItemID());
-
-					return stmt.executeUpdate();
+//					stmt.setInt(2, item.getItemID());
+					
+					ResultSet resultSet = stmt.executeQuery();
+					
+					while (resultSet.next()) {
+						System.out.println(resultSet.getString("name"));
+					}
+					
+//					return stmt.executeUpdate();
+					return 1;
 				} finally {
 					DBUtil.closeQuietly(stmt);
 				}
@@ -1446,6 +1456,27 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement("update compoundItems set inventoryID = ? where compoundItems.itemID = ?");
+
+					stmt.setInt(1, -9999);
+					stmt.setInt(2, item.getItemID());
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+
+	@Override
+	public Integer destroyItem(Item item) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
 
 					stmt.setInt(1, -9999);
 					stmt.setInt(2, item.getItemID());

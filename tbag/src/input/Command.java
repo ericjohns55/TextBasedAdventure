@@ -108,7 +108,7 @@ public class Command {
 	}
 	
 	public void execute() {
-		System.out.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
+		System.err.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
 		
 		// eat chocolate
 		if (verb != null) {

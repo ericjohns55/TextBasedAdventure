@@ -17,6 +17,7 @@ public class TypeCommand extends UserCommand {
 		if (puzzle.isWrittenSolution()) {
 			if (!puzzle.isSolved()) {
 				if (puzzle.getSolution().equals(noun)) {
+					System.out.println(puzzle.getUnlockObstacle());
 					RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());
 					
 					game.type(puzzle, obstacle, noun);

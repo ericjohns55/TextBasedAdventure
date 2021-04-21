@@ -36,6 +36,7 @@ public interface IDatabase {
 	public Integer breakItem(CompoundItem compoundItem, Inventory destinationInventory);
 	public Integer consumeItem(Item item);
 	public Integer destroyCompoundItem(CompoundItem item);
+	public Integer destroyItem(Item item);
 	public Integer playNotes(PlayableObject playableObject, String notes);
 	public String getDescription(int roomID);
 }

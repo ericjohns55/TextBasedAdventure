@@ -19,30 +19,29 @@ public class Actor {
 		equippedItems = new Inventory();
 		this.roomID = roomID;
 		this.game = game;
-		this.inventoryID = 0;
 	}
 	
 	public Actor(int roomID) {
 		this(null, roomID);
 	}
 	
-	public void equipItem(String identifier, Item toAdd) {
-		if (toAdd.inInventory() && toAdd.isEquippable()) {
-			inventory.removeItem(identifier);
-			equippedItems.addItem(identifier, toAdd);
-		}
-	}
-	
-	public void unEquipItem(String identifier, Item toRemove) {
-		if (toRemove.isEquipped() && inventory.canAddItem(toRemove)) {
-			equippedItems.removeItem(identifier);
-			inventory.addItem(identifier, toRemove);
-		}
-		else if (toRemove.isEquipped() && !inventory.canAddItem(toRemove)) {
-			equippedItems.removeItem(identifier);
-			game.getRoom(roomID).addItem(identifier, toRemove);
-		}
-	}
+//	public void equipItem(String identifier, Item toAdd) {
+//		if (toAdd.inInventory() && toAdd.isEquippable()) {
+//			inventory.removeItem(identifier);
+//			equippedItems.addItem(identifier, toAdd);
+//		}
+//	}
+//	
+//	public void unEquipItem(String identifier, Item toRemove) {
+//		if (toRemove.isEquipped() && inventory.canAddItem(toRemove)) {
+//			equippedItems.removeItem(identifier);
+//			inventory.addItem(identifier, toRemove);
+//		}
+//		else if (toRemove.isEquipped() && !inventory.canAddItem(toRemove)) {
+//			equippedItems.removeItem(identifier);
+//			game.getRoom(roomID).addItem(identifier, toRemove);
+//		}
+//	}
 	
 	public Inventory getInventory() {
 		return inventory;
@@ -62,7 +61,7 @@ public class Actor {
 	}
 
 	public Room getRoom() {
-		return game.getRoom(getRoomID());
+		return game.getRoom();
 	}
 
 	public int getInventoryID() {

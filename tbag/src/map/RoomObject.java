@@ -46,8 +46,6 @@ public class RoomObject {
 		
 		this.inventory = new Inventory();
 		this.roomID = roomID;
-		this.inventoryID = 0;
-		this.objectID = 0;
 	}
 	
 	public int getRoomID() {

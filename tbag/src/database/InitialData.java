@@ -144,7 +144,7 @@ public class InitialData {
 				
 				int roomID = Integer.parseInt(iter.next());
 				
-				Player player = new Player(new Game(), roomID);
+				Player player = new Player(null, roomID);
 				player.setInventoryID(Integer.parseInt(iter.next()));
 				player.setActorID(actorID);
 				
@@ -309,9 +309,7 @@ public class InitialData {
 		List<UnlockableObject> unlockableObjectsList = new ArrayList<UnlockableObject>();
 		ReadCSV readItems = new ReadCSV("unlockableObjects.csv");
 		
-		try {
-			int objectID = 1;
-			
+		try {			
 			while (true) {
 				List<String> itemRow = readItems.next();
 				
@@ -320,8 +318,8 @@ public class InitialData {
 				}
 				
 				Iterator<String> iter = itemRow.iterator();
-				Integer.parseInt(iter.next());
 				
+				int objectID = Integer.parseInt(iter.next());
 				String name = iter.next();
 				String description = iter.next();
 				String direction = iter.next();
@@ -356,7 +354,7 @@ public class InitialData {
 				unlockableObject.setCoverable(coverable);
 				unlockableObject.setPreviouslyUnlocked(previouslyUnlocked);
 				unlockableObject.setInventoryID(inventoryID);
-				unlockableObject.setObjectID(objectID++);
+				unlockableObject.setObjectID(objectID);
 				unlockableObject.setUnlockItemID(unlockItemID);
 				unlockableObject.setConsumeItem(consumeItem);
 				
@@ -392,9 +390,10 @@ public class InitialData {
 				String solution = iter.next();
 				String hint = iter.next();
 				boolean writtenSolution = Integer.parseInt(iter.next()) == 1;
-				UnlockableObject unlockObstacle = getUnlockableObjectByID(Integer.parseInt(iter.next()));
+				int unlockObstacleID = Integer.parseInt(iter.next());
 				boolean solved = Integer.parseInt(iter.next()) == 1;
 				
+				UnlockableObject unlockObstacle = getUnlockableObjectByID(unlockObstacleID);
 				String unlockObstacleName = unlockObstacle != null ? unlockObstacle.getName() : "";
 				
 				Puzzle puzzle = new Puzzle(description, solution, hint, writtenSolution, unlockObstacleName, roomID);
