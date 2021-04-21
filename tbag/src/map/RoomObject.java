@@ -19,6 +19,7 @@ public class RoomObject {
 	private boolean coverable;
 	
 	private boolean canBeFed;
+	private boolean canScan;
 	
 	private Inventory inventory;
 	
@@ -40,6 +41,8 @@ public class RoomObject {
 		this.canBeFed = false;
 		
 		this.covered = "";
+		
+		this.canScan = false;
 		
 		this.inventory = new Inventory();
 	}
@@ -161,5 +164,14 @@ public class RoomObject {
 	public void setCanBeFed(boolean canBeFed) {
 		this.canBeFed = canBeFed;
 	}
+	
+	public boolean canScan() {
+		return canScan;
+	}
+	
+	public void setCanScan(boolean canScan) {
+		this.canScan = canScan;
+	}
+	
 	
 }

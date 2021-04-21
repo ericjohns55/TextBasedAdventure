@@ -31,8 +31,7 @@ public class Item {
 		this.pourable = false;
 		this.isLit = false;
 		this.lightable = false;
-		this.producesFire = false;
-		
+		this.producesFire = false;		
 	}
 	
 	public Item(String name) {

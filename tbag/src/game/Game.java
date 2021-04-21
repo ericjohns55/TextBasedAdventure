@@ -21,7 +21,7 @@ public class Game {
 	}
 
 	public Game() {
-		this(1);
+		this(7);
 	}
 
 	public Player getPlayer() {

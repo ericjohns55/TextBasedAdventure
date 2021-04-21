@@ -34,11 +34,10 @@ public class RoomGeneration {
 		Room room10 = new Room("You are in a room where everthing appears to be upside down. There appears to be a desk and a bed on the ceiling with a blurry painting on the wall as well as a keypad on the door.", 10);
 		Room room11 = new Room("You are in a room, on the wall there is a sign that says \"There is nothing wrong here\". "
 				+ "This room is very clean, quiet, and cold; and you can't help but to feel like you're not alone as you hear murmurs in the walls. On a table in the exact center of the room there is a computer that says \"What is the capital of New Jersey?\" on the screen.", 11);
-		Room room12 = new Room("You are in a dark room where you can not see a thing.", 12);
-		Room room13 = new Room("Last current room", 13);
-		
-		
-		
+		Room room12 = new Room("You are in a bedroom with a bed, nightstand and a scanner.", 12);
+		Room room13 = new Room("You are in a room with a keypad. On the kepad is a standard set of numbers but the 1, 3, 6, and 8 buttons are clearly worn.", 13);
+		Room room14 = new Room("You are in a room with an undead doorman.", 14);			
+		Room room15 = new Room("You are in a dark room where you can not see a thing.", 15);
 		
 		
 		
@@ -78,13 +77,13 @@ public class RoomGeneration {
 		room12.addExit("south", room13);
 
 		room13.addExit("north", room12);
-/*		room13.addExit("south", room14);
+		room13.addExit("south", room14);
 		
 		room14.addExit("north", room13);
 		room14.addExit("west", room15);
 
 		room15.addExit("east", room14);
-		room15.addExit("west", room16);
+/*		room15.addExit("west", room16);
 		
 		room16.addExit("east", room15);
 		room16.addExit("up ladder", room17);
@@ -278,12 +277,52 @@ public class RoomGeneration {
 		table7.getInventory().addItem("note", note7);
 		room7.addObject("table", table7);
 
-		UnlockableObject door7 = new UnlockableObject("door", "Probably leads to another room...", "north", true, "black key");
-		door7.setLocked(true);
-		room7.addObject("door", door7);
+		UnlockableObject room7Door = new UnlockableObject("door", "Probably leads to another room...", "north", true, "black key");
+		room7Door.setLocked(true);
+		room7.addObject("door", room7Door);
 
 		room7.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "The key may be hidden somewhere.", false, ""));
 
+		
+		
+/*				
+		UnlockableObject door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "key");
+		door.setLocked(true);
+		room1.addObject("door", door);
+
+		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false, ""));
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		Puzzle doorman = new Puzzle("Doorman problem.", "hello", "Type hello on keypad", true, "sayHello");
+
+		room13.setPuzzle(doorman);
+
+		UnlockableObject room13Door = new UnlockableObject("door", "Probably leads to another room...", "south", true, "none");
+		room13Door.setLocked(true);
+		room13.addObject("sayHello", room13Door);
+*/		
+		
+		
+		
+		
+		// Keeps saying the obstacle doesnt exist when I try to "unlock door"
+		
+		
+		
 		// Room 8
 		Item bloodVial = new Item("blood vial", 0.2);
 		bloodVial.setPourable(true);
@@ -324,6 +363,10 @@ public class RoomGeneration {
 		// public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle)
 		room9.setPuzzle(new Puzzle("Hellhound Room", "meat", "I wonder if the hellhound would like some meat from one of the previous rooms.", false, "room9Door"));
 				
+		
+		
+
+		
 		
 		// Room 10
 		// Upside down room
@@ -429,6 +472,11 @@ public class RoomGeneration {
 		
 		
 		/*	
+		 
+		
+		// This type of problem is for when there isnt a set object you need to interact with so the door opens automatically 
+		// once the puzzle is satisfied.
+		
 		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true, "writtenObstacle");
 
 		room3.setPuzzle(math);
@@ -439,12 +487,121 @@ public class RoomGeneration {
 	*/
 		
 		
-		// Room 12
 		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Room 12
+		RoomObject room12Bed = new RoomObject("bed", "A bed to sleep in.", "south", true, true, false);
+		room12Bed.setCanHoldItems(true);
+		room12Bed.setInteractable(true);
+
+		RoomObject nightstand = new RoomObject("nightstand", "A common bedside table.", "south", true, true, false);
+		nightstand.setCanHoldItems(true);
+		nightstand.setInteractable(true);
+
+		// public CompoundItem(String name, double weight, boolean breakable, String breakIdentifier) {
+		Item finger = new Item("finger", 0.3);
+		finger.setDescription("It's a severed finger!");
+		
+		CompoundItem pillow = new CompoundItem("pillow", 1.7, true, "switchblade");
+		pillow.setDescription("A pillow, seeming a little lopsided.");
+		pillow.getInventory().addItem("finger", finger);
+		room12.addItem("pillow", pillow);
+		
+		Item blanket = new Item("blanket");
+		blanket.setWeight(1.2);
+		blanket.setDescription("This blanket could keep you warm.");
+		room12.addItem("blanket", blanket);
+		
+		Item lamp = new Item("lamp");
+		lamp.setWeight(2.3);
+		lamp.setDescription("An object to see in the dark.");
+		room12.addItem("lamp", lamp);
+
+		Item waterGlass = new Item("water glass");
+		waterGlass.setWeight(0.5);
+		waterGlass.setDescription("This glass has water in it.");
+		room12.addItem("water glass", waterGlass);
+		
+		Item switchblade = new Item("switchblade");
+		switchblade.setWeight(0.8);
+		switchblade.setDescription("This is a type of knife.");
+		room12.addItem("swtichblade", switchblade);
+
+		room12Bed.getInventory().addItem("blanket", blanket);
+		room12Bed.getInventory().addItem("pillow", pillow);
+		room12.addObject("bed", room12Bed);
+
+		nightstand.getInventory().addItem("lamp", lamp);
+		nightstand.getInventory().addItem("switchblade", switchblade);
+		nightstand.getInventory().addItem("water glass", waterGlass);
+		room12.addObject("nightstand", nightstand);
+
+		
+		
+	/*	
+		// Scanner
+		RoomObject sensor = new RoomObject("sensor", "Triggers something by weight...", "north", false, false, false);
+		sensor.setCanHoldItems(true);
+		room2.addObject("sensory pad", sensor);
+		
+	*/	
+		
+		RoomObject scanner = new RoomObject("scanner", "This is used to scan things.", "north", false, false, false);
+		scanner.setCanScan(true);
+		room12.addObject("scanner", scanner);
+		
+		UnlockableObject room12Door = new UnlockableObject("door", "Probably leads to another room...", "south", true, "none");
+		room12Door.setLocked(true);
+		room12.addObject("room12Door", room12Door);
+		
+		// public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle)
+		room12.setPuzzle(new Puzzle("Bedroom", "finger", "Looks like you might have to scan something from the room.", false, "room12Door"));
+				
+		
+		// Room 13
+
+		Puzzle guess = new Puzzle("Guess the order.", "6381","The first number is 6 and there are no repeats.", true, "writtenObstacle");
+
+		room13.setPuzzle(guess);
+		
+		UnlockableObject room13Door = new UnlockableObject("door", "Probably leads to another room...", "south", true, "none");
+		room13Door.setLocked(true);
+		room13.addObject("writtenObstacle", room13Door);		
+		
+
+		
+		
+		// Room 14
+		// Planning for sticky gloves to be grabbed before advancing up greasy ladder in room 16
+		Item stickyGloves = new Item("sticky gloves");
+		stickyGloves.setWeight(0.5);
+		stickyGloves.setDescription("These sticky gloves can be good for climbing.");
+		room14.addItem("sticky gloves", stickyGloves);
+		
+		Puzzle doorman = new Puzzle("Doorman problem.", "hello", "Type hello on keypad", true, "sayHello");
+
+		room15.setPuzzle(doorman);
+
+		UnlockableObject room14Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
+		room14Door.setLocked(true);
+		room14.addObject("sayHello", room14Door);
+				
+
+
+		
+		// Room 15	
 		// So the room starts out dark and needs an item to "light" an unlockable object to be able to reveal the room items (
 		// in this case a red key) and advance. I set the opposite in here 
 		
-		room12.setCanSee(false);
+		room15.setCanSee(false);
 		
 		
 		// Thinking the key and door will be revealed once the candle is lit and in the room.
@@ -452,198 +609,29 @@ public class RoomGeneration {
 		// LightableObject candle = new LightableObject("candle", "Looks like you need an object to light it.", "north", true, "lighter");
 		
 		// Might cause problems, it probably generates a key eveytime you enter into that room and it's lit
-		if (room12.getCanSee() == true)
+		if (room15.getCanSee() == true)
 		{
 			Item redKey = new Item("red key");
 			redKey.setWeight(0.1);
 			redKey.setDescription("This red key seems to be able to unlock a door.");
-			room12.addItem("red key", redKey);
+			room15.addItem("red key", redKey);
 
 		}
 		
 
 	
-		UnlockableObject room12Door = new UnlockableObject("door", "Probably leads to another room but you might need a key...", "south", true, "red key");
-		room12Door.setLocked(true);
-		room12.addObject("room12Door", room12Door);
-		
-		room12.setPuzzle(new Puzzle("Dark Room", "candle", "Might need something from a previous room to light something in here.", false, "room12Door"));
-
-/*		
-		
-		// Room 13
-		Room room13 = new Room("You are in a room with an undead doorman.", 13);
-
-
-
-		Item stickyGloves = new Item("sticky gloves");
-		stickyGloves.setWeight(0.5);
-		stickyGloves.setDescription("These sticky gloves can be good for climbing.");
-		room18.addItem("sticky gloves", stickyGloves);
-
-
-
-		// Room 14
-		Room room14 = new Room("You are in a bedroom with a bed and a nightstand.", 14);
-
-		room14.addExit("north", room13);
-		room15.addExit("west", room15);
-
-
-		Item switchblade = new Item("switchblade", 1.2);
-		switchblade.setDescription("This switchblade is used for cutting.");
-
-		Item finger = new Item("finger", 0.3);
-		finger.setDescription("It's a severed finger!");
-
-
-		// public CompoundItem(String name, double weight, boolean breakable, String breakIdentifier) {
-		CompoundItem pillow = new CompoundItem("pillow", 1.7, true, "switchblade");
-		pillow.setDescription("A pillow, seeming a little lopsided.");
-		pillow.getInventory().addItem("switchblade", switchblade);
-		
-		CompoundItem lambHeart = new CompoundItem("finger", 1.7, true, "");
-		pillow.setDescription("This pillow seems a little lopsided.");
-		pillow.getInventory().addItem("finger", finger);
-		
-
-		Item blanket = new Item("blanket");
-		blanket.setWeight(1.2);
-		blanket.setDescription("This blanket could keep you warm.");
-		room14.addItem("blanket", blanket);
-
-		Item lamp = new Item("lamp");
-		lamp.setWeight(2.3);
-		lamp.setDescription("An object to see in the dark.");
-		room14.addItem("lamp", lamp);
-
-		Item waterGlass = new Item("water glass");
-		waterGlass.setWeight(0.5);
-		waterGlass.setDescription("This glass has water in it.");
-		room14.addItem("water glass", waterGlass);
-
-		ObjectPuzzle puzzle = new ObjectPuzzle("Find severed finger for pad.", "Play 'Crumbling Land'", "Zabriskie Point sountrack", recordPlayer, record1, "room6Door");
-		room14.setPuzzle(puzzle);
-
-		UnlockableObject room14Door = new UnlockableObject("door", "Probably leads to another room...", "north", true, "none");
-		room14Door.setLocked(true);
-		room14.addObject("room14Door", room14Door);
-
-		
-		
-		
-		
-		
-		
-		
-		RoomObject bed = new RoomObject("bed", "A bed to sleep in.", "south", true, true, false);
-		bed.setCanHoldItems(true);
-		bed.setInteractable(true);
-		room14.addObject("bed", bed);
-
-		RoomObject nightstand = new RoomObject("nightstand", "A common bedside table.", "south", true, true, false);
-		nightstand.setCanHoldItems(true);
-		nightstand.setInteractable(true);
-		room14.addObject("nightstand", nightstand);
-		
-		Item record1 = new Item("Crumbling Land Record", 0.7);
-		record1.setDescription("This record has a song by Pink Floyd on it.");
-
-		Item record2 = new Item("Another Brick Wall Record", 0.7);
-		record2.setDescription("This record has a song by Pink Floyd on it.");
-
-		Item record3 = new Item("Hey You Record", 0.7);
-		record3.setDescription("This record has a song by Pink Floyd on it.");
-
-		Item record4 = new Item("Young Lust Record", 0.7);
-		record4.setDescription("This record has a song by Pink Floyd on it.");
-
-		Item record5 = new Item("Arnold Layne Record", 0.7);
-		record5.setDescription("This record has a song by Pink Floyd on it.");
-
-		bed.getInventory().addItem("Crumbling Land Record", record1);
-		bed.getInventory().addItem("Another Brick Wall Record", record2);
-		bed.getInventory().addItem("Hey You Record", record3);
-		bed.getInventory().addItem("Young Lust Record", record4);
-		bed.getInventory().addItem("Arnold Layne Record", record5);
-
-
-		nightstand.getInventory().addItem("Crumbling Land Record", record1);
-		nightstand.getInventory().addItem("Another Brick Wall Record", record2);
-		nightstand.getInventory().addItem("Hey You Record", record3);
-		nightstand.getInventory().addItem("Young Lust Record", record4);
-		nightstand.getInventory().addItem("Arnold Layne Record", record5);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// Room 15
-		Room room15 = new Room("You are in a room with a keypad. On the kepad are a standard set of numbers but the 1, 3, 6, and 8 buttons are clearly worn.", 15);
-
-		Puzzle guess = new Puzzle("Guess the order.", "6381","The first number is 6 and there are no repeats.", true, "writtenObstacle");
-
-		room15.setPuzzle(guess);
-		UnlockableObject room15Door = new UnlockableObject("door", "Probably leads to another room...", "north", true, "none");
+		UnlockableObject room15Door = new UnlockableObject("door", "Probably leads to another room but you might need a key...", "west", true, "red key");
 		room15Door.setLocked(true);
 		room15.addObject("room15Door", room15Door);
-
-		// Room 16
-		Room room16 = new Room("You are in a room where to the north there is a greasy ladder going through the ceiling.", 16);
-
-		ObjectPuzzle ladder = new ObjectPuzzle("Climb ladder using an item.", "Climb ladder using 'sticky gloves'", "You may need an item from another room.", ladder, stickyGloves, "room16Door");
-		room16.setPuzzle(ladder);
-
-		// Room 17
-
-
-
-
-		// Room 18
-		// Potion room
-		RoomObject pot = new RoomObject("pot", "Holder of liquids", "north", true, true, false);
-		pot.setCoverable(true);
-		room8.addObject("pentagram", pentagram);
-
-		Item lemonJuice = new Item("lemon juice");
-		lemonJuice.setWeight(0.3);
-		lemonJuice.setDescription("This lemon juice looks like it can be mixed in with something.");
-		room18.addItem("lemon juice", lemonJuice);
-
-		Item bile = new Item("bile");
-		bile.setWeight(0.3);
-		bile.setDescription("This bile looks like it can be mixed in with something.")
-		room18.addItem("bile", bile);
-
-		Item chickenBlood = new Item("chicken blood");
-		chickenBlood.setWeight(0.3);
-		chickenBlood.setDescription("This chicken blood looks like it can be mixed in with something.")
-		room18.addItem("chicken blood", chickenBlood);
-
-		Item redKey = new Item("red key");
-		redKey.setWeight(0.1);
-		redKey.setDescription("This red key seems to be able to unlock a door.");
-		room18.addItem("red key", redKey);
-
-*/
+		
+		room15.setPuzzle(new Puzzle("Dark Room", "candle", "Might need something from a previous room to light something in here.", false, "room15Door"));
 
 		
 		
 		
+		
+		
+
 		rooms.put(1, room1);
 		rooms.put(2, room2);
 		rooms.put(3, room3);
@@ -659,7 +647,8 @@ public class RoomGeneration {
 		rooms.put(11, room11);
 		rooms.put(12, room12);
 		rooms.put(13, room13);
-		
+		rooms.put(14, room14);
+		rooms.put(15, room15);
 		
 		
 	}

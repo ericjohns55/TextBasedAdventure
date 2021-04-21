@@ -24,7 +24,7 @@ public class Command {
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
 	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
-			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint", "feed"));
+			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint", "feed", "scan"));
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -110,8 +110,10 @@ public class Command {
 							{
 								//Item candle = room.getItem("candle");
 								
+								// If it just has the candle
 								if (inventory.contains("candle"))
 								{
+									// If it has a candle and also the candle is lit
 									if (inventory.getItem("candle").isLit() == true)
 									{
 								
@@ -181,6 +183,9 @@ public class Command {
 									}
 									
 								} else {
+									
+									// It sends back a description but our description is the solution so we want 
+									// but only some stuff has a description like this
 									output = room.getObject(noun).getDescription();
 								}
 							}
@@ -301,7 +306,6 @@ public class Command {
 										output = "You placed the " + noun + " on the " + location + "."; 
 										
 										// We will want to use the "cadaverPuzzle" in here
-										
 										
 										
 										if (puzzle.getDescription().equals("weightPuzzle")) {
@@ -664,11 +668,19 @@ public class Command {
 
 							// Set the lighter to "can light" and check if anything from the inventory  
 							
+							if (inventory.getItem(noun).isLit() == true)
+							{
+								inventory.getItem(noun).setLit(true);
+								room.setCanSee(true);
+								output = "This item is already lit.";
+							}
 							
 							
 							if (inventory.getItem(noun).isLit() == false && inventory.getItem(inventory.listItems()).producesFire() == true)
 							{
 								
+								inventory.getItem(noun).setLit(true);
+								room.setCanSee(true);
 								output = "The " + noun + " is lit!";
 							}
 							
@@ -679,11 +691,8 @@ public class Command {
 								
 								output = "The " + noun + " is lit!";
 							}
+						
 							
-							if (inventory.getItem(noun).isLit() == true)
-							{
-								output = "This item is already lit.";
-							}
 							
 							
 						// For when the object is either not in the inventory or not a candle
@@ -701,6 +710,14 @@ public class Command {
 						
 							break;
 
+							
+							
+							
+							
+							
+							
+							
+							
 						case "feed":
 						// Okay so Im assuming location must take account for the preposition and articles happening
 						// So it would be like "feed meat to the hellhound" for the commands 
@@ -712,7 +729,7 @@ public class Command {
 								{
 									RoomObject object = (RoomObject) room.getObject(location);
 									
-									output = "You fed " + noun + " to the " + location + ".";
+									// output = "You fed " + noun + " to the " + location + ".";
 									
 									boolean unlock = false;
 									
@@ -721,23 +738,32 @@ public class Command {
 										
 										if (inventory.contains(noun)) 
 										{
-											// This transfers the object 
-											Item toDrop = inventory.removeItem(noun);
-											object.getInventory().addItem(noun, toDrop);
 											
-											output = "Fed " + noun + " to the " + location + ".";
+											if (inventory.contains(puzzle.getSolution()))
+											{		
+												// This transfers the object 
+												Item toDrop = inventory.removeItem(noun);
+												object.getInventory().addItem(noun, toDrop);
+											
+												output = "Fed " + noun + " to the " + location + ".";
 											
 											
-											if (puzzle instanceof ObjectPuzzle) 
-											{
-												ObjectPuzzle obstaclePuzzle = (ObjectPuzzle) puzzle;
-												
-												if (obstaclePuzzle.isSolved()) 
+												RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
+											
+												if (toUnlock.isLocked()) 
 												{
-													unlock = true;
-												}
+													toUnlock.setLocked(false);
+										
+													output += "\nThe " + location + " is occupied away from an open " + toUnlock.getName() + " to the " + toUnlock.getDirection() + "!!";
 												
+												}
 											}
+											
+											else 
+											{
+												output = location + " doesn't want to be fed that!";
+											}
+											
 											
 										} 
 										
@@ -781,19 +807,42 @@ public class Command {
 						}
 						
 						break;
+
 						
-						
-						
-						
-						
-						
+						case "scan":
 							
-						
-						
-						
-						
-						
-						
+							// This works but crashes if you try to scan in another room
+							if (room.getObject(location).canScan()) 
+							{
+
+								// Set the lighter to "can light" and check if anything from the inventory  
+								RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
+								
+								
+								// If we have the item in our inventory
+								if (inventory.contains(puzzle.getSolution()) )
+								{
+									
+									toUnlock.setLocked(false);
+									
+									output = "A " + toUnlock.getName() + " opens to the " + toUnlock.getDirection() +".";
+								}
+								
+								else
+								{
+									output = "You do not have what is needed to scan.";
+								}
+								
+							} 
+							
+
+							else {
+
+								output = "This " + location + " does not have the capabilities of scanning.";
+								
+							}
+							
+					
 				}
 			} else {
 				if (VALID_COMMANDS.contains(verb)) {
