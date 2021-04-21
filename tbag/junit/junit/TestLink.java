@@ -19,8 +19,8 @@ public class TestLink {
 	public void setUp() {
 		option = "yes";
 		isAvailable = true;
-		nextNode = new Node(0, ""); 
-		previousNode = new Node(0, ""); 
+		nextNode = new Node(0, "", false); 
+		previousNode = new Node(0, "", false); 
 		l = new Link(nextNode, previousNode, isAvailable, option);
 	}
 	

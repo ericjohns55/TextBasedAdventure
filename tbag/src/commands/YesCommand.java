@@ -21,17 +21,24 @@ public class YesCommand extends UserCommand {
 			NPC npc = room.getNpc();
 			if (!npc.isDone()) {
 				if(npc.isTalkedTo()) {
+					npc.setPreviousNode(npc.getCurrentNode());
 					npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(0).getNextNode());
 					if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
-						output = npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + "(Y) \n" + npc.getCurrentNode().getAvailableLinks().get(1).getOption() + "(N) \n";
+						output = npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " Y/N \n";
 					}
 					else {
 						output = npc.getCurrentNode().getMessage();
-						npc.setDone(true);
+						if(npc.getCurrentNode().isWrong()) {
+							npc.setCurrentNode(npc.getPreviousNode());
+							npc.setTalkedTo(false);
+						}
+						else {
+							npc.setDone(true);
+						}
 					}
 				}
 				else {
-					output = "You should talk to " + npc.getName() + " first.";
+					output = "You should talk to " + npc.getName() + ".";
 				}
 			}
 			else {

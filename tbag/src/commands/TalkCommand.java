@@ -19,13 +19,18 @@ public class TalkCommand extends UserCommand {
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
 			if(location.equals(npc.getName())) {
-				if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
-					output = npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " (Y) \n" + npc.getCurrentNode().getAvailableLinks().get(1).getOption() + " (N) \n";
-					npc.setTalkedTo(true);
+				if(npc.CanTalkTo()) {
+					if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
+						output = npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " Y/N \n";
+						npc.setTalkedTo(true);
+					}
+					else {
+						output = npc.getCurrentNode().getMessage();
+						npc.setTalkedTo(true);
+					}
 				}
 				else {
-					output = npc.getCurrentNode().getMessage();
-					npc.setTalkedTo(true);
+					output = npc.getName() + " doesn't want to talk.";
 				}
 			}
 			else {

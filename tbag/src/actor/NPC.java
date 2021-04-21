@@ -9,10 +9,13 @@ public class NPC extends Actor {
 	private String name;
 	private String description;
 	private Node currentNode;
+	private Node previousNode;
 	private boolean talkedTo;
+	private boolean canTalkTo;
 	private boolean done;
 	private RoomObject unlockObstacle;
 	private Item requiredItem;
+	
 	
 	public NPC(Game game, int roomID, String name, String description, Item requiredItem, RoomObject unlockObstacle) {
 		super(game, roomID);
@@ -22,6 +25,7 @@ public class NPC extends Actor {
 		done = false;
 		this.unlockObstacle = unlockObstacle;
 		this.requiredItem = requiredItem;
+		canTalkTo = true;
 		
 	}
 
@@ -56,6 +60,14 @@ public class NPC extends Actor {
 	public void setCurrentNode(Node currentNode) {
 		this.currentNode = currentNode;
 	}
+	
+	public Node getPreviousNode() {
+		return previousNode;
+	}
+
+	public void setPreviousNode(Node previousNode) {
+		this.previousNode = previousNode;
+	}
 
 	public boolean isDone() {
 		return done;
@@ -83,6 +95,14 @@ public class NPC extends Actor {
 	
 	public boolean isSolved() {
 		return this.getInventory().contains(requiredItem);
+	}
+
+	public boolean CanTalkTo() {
+		return canTalkTo;
+	}
+
+	public void setCanTalkTo(boolean canTalkTo) {
+		this.canTalkTo = canTalkTo;
 	}
 }
 

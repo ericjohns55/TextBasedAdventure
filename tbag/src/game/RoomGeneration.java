@@ -29,7 +29,7 @@ public class RoomGeneration {
 		Room room7 = new Room("You walk into a dining room area and in front of the head seat of the table sits a lamb heart on a plate with "
 				+ "a butcher knife and a note next to it. There is a door on the northern wall of the room.", 7);
 		Room room8 = new Room("You move into a living room with a westward door and a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
-		Room room9 = new Room("Big Room with a guy named bob in it and a door to the north.", 9);
+		Room room9 = new Room("Big Room with a guy named bob in it and a door to the west.", 9);
 		Room room10 = new Room("Last current room.", 10);
 
 		room1.addExit("west", room2);
@@ -276,18 +276,29 @@ public class RoomGeneration {
 		cake.setDescription("apple pie.");
 		room9.addItem("cake", cake);
 		
+		Item key2 = new Item("key", 0.1);
+		key2.setDescription("This key does nothing.");
+
+		room9.addItem("key", key2);
+		
 		UnlockableObject room9Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
 		room9Door.setLocked(true);
 		room9.addObject("room9Door", room9Door);
 		
 		NPC bob = new NPC(null, 1, "bob", "Just a nice guy.", cake, room9Door);
-		Node n = new Node(0, "Hi im Bob.");
-		Node p = new Node(1, "There you go.");
-		Node o = new Node(2, "Then stop");
-		Link l = new Link(p, n, true, "Do you want my pie?");
-		Link l2 = new Link(o, n, true, "Do you want to stop?");
+		Node n = new Node(0, "Hi im Bob.", false);
+		Node p = new Node(1, "Im just a real swell guy, but I am quite hungry.", false);
+		Node o = new Node(2, "Ok then.", true);
+		Node q = new Node(3, "Give me the cake then.", false);
+		Node r = new Node(4, "Come back when you have a cake for me.", false);
+		Link l = new Link(p, n, true, "Would you like to know more about me?");
+		Link l2 = new Link(o, n, true, "");
+		Link l3 = new Link(q, p, true, "Do you have any cake?");
+		Link l4 = new Link(r, p, true, "");
 		n.addLink(l);
 		n.addLink(l2);
+		p.addLink(l3);
+		p.addLink(l4);
 		bob.setCurrentNode(n);
 		
 		Item pie = new Item("pie");

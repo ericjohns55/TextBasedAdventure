@@ -29,17 +29,19 @@ public class GiveCommand extends UserCommand {
 					Item toGive = inventory.getItem(noun);
 				
 					if (toGive != null) {
-						toGive.setInInventory(false);
-						npc.getInventory().addItem(noun, toGive);
-						inventory.removeItem(noun);
-					
-						if (toGive == npc.getRequiredItem()) {
+						if (toGive.equals(npc.getRequiredItem())) {
 							RoomObject roomObject = npc.getUnlockObstacle();
 							roomObject.setLocked(false);
 							output = "Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.";
+							toGive.setCanBePickedUp(false);
+							toGive.setInInventory(false);
+							npc.getInventory().addItem(noun, toGive);
+							inventory.removeItem(noun);
+							npc.setCanTalkTo(false);
+						
 						}
 						else {
-							output = "You gave " + noun + " to " + npc.getName() + ".";
+							output = npc.getName() + " doesn't want that item.";
 						}
 					} else {
 						output = "You don't have that item.";

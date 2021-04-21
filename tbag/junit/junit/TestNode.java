@@ -20,8 +20,8 @@ public class TestNode {
 	public void setUp() {
 		nodeID = 0;
 		message = "Game?";
-		n = new Node(nodeID, message);
-		p = new Node(1, "Stop");
+		n = new Node(nodeID, message, false);
+		p = new Node(1, "Stop", false);
 	}
 	
 	@Test

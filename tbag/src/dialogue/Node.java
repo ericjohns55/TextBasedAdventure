@@ -6,11 +6,14 @@ public class Node{
 	private int nodeID;
 	private String message;
 	private ArrayList<Link> options;
+	private boolean wrong;
 	
-	public Node(int ID, String message) {
+	public Node(int ID, String message, boolean wrong) {
 		this.nodeID = ID;
 		this.message = message;
 		options = new ArrayList<Link>();
+		this.wrong = wrong;
+		
 	}
 	public int getNodeID() {
 		return nodeID;
@@ -62,6 +65,12 @@ public class Node{
 
 	public void setOptions(ArrayList<Link> options) {
 		this.options = options;
+	}
+	public boolean isWrong() {
+		return wrong;
+	}
+	public void setWrong(boolean wrong) {
+		this.wrong = wrong;
 	}
 	
 }
