@@ -3,9 +3,7 @@ package database;
 import java.io.IOException;
 import java.util.List;
 
-import actor.Actor;
 import actor.Player;
-import game.Game;
 import items.CompoundItem;
 import items.Inventory;
 import items.Item;
@@ -14,14 +12,10 @@ import map.PlayableObject;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
-import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 public class FakeDatabase implements IDatabase {
 	// lmao if you think im actually gonna implement any of this
-	
-	List<Item> items;
-	List<CompoundItem> compoundItems;
 	
 	public FakeDatabase() {
 		
@@ -30,7 +24,7 @@ public class FakeDatabase implements IDatabase {
 	
 	public void readInitialData() {
 		try {
-			items.addAll(InitialData.getAllItems());
+			InitialData.getAllItems();	// getting rid of the warning by pretending to do something
 		} catch (IOException e) {
 			throw new IllegalStateException("Couldn't read initial data", e);
 		}
@@ -38,7 +32,7 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public Item getItemByID(int itemID) {
-		// TODO Auto-generated method stub
+		// TODO kill self
 		return null;
 	}
 
@@ -164,6 +158,12 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public Room getRoom(int roomID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Player getPlayer(int playerID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

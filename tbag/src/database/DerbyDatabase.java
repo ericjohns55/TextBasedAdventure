@@ -2000,6 +2000,7 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// The main method creates the database tables and loads the initial data.
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
 		System.out.println("Creating tables...");
 		DerbyDatabase db = new DerbyDatabase();
