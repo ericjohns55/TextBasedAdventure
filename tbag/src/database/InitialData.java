@@ -130,8 +130,6 @@ public class InitialData {
 		ReadCSV readItems = new ReadCSV("players.csv");
 		
 		try {
-			int actorID = 1;
-			
 			while (true) {
 				List<String> itemRow = readItems.next();
 				
@@ -140,13 +138,18 @@ public class InitialData {
 				}
 				
 				Iterator<String> iter = itemRow.iterator();
-				Integer.parseInt(iter.next());
 				
+				int actorID = Integer.parseInt(iter.next());
 				int roomID = Integer.parseInt(iter.next());
+				int inventoryID = Integer.parseInt(iter.next());
+				int moves = Integer.parseInt(iter.next());
+				String lastOutput = iter.next();
 				
 				Player player = new Player(null, roomID);
-				player.setInventoryID(Integer.parseInt(iter.next()));
+				player.setInventoryID(inventoryID);
 				player.setActorID(actorID);
+				player.setMoves(moves);
+				player.setLastOutput(lastOutput);
 				
 				playerList.add(player);
 			}
@@ -398,7 +401,7 @@ public class InitialData {
 				
 				Puzzle puzzle = new Puzzle(description, solution, hint, writtenSolution, unlockObstacleName, roomID);
 				puzzle.setSolved(solved);
-				
+				puzzle.setUnlockObstacleID(unlockObstacleID);
 				puzzle.setPuzzleID(roomID);
 				
 				puzzlesList.add(puzzle);

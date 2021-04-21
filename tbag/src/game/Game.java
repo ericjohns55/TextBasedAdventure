@@ -31,7 +31,7 @@ public class Game {
 		DatabaseProvider.setInstance(new DerbyDatabase());
 		db = DatabaseProvider.getInstance();	
 		
-		this.player = db.getPlayer(1);
+		this.player = db.getPlayer(0);
 		this.player.setGame(this);
 		this.room = db.getRoom(player.getRoomID());
 		this.output = "";
@@ -58,6 +58,14 @@ public class Game {
 	public Player getPlayer() {
 		return player;
 	}
+//	
+//	public String getLastOutput() {
+//		return player.getLastOutput();
+//	}
+//	
+//	public void setLastOutput(String lastOutput) {
+//		player.setLastOutput(lastOutput);
+//	}
 
 	public void runCommand(String input) {
 		this.output = "";
@@ -75,6 +83,10 @@ public class Game {
 
 	public Room getRoom(int ID) {
 		return db.getRoom(ID);
+	}
+	
+	public void updateGameState(String lastOutput, int moves) {
+		db.updateGameState(lastOutput, moves, player);
 	}
 	
 	public void unlock(UnlockableObject object, Item unlockItem, Player player) {
@@ -145,7 +157,7 @@ public class Game {
 					obstacle.setLocked(false);
 					obstacle.setPreviouslyUnlocked(true);
 					db.toggleLocks((UnlockableObject) obstacle, false); // update obstacle locked and previously unlocked
-					addOutput("A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.");
+					addOutput("\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.");
 				}
 			}
 		}
@@ -271,11 +283,16 @@ public class Game {
 	
 	public void moveRooms(Player player, String direction) {		
 		int roomID = player.getRoom().getExit(direction);
-		player.setRoomID(roomID);	
 		
-		db.moveRooms(player, roomID);  // update roomID in database
-		
-		addOutput("You walk " + direction + "\n\n");
-		addOutput(db.getDescription(player.getRoomID()));	// grab room description from DB
+		if (roomID != -1) {
+			player.setRoomID(roomID);	
+			
+			db.moveRooms(player, roomID);  // update roomID in database
+			
+			addOutput("You walk " + direction + "\n\n");
+			addOutput(db.getDescription(player.getRoomID()));	// grab room description from DB
+		} else {
+			addOutput("There is not an exit here!");
+		}
 	}
 }

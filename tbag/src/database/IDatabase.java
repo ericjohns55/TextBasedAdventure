@@ -26,6 +26,8 @@ public interface IDatabase {
 	public Puzzle getPuzzle(Room room);
 	public UnlockableObject getUnlockableObjectByID(int objectID);
 	
+	public Integer updateGameState(String output, int moves, Player player);
+	
 	public Room getRoom(int roomID);
 	public Player getPlayer(int playerID);
 	public Integer addItemToInventory(Inventory destinationInventory, Item item);

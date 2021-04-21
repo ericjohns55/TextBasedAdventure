@@ -7,25 +7,29 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import actor.Player;
 import game.Game;
 
 public class TBAGServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private boolean firstRun = true;
 	private String pastInputs = "";
-	private int moves = 0;
 	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {			
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
+		Game game = new Game();
+		Player player = game.getPlayer();
+		
 		if (firstRun) {
 			firstRun = !firstRun;
-			
-			req.setAttribute("story", "Start game?");
-			req.setAttribute("moves", "Moves: 0");
-			req.setAttribute("score", "Score: 0");
-			req.setAttribute("timeText", "Time Left: ");
-			req.setAttribute("duration", 900);
+			player.setLastOutput(player.getLastOutput() + "\n");
 		}
+		
+		req.setAttribute("story", player.getLastOutput());
+		req.setAttribute("moves", "Moves: " + player.getMoves());
+		req.setAttribute("score", "Score: 0");
+		req.setAttribute("timeText", "Time Left: ");
+		req.setAttribute("duration", 900);
 		
 		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
 	}
@@ -33,10 +37,10 @@ public class TBAGServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
 		Game game = new Game();
+		Player player = game.getPlayer();
 		
 		if (req.getParameter("submit").equals("Clear Game")) {
-			req.setAttribute("story", game.getPlayer().getRoom().getDescription());
-			moves = 0;
+			req.setAttribute("story", player.getLastOutput());
 		} else {
 			String text = req.getParameter("userInput");
 			String story = req.getParameter("story");
@@ -47,20 +51,25 @@ public class TBAGServlet extends HttpServlet {
 				
 				game.runCommand(text);
 				
-				story += game.getOutput();
+				story += game.getOutput() + "\n";
 				
 			}
 			
-			req.setAttribute("story", story + "\n");
+			player.setLastOutput(story);
+			player.setMoves(player.getMoves() + 1);
+			
+			game.updateGameState(story, player.getMoves());
+			
+			req.setAttribute("story", story);
 			req.setAttribute("pastInputs", pastInputs + "\n");
 			req.setAttribute("duration", req.getParameter("duration"));
+			
 		}
 		
-		req.setAttribute("moves", "Moves: " + ++moves);
+		req.setAttribute("moves", "Moves: " + player.getMoves());
 		req.setAttribute("score", "Score: 0");
 		req.setAttribute("timeText", "Time Left: ");
 
 		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
-		
 	}
 }

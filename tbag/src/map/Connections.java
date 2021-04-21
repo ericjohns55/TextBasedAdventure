@@ -25,7 +25,11 @@ public class Connections {
 	}
 	
 	public int getConnection(String direction) {
-		return connectionsMap.get(direction);
+		if (hasConnection(direction)) {
+			return connectionsMap.get(direction);
+		} else {
+			return -1;
+		}
 	}
 	
 	public boolean removeConnection(String direction) {

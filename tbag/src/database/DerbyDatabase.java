@@ -132,7 +132,7 @@ public class DerbyDatabase implements IDatabase {
 						List<RoomObject> objects = findAllObjects(room);
 						
 						for (RoomObject object : objects) {
-							System.out.println("Added " + object.getName());
+							System.out.println("Added " + object.getName() + " with ID " + object.getObjectID());
 							room.addObject(object.getName(), object);
 						}
 						
@@ -175,9 +175,13 @@ public class DerbyDatabase implements IDatabase {
 						int actorID = resultSet.getInt(index++);
 						int roomID = resultSet.getInt(index++);
 						int inventoryID = resultSet.getInt(index++);
+						int moves = resultSet.getInt(index++);
+						String lastOutput = resultSet.getString(index++);
 												
 						player = new Player(roomID);
 						player.setActorID(actorID);
+						player.setMoves(moves);
+						player.setLastOutput(lastOutput);
 						player.setInventoryID(inventoryID);
 						player.setInventory(getInventoryByID(inventoryID));
 						System.out.println("Created player inventory");
@@ -621,8 +625,8 @@ public class DerbyDatabase implements IDatabase {
 						int unlockObstacle = resultSet.getInt(index++);	
 						boolean solved = resultSet.getInt(index++) == 1;
 						int roomID = resultSet.getInt(index++);
-
-						System.out.println(resultSet.getInt("roomID"));
+						
+						System.out.println("unlock id: " + unlockObstacle);
 						
 						RoomObject object = getUnlockableObjectByID(unlockObstacle);
 						String unlockName = object != null ? object.getName() : null;
@@ -1269,6 +1273,34 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	@Override
+	public Integer updateGameState(String output, int moves, Player player) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				
+				try {
+					stmt = conn.prepareStatement("update players set moves = ? where players.actorID = ?");
+					stmt.setInt(1, moves);
+					stmt.setInt(2, player.getActorID());
+					
+					stmt.executeUpdate();
+					
+					stmt2 = conn.prepareStatement("update players set lastOutput = ? where players.actorID = ?");
+					stmt2.setString(1, output);
+					stmt2.setInt(2, player.getActorID());
+					
+					return stmt2.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+				}
+			}
+		});
+	}
 
 	@Override
 	public Integer addItemToInventory(Inventory inventory, Item item) {
@@ -1301,26 +1333,10 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
 
-//					stmt.setInt(1, destinationInventory.getInventoryID());
 					stmt.setInt(1, destinationInventory.getInventoryID());
 					stmt.setInt(2, item.getItemID());
 					
-					int update = stmt.executeUpdate();
-					
-					PreparedStatement stmt2 = conn.prepareStatement("select * from items where items.inventoryID = ?");
-					stmt2.setInt(1, destinationInventory.getInventoryID());
-					
-					ResultSet resultSet = stmt2.executeQuery();
-					
-					System.out.println(destinationInventory.getInventoryID() + " ======================================");
-					
-					while (resultSet.next()) {
-						System.out.println(resultSet.getString("name"));
-					}
-
-					System.out.println("==========================================");
-					
-					return 1;
+					return stmt.executeUpdate();
 				} finally {
 					DBUtil.closeQuietly(stmt);
 				}
@@ -1665,7 +1681,9 @@ public class DerbyDatabase implements IDatabase {
 						"create table players (" +
 						"	actorID integer," +
 						"	roomID integer," +
-						"	inventoryID integer" +
+						"	inventoryID integer," +
+						"	moves integer," +
+						"	lastOutput varchar(8000)" +
 						")"
 					);	
 					stmtPlyrs.executeUpdate();
@@ -1866,12 +1884,14 @@ public class DerbyDatabase implements IDatabase {
 					insertCompoundItems.executeBatch();
 					
 					
-					insertPlayers = conn.prepareStatement("insert into players (actorID, roomID, inventoryID) values (?, ?, ?)");
+					insertPlayers = conn.prepareStatement("insert into players (actorID, roomID, inventoryID, moves, lastOutput) values (?, ?, ?, ?, ?)");
 					
 					for (Player player : players) {
 						insertPlayers.setInt(1, player.getActorID());
 						insertPlayers.setInt(2, player.getRoomID());
 						insertPlayers.setInt(3, player.getInventoryID());
+						insertPlayers.setInt(4, player.getMoves());
+						insertPlayers.setString(5, player.getLastOutput());
 						insertPlayers.addBatch();
 					}
 					
@@ -2044,10 +2064,10 @@ public class DerbyDatabase implements IDatabase {
 	public static void main(String[] args) throws IOException {
 		System.out.println("Creating tables...");
 		DerbyDatabase db = new DerbyDatabase();
-//		db.createTables();
+		db.createTables();
 		
 		System.out.println("\nLoading initial data...");
-//		db.loadInitialData();
+		db.loadInitialData();
 		
 		System.out.println("\nText Based Adventure Game DB successfully initialized!");
 	}
