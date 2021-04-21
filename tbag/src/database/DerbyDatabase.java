@@ -124,8 +124,8 @@ public class DerbyDatabase implements IDatabase {
 												
 						room = new Room(description, roomID);
 						room.setInventoryID(inventoryID);
-						room.setInventory(getInventory(room));
-						System.out.println("Created room inventory");
+						room.setInventory(getInventoryByID(inventoryID));
+						System.out.println("Created room inventory (" + inventoryID + ")");
 					}
 					
 					if (room != null) {
@@ -943,6 +943,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt.setInt(1, id);
 					
 					Inventory inventory = new Inventory();
+					inventory.setInventoryID(id);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -1298,19 +1299,27 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-//					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
-					stmt = conn.prepareStatement("select * from items where items.inventoryID = ?");
-					
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
+
+//					stmt.setInt(1, destinationInventory.getInventoryID());
 					stmt.setInt(1, destinationInventory.getInventoryID());
-//					stmt.setInt(2, item.getItemID());
+					stmt.setInt(2, item.getItemID());
 					
-					ResultSet resultSet = stmt.executeQuery();
+					int update = stmt.executeUpdate();
+					
+					PreparedStatement stmt2 = conn.prepareStatement("select * from items where items.inventoryID = ?");
+					stmt2.setInt(1, destinationInventory.getInventoryID());
+					
+					ResultSet resultSet = stmt2.executeQuery();
+					
+					System.out.println(destinationInventory.getInventoryID() + " ======================================");
 					
 					while (resultSet.next()) {
 						System.out.println(resultSet.getString("name"));
 					}
+
+					System.out.println("==========================================");
 					
-//					return stmt.executeUpdate();
 					return 1;
 				} finally {
 					DBUtil.closeQuietly(stmt);

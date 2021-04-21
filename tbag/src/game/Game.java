@@ -138,6 +138,7 @@ public class Game {
 			double weightSolution = Double.parseDouble(puzzle.getSolution());
 			
 			if (objectInventory.getCurrentWeight() >= weightSolution) {
+				System.out.println(puzzle.getUnlockObstacle());
 				RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
 				
 				if (obstacle.isLocked()) {	
@@ -151,10 +152,14 @@ public class Game {
 	}
 	
 	public void dropItem(Room room, String item, Player player, Puzzle puzzle) {
-		Item removed = player.getInventory().removeItem(item);
-		room.getInventory().addItem(item, removed);
-		System.out.println(room.listItems());
-		db.removeItemFromInventory(room.getInventory(), removed); // update DB inventory ID
+		Item toDrop = player.getInventory().getItem(item);
+		
+//		Item removed = player.getInventory().removeItem(item);
+//		room.getInventory().addItem(item, removed);
+		
+//		System.out.println(room.listItems());
+		System.out.println("ROOM ID " + room.getRoomID());
+		db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
 		
 		if (room.getInventory().contains(item)) {
 			System.out.println("what the fuck");

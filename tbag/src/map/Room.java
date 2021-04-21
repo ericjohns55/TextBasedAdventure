@@ -27,7 +27,6 @@ public class Room {
 		this.connections = new Connections(roomID);
 	}
 	
-
 	public HashMap<String, RoomObject> getAllObjects() { 
 		return objects; 
 	} 
