@@ -6,17 +6,11 @@ import actor.NPC;
 import dialogue.Link;
 
 public class YesCommand extends UserCommand {
-	public YesCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output;
-		
-		
+	public void execute() {		
 		Room room = getRoom();
 		
+		Game game = getGame();
 		
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
@@ -40,10 +34,10 @@ public class YesCommand extends UserCommand {
 								
 							}
 						}
-						output = t;
+						game.setOutput(t);
 					}
 					else {
-						output = npc.getCurrentNode().getMessage();
+						game.setOutput(npc.getCurrentNode().getMessage());
 						if(npc.getCurrentNode().getType().equals("WC")) {
 							npc.setCurrentNode(npc.getPreviousNode());
 						}
@@ -54,17 +48,16 @@ public class YesCommand extends UserCommand {
 					}
 				}
 				else {
-					output = "You should talk to " + npc.getName() + ".";
+					game.setOutput("You should talk to " + npc.getName() + ".");
 				}
 			}
 			else {
-				output = "I don't understand that command.";
+				game.setOutput("I don't understand that command.");
 			}
 		}
 		else {
-			output = "I don't understand that command.";
+			game.setOutput("I don't understand that command.");
 		}
-		return output;
 	}
 
 }

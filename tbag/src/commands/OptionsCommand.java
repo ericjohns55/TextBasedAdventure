@@ -6,18 +6,14 @@ import actor.NPC;
 import dialogue.Link;
 
 public class OptionsCommand extends UserCommand {
-	public OptionsCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		Room room = getRoom();
-		
-		
+
+		Game game = getGame();
+
+
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
 			if (!npc.isDone()) {
@@ -39,12 +35,13 @@ public class OptionsCommand extends UserCommand {
 										t += " y/n \n";
 									}
 									else {
-										
+
 									}
 								}
-								output = t;							}
+								game.setOutput(t);
+							}
 							else {
-								output = npc.getCurrentNode().getMessage();
+								game.setOutput(npc.getCurrentNode().getMessage());
 								if(npc.getCurrentNode().getType().equals("WC")) {
 									npc.setCurrentNode(npc.getPreviousNode());
 								}
@@ -55,25 +52,24 @@ public class OptionsCommand extends UserCommand {
 							}
 						} 
 						else {
-							output = "Select and available option.";
+							game.setOutput("Select and available option.");
 						}
 					}
 					else {
-						output = "I don't understand that command.";
+						game.setOutput("I don't understand that command.");
 					}
 				}
 				else {
-					output = "You should talk to " + npc.getName() + ".";
+					game.setOutput("You should talk to " + npc.getName() + ".");
 				}
 			}
 			else {
-				output = "I don't understand that command.";
+				game.setOutput("I don't understand that command.");
 			}
 		}
 		else {
-			output = "I don't understand that command.";
+			game.setOutput("I don't understand that command.");
 		}
-		return output;
 	}
 
 }

@@ -41,18 +41,19 @@ public class TakeCommand extends UserCommand {
 				
 				if (toGrab != null) {
 					toGrab.setInInventory(true);
-					inventory.addItem(noun, toGrab);
+					getInventory().addItem(noun, toGrab);
+					// TODO: DB take for NPC
 					npc.getInventory().removeItem(noun);
 					
-					output = "You picked up " + noun + ".";
+					game.setOutput("You picked up " + noun + ".");
 				} else {
-					output = npc.getName() + " doesn't have that item.";
+					game.setOutput(npc.getName() + " doesn't have that item.");
 				}
 			}
 			else if (noun == null) {
-				output = "Please specify an item.";
+				game.setOutput("Please specify an item.");
 			} else {
-				output = npc.getName() + " doesn't have that item.";
+				game.setOutput(npc.getName() + " doesn't have that item.");
 			} 
 		}
 		else {
@@ -77,7 +78,7 @@ public class TakeCommand extends UserCommand {
 					game.setOutput("This object does not possess any items.");
 				}
 			} else if (room.hasNpc() && !location.equals(npc.getName())) {
-				output = "There is no one named " + location + " in this room.";
+				game.setOutput("There is no one named " + location + " in this room.");
 			} else {
 				game.setOutput("Could not find that object.");
 			}

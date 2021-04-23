@@ -8,20 +8,16 @@ import map.Room;
 import map.RoomObject;
 
 public class GiveCommand extends UserCommand {
-	public GiveCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {		
 		String noun = getNoun();
 		String location = getLocation();
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
 		NPC npc = getNpc();
+		
+		Game game = getGame();
 		
 		if (room.hasNpc()) {
 			if (location.equals(npc.getName())) {
@@ -32,7 +28,7 @@ public class GiveCommand extends UserCommand {
 						if (toGive.equals(npc.getRequiredItem())) {
 							RoomObject roomObject = npc.getUnlockObstacle();
 							roomObject.setLocked(false);
-							output = "Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.";
+							game.setOutput("Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.");
 							toGive.setCanBePickedUp(false);
 							toGive.setInInventory(false);
 							npc.getInventory().addItem(noun, toGive);
@@ -41,27 +37,24 @@ public class GiveCommand extends UserCommand {
 						
 						}
 						else {
-							output = npc.getName() + " doesn't want that item.";
+							game.setOutput(npc.getName() + " doesn't want that item.");
 						}
 					} else {
-						output = "You don't have that item.";
+						game.setOutput("You don't have that item.");
 					}
 				}
 				else if (noun == null) {
-					output = "Please specify an item.";
+					game.setOutput("Please specify an item.");
 				} else {
-					output = "You don't have that item.";
+					game.setOutput("You don't have that item.");
 				}
 			}
 			else {
-				output = "There is no one named " + location + " in this room.";
+				game.setOutput("There is no one named " + location + " in this room.");
 			}
 		}
 		else {
-			output = "There is no one else in the room with you.";
+			game.setOutput("There is no one else in the room with you.");
 		}
-		
-		return output;
 	}
-
 }

@@ -5,42 +5,37 @@ import map.Room;
 import actor.NPC;
 
 public class TalkCommand extends UserCommand {
-	public TalkCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		Room room = getRoom();
 		String location = getLocation();
+		
+		Game game = getGame();
 		
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
 			if(location.equals(npc.getName())) {
 				if(npc.CanTalkTo()) {
 					if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
-						output = npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " Y/N \n";
+						game.setOutput(npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " Y/N \n");
 						npc.setTalkedTo(true);
 					}
 					else {
-						output = npc.getCurrentNode().getMessage();
+						game.setOutput(npc.getCurrentNode().getMessage());
 						npc.setTalkedTo(true);
 					}
 				}
 				else {
-					output = npc.getName() + " doesn't want to talk.";
+					game.setOutput(npc.getName() + " doesn't want to talk.");
 				}
 			}
 			else {
-				output = "There is no one named " + location + " in this room.";
+				game.setOutput("There is no one named " + location + " in this room.");
 			}
 		}
 		else {
-			output = "There is no one else in the room with you.";
+			game.setOutput("There is no one else in the room with you.");
 		}
-		return output;
 	}
 
 }

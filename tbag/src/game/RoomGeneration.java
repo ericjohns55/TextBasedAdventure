@@ -282,7 +282,7 @@ public class RoomGeneration {
 
 		room9.addItem("key", key2);
 		
-		UnlockableObject room9Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
+		UnlockableObject room9Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, null, 9);
 		room9Door.setLocked(true);
 		room9.addObject("room9Door", room9Door);
    
