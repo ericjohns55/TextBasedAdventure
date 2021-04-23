@@ -6,7 +6,6 @@ import static org.junit.Assert.*;
 
 import items.Item;
 import map.PlayableObject;
-import map.RoomObject;
 import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 

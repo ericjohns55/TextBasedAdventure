@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import actor.Player;
-import game.Game;
 import items.CompoundItem;
 import items.Item;
 import map.Connections;

@@ -22,22 +22,22 @@ public class TestValidateDatabase {
 		assertEquals(6, room.getRoomID());
 	}
 	
-//	@Test
-//	public void grabPlayer() {
-//		DatabaseProvider.setInstance(new DerbyDatabase());
-//		IDatabase db = DatabaseProvider.getInstance();	
-//		
-//		Player player = db.getPlayer(0);
-//		assertEquals(0, player.getActorID());
-//	}
+	@Test
+	public void grabPlayer() {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		IDatabase db = DatabaseProvider.getInstance();	
+		
+		Player player = db.getPlayer(0);
+		assertEquals(0, player.getActorID());
+	}
 	
-//	@Test
-//	public void movePlayer() {
-//		DatabaseProvider.setInstance(new DerbyDatabase());
-//		IDatabase db = DatabaseProvider.getInstance();	
-//		
-//		Player player = db.getPlayer(0);
-//		db.moveRooms(player, 6);
-////		assertEquals(6, );
-//	}
+	@Test
+	public void movePlayer() {
+		DatabaseProvider.setInstance(new DerbyDatabase());
+		IDatabase db = DatabaseProvider.getInstance();	
+		
+		Player player = db.getPlayer(0);
+		db.moveRooms(player, 6);
+		assertEquals(6, player.getRoomID());
+	}
 }

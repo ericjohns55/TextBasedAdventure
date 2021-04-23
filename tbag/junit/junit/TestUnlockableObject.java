@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import items.Item;
-import map.RoomObject;
 import map.UnlockableObject;
 
 public class TestUnlockableObject {
