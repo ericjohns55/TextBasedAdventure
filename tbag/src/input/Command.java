@@ -24,7 +24,7 @@ public class Command {
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
 	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
-			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint", "feed", "scan"));
+			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint", "feed", "scan", "climb"));
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -151,9 +151,7 @@ public class Command {
 								RoomObject object = room.getObject(noun);
 								
 								if (object.isLocked()) {
-									
-									
-									
+
 									UnlockableObject painting = (UnlockableObject) object;
 									
 									if (painting.getCanBeLookedAtNow() == false)
@@ -161,29 +159,34 @@ public class Command {
 										
 										// So this checks if our unlockable object is an object where you need something to look at it with
 										// and checking if you have what it needs in your inventory
+										
+										// Before it was just setting it to unlocked and you would have to examine again,
+										// but now it sends it out immediately.
 										if (inventory.contains(painting.getUnlockItem()))
 										{
-											painting.setCanBeLookedAtNow(true);
-											painting.setLocked(false);
+	
+											output = "This " + room.getObject(noun).getName() + " reads " + room.getObject(noun).getDescription() + ".";
+	
 										}
 										
 										else
 										{
-											painting.setCanBeLookedAtNow(false);
-											painting.setLocked(true);
+				
 											output = "You do not have what is needed to see this object.";
 											
 										}
 									
-									}
+									}									
 									
 									else
 									{	
 										output = "This object is locked, I cannot see what is inside.";
 									}
 									
-								} else {
-									
+								} 
+								
+								else 
+								{	
 									// It sends back a description but our description is the solution so we want 
 									// but only some stuff has a description like this
 									output = room.getObject(noun).getDescription();
@@ -692,31 +695,18 @@ public class Command {
 								output = "The " + noun + " is lit!";
 							}
 						
-							
-							
-							
-						// For when the object is either not in the inventory or not a candle
 						} 
-						
-						
 						
 						else {
 							if (inventory.contains(noun)) {
 								output = "This " + inventory.getItem(noun).getName() + " can not be lit.";
 							} else {
-								output = "This " + noun + " is not in your inventory. Try picking it up and lighting it.";
+								output = "This " + noun + " is not in your inventory.";
 							}
 						}
 						
 							break;
 
-							
-							
-							
-							
-							
-							
-							
 							
 						case "feed":
 						// Okay so Im assuming location must take account for the preposition and articles happening
@@ -738,30 +728,42 @@ public class Command {
 										
 										if (inventory.contains(noun)) 
 										{
+
 											
 											if (inventory.contains(puzzle.getSolution()))
-											{		
-												// This transfers the object 
-												Item toDrop = inventory.removeItem(noun);
-												object.getInventory().addItem(noun, toDrop);
-											
-												output = "Fed " + noun + " to the " + location + ".";
-											
-											
-												RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
-											
-												if (toUnlock.isLocked()) 
-												{
-													toUnlock.setLocked(false);
-										
-													output += "\nThe " + location + " is occupied away from an open " + toUnlock.getName() + " to the " + toUnlock.getDirection() + "!!";
+											{	
+												// Man it doesnt like this at all for like no reason, ok so strings are wusses,
+												// it was trying to accesss the memory of the object instead of the contents 
+												if (noun.equals(puzzle.getSolution()))
+												{	
+													// This transfers the object 
+													Item toDrop = inventory.removeItem(noun);
+													object.getInventory().addItem(noun, toDrop);
 												
+													output = "Fed " + noun + " to the " + location + ".";
+												
+												
+													RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
+												
+													if (toUnlock.isLocked()) 
+													{
+														toUnlock.setLocked(false);
+											
+														output += "\nThe " + location + " is occupied away from an open " + toUnlock.getName() + " to the " + toUnlock.getDirection() + "!!";
+													
+													}
 												}
+												
+												else 
+												{
+													output ="The " + location + " doesn't want to be fed that!";
+												}
+												
 											}
 											
 											else 
 											{
-												output = location + " doesn't want to be fed that!";
+												output = "The " + location + " doesn't want to be fed that!";
 											}
 											
 											
@@ -802,47 +804,154 @@ public class Command {
 							
 						} 
 						
-						else {
+						else 
+						{
 							output = "Not sure what you want me to feed...";
 						}
-						
 						break;
 
 						
+						// Okay so Im assuming location must take account for the preposition and articles happening
+						// So it would be like "feed meat to the hellhound" for the commands 
 						case "scan":
-							
-							// This works but crashes if you try to scan in another room
-							if (room.getObject(location).canScan()) 
+						if (location != null) 
+						{
+							if (room.hasObject(location)) 
 							{
+								if (room.getObject(location) instanceof RoomObject) 
+								{
+									RoomObject object = (RoomObject) room.getObject(location);
+									
+									if (object.canScan() == true) 
+									{
+										
+										if (inventory.contains(noun)) 
+										{
 
-								// Set the lighter to "can light" and check if anything from the inventory  
-								RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
-								
-								
-								// If we have the item in our inventory
-								if (inventory.contains(puzzle.getSolution()) )
-								{
+											
+											if (inventory.contains(puzzle.getSolution()))
+											{	
+
+												if (noun.equals(puzzle.getSolution()))
+												{	
+
+													output = "Scanned " + noun + " on the " + location + ".";
+												
+												
+													RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
+												
+											
+													toUnlock.setLocked(false);
+											
+													output += "\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open!";
+
+													
+												}
+												
+												else 
+												{
+													output ="The " + location + " can't scan that!";
+												}
+												
+											}
+											
+											else 
+											{
+												output ="The " + location + " can't scan that!";
+											}
+											
+											
+										} 
+										
+										else 
+										{
+											output = "You do not have that item!";
+										}
+										
+									}
 									
-									toUnlock.setLocked(false);
-									
-									output = "A " + toUnlock.getName() + " opens to the " + toUnlock.getDirection() +".";
-								}
+									else
+									{
+										output ="The " + location + " can't scan that!";
+									}
 								
-								else
+									
+								} 
+								
+								else 
 								{
-									output = "You do not have what is needed to scan.";
+									output = "You can't scan that!";
 								}
 								
 							} 
 							
-
-							else {
-
-								output = "This " + location + " does not have the capabilities of scanning.";
-								
+							else 
+							{
+								output = "Could not find a " + location + ".";
 							}
 							
-					
+						} 
+						
+						else 
+						{
+							output = "Not sure what you want me to scan...";
+						}
+						
+						break;
+						
+						
+						
+						case "climb":
+						if (noun != null) 
+						{
+							// So its looking for up ladder in the noun
+							if (room.hasObject(noun)) 
+							{
+								if (room.getObject(noun) instanceof RoomObject) 
+								{
+									UnlockableObject object = (UnlockableObject) room.getObject(noun);									
+									if (object.canBeClimbed() == true) 
+									{
+											if (inventory.contains(puzzle.getSolution()))
+											{	
+													RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
+													toUnlock.setLocked(false);
+													output = "You climbed the " + room.getObject(noun).getDirection() + ".";
+													output += moveRooms(player, room, noun);
+											}											
+											else 
+											{	
+												output = "You do not have what is needed to climb this " + room.getObject(noun).getName() + "!";				
+											}
+									} 	
+									else
+									{									
+										output ="That can't be climbed!";									
+									}	
+										
+								} 
+								
+								else 
+								{
+									output = "You can't climb that!";
+								}
+								
+							} 
+							
+							else 
+							{
+								output = "Could not find that!";
+							}
+							
+						} 
+						
+						else 
+						{
+							output = "Not sure what you want me to climb...";
+						}
+						
+						break;
+	
 				}
 			} else {
 				if (VALID_COMMANDS.contains(verb)) {
@@ -861,6 +970,7 @@ public class Command {
 	private String moveRooms(Player player, Room room, String direction) {
 		int roomID = room.getExit(noun).getRoomID();
 		player.setRoomID(roomID);
+		
 		
 		String output = "You walk " + noun + "\n\n";
 		output += player.getRoom().getDescription();

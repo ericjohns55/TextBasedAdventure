@@ -36,8 +36,11 @@ public class RoomGeneration {
 				+ "This room is very clean, quiet, and cold; and you can't help but to feel like you're not alone as you hear murmurs in the walls. On a table in the exact center of the room there is a computer that says \"What is the capital of New Jersey?\" on the screen.", 11);
 		Room room12 = new Room("You are in a bedroom with a bed, nightstand and a scanner.", 12);
 		Room room13 = new Room("You are in a room with a keypad. On the kepad is a standard set of numbers but the 1, 3, 6, and 8 buttons are clearly worn.", 13);
-		Room room14 = new Room("You are in a room with an undead doorman.", 14);			
-		Room room15 = new Room("You are in a dark room where you can not see a thing.", 15);
+		Room room14 = new Room("You are in a dark room where you can not see a thing.", 14);
+		Room room15 = new Room("You are in a room with an undead doorman.", 15);	
+		Room room16 = new Room("You are in a room where to the north there is a ladder covered in grease going through the ceiling.", 16);
+		Room room17 = new Room("Last current room.", 17);
+
 		
 		
 		
@@ -83,13 +86,13 @@ public class RoomGeneration {
 		room14.addExit("west", room15);
 
 		room15.addExit("east", room14);
-/*		room15.addExit("west", room16);
+		room15.addExit("west", room16);
 		
 		room16.addExit("east", room15);
-		room16.addExit("up ladder", room17);
+		room16.addExit("ladder", room17);
 		
-		room17.addExit("down ladder", room16);
-		room17.addExit("east", room18);
+		room17.addExit("ladder", room16);
+/*		room17.addExit("east", room18);
 		
 		room18.addExit("west", room17);
 		room18.addExit("east", room19);
@@ -340,7 +343,7 @@ public class RoomGeneration {
 		pentagram.setCoverable(true);
 		room8.addObject("pentagram", pentagram);
 
-		UnlockableObject room8Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
+		UnlockableObject room8Door = new UnlockableObject("door", "Probably leads to another room...", "west up stairs", true, "none");
 		room8Door.setLocked(true);
 		room8.addObject("room8Door", room8Door);
 
@@ -449,7 +452,7 @@ public class RoomGeneration {
 		
 		
 		//public ObjectPuzzle(String description, String solution, String hint, RoomObject object, Item requiredItem, String unlockObstacle) {
-		Puzzle secretCode = new Puzzle("Read a secret code.", "862451", "Try reading the painting when you have a popular geometric shape.", true, "room10Door");
+		Puzzle secretCode = new Puzzle("Read a secret code.", "862451", "Try looking at the painting when you have a popular geometric shape.", true, "room10Door");
 		room10.setPuzzle(secretCode);
 	
 		
@@ -465,37 +468,10 @@ public class RoomGeneration {
 		Puzzle newJersey = new Puzzle("Geography problem.", "trenton", "There's a name in the solution.", true, "room11Door");
 		room11.setPuzzle(newJersey);
 		
-		
 		UnlockableObject room11Door = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
 		room11Door.setLocked(true);
 		room11.addObject("room11Door", room11Door);
-		
-		
-		/*	
-		 
-		
-		// This type of problem is for when there isnt a set object you need to interact with so the door opens automatically 
-		// once the puzzle is satisfied.
-		
-		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true, "writtenObstacle");
 
-		room3.setPuzzle(math);
-
-		UnlockableObject writtenDoor = new UnlockableObject("door", "Probably leads to another room...", "south", true, "none");
-		writtenDoor.setLocked(true);
-		room3.addObject("writtenObstacle", writtenDoor);
-	*/
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		// Room 12
 		RoomObject room12Bed = new RoomObject("bed", "A bed to sleep in.", "south", true, true, false);
@@ -544,16 +520,6 @@ public class RoomGeneration {
 		nightstand.getInventory().addItem("water glass", waterGlass);
 		room12.addObject("nightstand", nightstand);
 
-		
-		
-	/*	
-		// Scanner
-		RoomObject sensor = new RoomObject("sensor", "Triggers something by weight...", "north", false, false, false);
-		sensor.setCanHoldItems(true);
-		room2.addObject("sensory pad", sensor);
-		
-	*/	
-		
 		RoomObject scanner = new RoomObject("scanner", "This is used to scan things.", "north", false, false, false);
 		scanner.setCanScan(true);
 		room12.addObject("scanner", scanner);
@@ -577,7 +543,7 @@ public class RoomGeneration {
 		room13.addObject("writtenObstacle", room13Door);		
 		
 
-		
+	/*	
 		
 		// Room 14
 		// Planning for sticky gloves to be grabbed before advancing up greasy ladder in room 16
@@ -595,13 +561,13 @@ public class RoomGeneration {
 		room14.addObject("sayHello", room14Door);
 				
 
-
+	*/
 		
 		// Room 15	
 		// So the room starts out dark and needs an item to "light" an unlockable object to be able to reveal the room items (
 		// in this case a red key) and advance. I set the opposite in here 
 		
-		room15.setCanSee(false);
+		room14.setCanSee(false);
 		
 		
 		// Thinking the key and door will be revealed once the candle is lit and in the room.
@@ -609,25 +575,48 @@ public class RoomGeneration {
 		// LightableObject candle = new LightableObject("candle", "Looks like you need an object to light it.", "north", true, "lighter");
 		
 		// Might cause problems, it probably generates a key eveytime you enter into that room and it's lit
-		if (room15.getCanSee() == true)
+		if (room14.getCanSee() == true)
 		{
 			Item redKey = new Item("red key");
 			redKey.setWeight(0.1);
 			redKey.setDescription("This red key seems to be able to unlock a door.");
-			room15.addItem("red key", redKey);
+			room14.addItem("red key", redKey);
 
 		}
 		
 
 	
-		UnlockableObject room15Door = new UnlockableObject("door", "Probably leads to another room but you might need a key...", "west", true, "red key");
-		room15Door.setLocked(true);
-		room15.addObject("room15Door", room15Door);
+		UnlockableObject room14Door = new UnlockableObject("door", "Probably leads to another room but you might need a key...", "west", true, "red key");
+		room14Door.setLocked(true);
+		room14.addObject("room14Door", room14Door);
 		
-		room15.setPuzzle(new Puzzle("Dark Room", "candle", "Might need something from a previous room to light something in here.", false, "room15Door"));
+		room14.setPuzzle(new Puzzle("Dark Room", "candle", "Might need something from a previous room to light something in here.", false, "room14Door"));
+
+
+
+		// Room 16
+		// Room room16 = new Room("You are in a room where to the north there is a ladder covered in grease going through the ceiling.", 15);
+		// public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable) 
+		Item stickyGloves = new Item("sticky gloves");
+		stickyGloves.setWeight(0.8);
+		stickyGloves.setDescription("These gloves seem good for climbing.");
+		room16.addItem("sticky gloves", stickyGloves);
 
 		
+		UnlockableObject ladder = new UnlockableObject("ladder", "Probably leads to another room but you might need something for your hands...", "ladder", true, "sticky gloves");
+		ladder.setCanBeClimbed(true);
+		room16.addObject("ladder", ladder);
 		
+		room16.setPuzzle(new Puzzle("Ladder Room", "sticky gloves", "Might need to have some sort of item with a lot of grip for this ladder.", false, "ladder"));
+
+	/*	
+		UnlockableObject room8Door = new UnlockableObject("door", "Probably leads to another room...", "west up stairs", true, "none");
+		room8Door.setLocked(true);
+		room8.addObject("room8Door", room8Door);
+
+		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
+	*/
+	
 		
 		
 		
@@ -649,6 +638,9 @@ public class RoomGeneration {
 		rooms.put(13, room13);
 		rooms.put(14, room14);
 		rooms.put(15, room15);
+		rooms.put(16, room16);
+		rooms.put(17, room17);
+
 		
 		
 	}

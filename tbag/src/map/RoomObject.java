@@ -172,6 +172,4 @@ public class RoomObject {
 	public void setCanScan(boolean canScan) {
 		this.canScan = canScan;
 	}
-	
-	
 }

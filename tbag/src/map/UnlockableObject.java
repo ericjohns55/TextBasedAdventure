@@ -3,8 +3,8 @@ package map;
 public class UnlockableObject extends RoomObject {
 	private boolean consumeItem;
 	private String unlockItem;
-	
 	private boolean canBeLookedAtNow;
+	private boolean canBeClimbed;
 	
 	public UnlockableObject(String name, String description, String direction, boolean blockingExit, String unlockItem) {
 		super(name, description, direction, true, blockingExit, false);
@@ -13,6 +13,7 @@ public class UnlockableObject extends RoomObject {
 		this.unlockItem = unlockItem;
 		this.consumeItem = true;
 		this.canBeLookedAtNow = true;
+		this.canBeClimbed = false;
 	}
 	
 	public String getUnlockItem() {
@@ -37,6 +38,14 @@ public class UnlockableObject extends RoomObject {
 	
 	public void setCanBeLookedAtNow(boolean setter) {
 		this.canBeLookedAtNow = setter;
+	}
+	
+	public boolean canBeClimbed() {
+		return canBeClimbed;
+	}
+	
+	public void setCanBeClimbed(boolean canBeClimbed) {
+		this.canBeClimbed = canBeClimbed;
 	}
 	
 }
