@@ -5,11 +5,13 @@ import java.util.HashMap;
 import items.Inventory;
 import items.Item;
 import puzzle.Puzzle;
+import actor.NPC;
 
 public class Room {
 	// Each room has to have a set items in the room
 	private Puzzle puzzle;
 	private HashMap<String, RoomObject> objects;
+	private NPC npc = null;
 	private String description; 
 	private Inventory inventory;
 	private int roomID;
@@ -146,6 +148,20 @@ public class Room {
 		this.puzzle = puzzle;
 	}
 
+	public void addNpc(NPC npc)
+	{
+		this.npc = npc;
+	}
+
+	public NPC getNpc()
+	{
+		return npc;
+	}
+	
+	public boolean hasNpc() 
+	{
+		return npc != null;
+	}
 
 	public void setRoomID(int roomID) {
 		this.roomID = roomID;

@@ -14,7 +14,11 @@ public class LookCommand extends UserCommand {
 		Game game = getGame();
 		
 		if (noun == null || noun == "" || noun.equals("room")) {
+
 			game.setOutput(room.getDescription());
+		} 
+		else if (room.hasNpc() && noun.equals(room.getNpc().getName())) {
+			game.setOutput(room.getNpc().getDescription());
 		} else {
 			if (room.hasItem(noun)) {
 				game.setOutput(room.getItem(noun).getDescription());

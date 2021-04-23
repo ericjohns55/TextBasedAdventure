@@ -1,5 +1,6 @@
 package commands;
 
+import actor.NPC;
 import actor.Player;
 import game.Game;
 import items.Inventory;
@@ -17,8 +18,10 @@ public abstract class UserCommand {
 	private Room room;
 	private Inventory inventory;
 	private Puzzle puzzle;
+	private NPC npc;
 		
 	public void loadInputandGame(Game game, String verb, String noun, String location) {
+
 		this.game = game;
 		
 		this.verb = verb;
@@ -29,7 +32,8 @@ public abstract class UserCommand {
 		this.room = player.getRoom();
 		this.inventory = player.getInventory();
 		this.puzzle = room.getPuzzle();
-	}
+		this.npc = room.getNpc();
+  }
 	
 	public abstract void execute();
 
@@ -95,5 +99,13 @@ public abstract class UserCommand {
 
 	public void setPuzzle(Puzzle puzzle) {
 		this.puzzle = puzzle;
+	}
+	
+	public NPC getNpc() {
+		return npc;
+	}
+
+	public void setNpc(NPC npc) {
+		this.npc = npc;
 	}
 }

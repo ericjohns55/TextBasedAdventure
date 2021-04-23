@@ -10,7 +10,7 @@ import game.Game;
 import commands.*;
 
 public class Command {
-	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint"));
+	private static Set<String> SINGLE_WORD_COMMANDS = new HashSet<>(Arrays.asList("look", "examine", "hint", "y", "n"));
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
@@ -48,7 +48,10 @@ public class Command {
 		commands.put("cut", new CutCommand());
 		commands.put("pour", new PourCommand());
 		commands.put("hint", new HintCommand());
-		
+    commands.put("y", new  YesCommand());
+    commands.put("n", new NoCommand());
+    commands.put("give", new GiveCommand());
+    commands.put("options", new OptionsCommand());
 		parseCommands();
 	}
 	
@@ -104,6 +107,8 @@ public class Command {
 		replace = replace.replace("right", "west");
 		replace = replace.replace("up", "north");
 		replace = replace.replace("down", "south");
+		replace = replace.replace("yes", "y");
+		replace = replace.replace("no", "n");
 		return replace;
 	}
 	
