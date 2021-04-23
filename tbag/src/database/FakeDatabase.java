@@ -43,18 +43,6 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public Inventory getInventory(RoomObject roomObject) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Inventory getInventory(Room room) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Inventory getInventoryByID(int id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -170,6 +158,12 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public Integer destroyItem(Item item) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer updateGameState(String output, int moves, Player player) {
 		// TODO Auto-generated method stub
 		return null;
 	}

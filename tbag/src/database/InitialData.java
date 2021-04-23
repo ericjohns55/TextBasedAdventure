@@ -114,8 +114,10 @@ public class InitialData {
 				item.setPourable(pourable);
 				item.setLocationID(locationID);
 				item.setInventoryID(inventoryID);
-				item.setBreakItem(items.get(breakItemID));
+				item.setBreakItem(getItemByID(breakItemID));
 				item.setBreakable(breakable);
+				
+				compoundItemList.add(item);
 			}
 			
 			System.out.println("compoundItemList loaded");
@@ -433,17 +435,19 @@ public class InitialData {
 				String solution = iter.next();
 				String hint = iter.next();
 				boolean writtenSolution = Integer.parseInt(iter.next()) == 1;
-				UnlockableObject unlockObstacle = getUnlockableObjectByID(Integer.parseInt(iter.next()));
 				boolean solved = Integer.parseInt(iter.next()) == 1;
+				int unlockObstacleID = Integer.parseInt(iter.next());
 				int roomID = Integer.parseInt(iter.next());
 				int objectID = Integer.parseInt(iter.next());
 				int itemID = Integer.parseInt(iter.next());
-				
+
+				UnlockableObject unlockObstacle = getUnlockableObjectByID(unlockObstacleID);
 				String unlockObstacleName = unlockObstacle != null ? unlockObstacle.getName() : "";
 
 				ObjectPuzzle puzzle = new ObjectPuzzle(description, solution, hint, getObjectByID(objectID), getItemByID(itemID), unlockObstacleName, roomID);
 				puzzle.setPuzzleID(puzzleID);
 				puzzle.setWrittenSolution(writtenSolution);
+				puzzle.setUnlockObstacleID(unlockObstacleID);
 				puzzle.setSolved(solved);
 				
 				objectPuzzlesList.add(puzzle);

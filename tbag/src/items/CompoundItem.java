@@ -19,6 +19,10 @@ public class CompoundItem extends Item {
 	public Inventory getInventory() {
 		return inventory;
 	}
+	
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
 
 	public Item getBreakItem() {
 		return breakItem;

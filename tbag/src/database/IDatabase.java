@@ -17,8 +17,6 @@ public interface IDatabase {
 	public Item getItemByID(int itemID);
 	public RoomObject getRoomObjectByID(int objectID);
 	public Inventory getPlayerInventory(Player player);
-	public Inventory getInventory(RoomObject roomObject);
-	public Inventory getInventory(Room room);
 	public Inventory getInventoryByID(int id);
 	public List<RoomObject> findAllObjects(Room room);	
 	public List<Player> getAllPlayers();

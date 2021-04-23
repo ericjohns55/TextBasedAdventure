@@ -105,19 +105,20 @@ public class Game {
 	}
 	
 	public void breakItem(RoomObject container, CompoundItem item, String noun, String location) {
-		HashMap<String, Item> items = item.getItems();
+//		HashMap<String, Item> items = item.getItems();
+//		
+//		for (String identifier : items.keySet()) {
+//			Item containedItem = items.get(identifier);
+//			container.getInventory().addItem(identifier, containedItem);
+//			db.addItemToInventory(container.getInventory(), containedItem);	// update DB item inventory ID, also destroys item
+//		}
+//		
+//		container.getInventory().removeItem(noun);
+//		item.getInventory().emptyInventory();
+//		
+//		db.destroyCompoundItem(item);	// nuke item from existence
 		
-		for (String identifier : items.keySet()) {
-			Item containedItem = items.get(identifier);
-			container.getInventory().addItem(identifier, containedItem);
-			db.addItemToInventory(container.getInventory(), containedItem);	// update DB item inventory ID
-		}
-		
-		container.getInventory().removeItem(noun);
-		item.getInventory().emptyInventory();
-		
-		db.destroyCompoundItem(item);	// nuke item from existence
-		
+		db.breakItem(item, container.getInventory());
 		setOutput("You break apart the " + noun + " and dump the contents on the " + location + ".");
 	}
 	
@@ -187,7 +188,7 @@ public class Game {
 		if (puzzle instanceof ObjectPuzzle) {
 			ObjectPuzzle obstaclePuzzle = (ObjectPuzzle) puzzle;
 			
-			if (obstaclePuzzle.isSolved()) {
+			if (obstaclePuzzle.isSolved(item.getItemID())) {
 				return true;
 			}
 		}
@@ -212,8 +213,9 @@ public class Game {
 		return false;
 	}
 	
-	public void pour(RoomObject object, Item item, Player player, Puzzle puzzle, String noun) {
+	public void pour(RoomObject object, Item item, Player player, Puzzle puzzle, String noun, String location) {
 		object.cover(noun);	// update covered in DB
+		setOutput("You poured the " + noun + " on the " + location + ".");
 		
 		if (item.consumeOnUse()) {
 			player.getInventory().removeItem(noun);	// update inventoryID in DB (make it something random so disappeared)

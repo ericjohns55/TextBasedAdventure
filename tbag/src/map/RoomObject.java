@@ -171,7 +171,7 @@ public class RoomObject {
 	}
 	
 	public boolean isCovered() {
-		return covered != "";
+		return covered.length() > 1;
 	}
 	
 	public boolean wasPreviouslyUnlocked() {

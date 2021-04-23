@@ -21,6 +21,10 @@ public class ObjectPuzzle extends Puzzle {
 	public boolean isSolved() {
 		return object.getInventory().contains(requiredItem);
 	}
+	
+	public boolean isSolved(int proposedID) {
+		return itemID == proposedID;
+	}
 
 	public int getObjectID() {
 		return objectID;
