@@ -14,7 +14,7 @@ public class TestRoomObject {
 	
 	@Before
 	public void setUp() {
-		object = new RoomObject("name", "desc", "dir", false, false, false);
+		object = new RoomObject("name", "desc", "dir", false, false, false, 4);
 	}
 	
 	@Test

@@ -2,23 +2,19 @@ package commands;
 
 import game.Game;
 import items.Inventory;
+import items.Item;
 import map.Room;
 import map.RoomObject;
 import map.UnlockableObject;
 
 public class UnlockCommand extends UserCommand {
-	public UnlockCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
+		Game game = getGame();
 		
 		if (room.hasObject(noun)) {
 			RoomObject roomObject = room.getObject(noun);
@@ -27,32 +23,25 @@ public class UnlockCommand extends UserCommand {
 				if (roomObject.isLocked()) {
 					if (roomObject instanceof UnlockableObject) {
 						UnlockableObject unlockableObject = (UnlockableObject) roomObject;
+						Item unlockItem = unlockableObject.getUnlockItem();
 						
-						if (inventory.contains(unlockableObject.getUnlockItem())) {
-							unlockableObject.setLocked(false);
-							
-							if (unlockableObject.consumeItem()) {
-								inventory.removeItem(unlockableObject.getUnlockItem());
-							}
-							
-							output = "You successfully unlocked the " + unlockableObject.getName() + ".";
+						if (inventory.contains(unlockItem)) {
+							game.unlock(unlockableObject, unlockItem, getPlayer());
+							game.setOutput("You successfully unlocked the " + unlockableObject.getName() + ".");
 						} else {
-							output = "You do not have the required item to unlock this " + unlockableObject.getName() + ".";
+							game.setOutput("You do not have the required item to unlock this " + unlockableObject.getName() + ".");
 						}
 					} else {
-						output = "Not implemented.";
+						game.setOutput("Not implemented.");
 					}
 				} else {
-					output = "This is already unlocked.";
+					game.setOutput("This is already unlocked.");
 				}
 			} else {
-				output = "You cannot unlock that!";
+				game.setOutput("You cannot unlock that!");
 			}
 		} else {
-			output = "This obstacle does not exist...";
+			game.setOutput("This obstacle does not exist...");
 		}
-		
-		return output;
 	}
-
 }

@@ -19,8 +19,9 @@ public abstract class UserCommand {
 	private Inventory inventory;
 	private Puzzle puzzle;
 	private NPC npc;
-	
-	public UserCommand(Game game, String verb, String noun, String location) {
+		
+	public void loadInputandGame(Game game, String verb, String noun, String location) {
+
 		this.game = game;
 		
 		this.verb = verb;
@@ -32,9 +33,9 @@ public abstract class UserCommand {
 		this.inventory = player.getInventory();
 		this.puzzle = room.getPuzzle();
 		this.npc = room.getNpc();
-	}	
+  }
 	
-	public abstract String getOutput();
+	public abstract void execute();
 
 	public Game getGame() {
 		return game;

@@ -153,11 +153,6 @@
 						<td><input type="Submit" id="button" name="submit" value="Clear Game"></td>
 					</tr>
 				</table>
-				<table>
-					<tr>		
-                    
-                    </tr>
-				</table>
 			</center>
 		</form>
 	</body>

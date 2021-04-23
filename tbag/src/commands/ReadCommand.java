@@ -5,15 +5,11 @@ import items.Inventory;
 import items.Item;
 
 public class ReadCommand extends UserCommand {
-	public ReadCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
+		
+		Game game = getGame();
 		
 		Inventory inventory = getInventory();
 		
@@ -21,15 +17,13 @@ public class ReadCommand extends UserCommand {
 			Item toRead = inventory.getItem(noun);
 			
 			if (toRead.isReadable()) {
-				output = "This " + noun + " says \"" + toRead.getDescription() + "\"";
+				game.setOutput("This " + noun + " says \"" + toRead.getDescription() + "\"");
 			} else {
-				output = "Cannot read this item.";
+				game.setOutput("Cannot read this item.");
 			}
 		} else {
-			output = "Could not find a " + noun + ".";
+			game.setOutput("Could not find a " + noun + ".");
 		}
-		
-		return output;
 	}
 
 }

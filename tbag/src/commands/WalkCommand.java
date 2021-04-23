@@ -7,24 +7,19 @@ import map.RoomObject;
 import map.UnlockableObject;
 
 public class WalkCommand extends UserCommand {
-	public WalkCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output = null;
-		
+	public void execute() {
 		String noun = getNoun();
 		
 		Player player = getPlayer();
 		Room room = getRoom();
+		Game game = getGame();
 				
 		if (room.getAllObjects().size() == 0) {
 			if (room.hasExit(noun)) {
-				output = moveRooms(player, room, noun);
+				game.moveRooms(player, noun);
 			} else {
-				output = "You cannot move this direction.";
+				game.setOutput("You cannot move this direction.");
 			}
 		} else {
 			boolean foundObstacleInPath = false;
@@ -39,40 +34,26 @@ public class WalkCommand extends UserCommand {
 							UnlockableObject door = (UnlockableObject) roomObject;
 							
 							if (door.isLocked()) {
-								output = "This door appears to be locked... perhaps there is something in the room that can help you.";
+								game.setOutput("This door appears to be locked... perhaps there is something in the room that can help you.");
 							} else {
-								output = moveRooms(player, room, noun);
+								game.moveRooms(player, noun);
 							}
 						} else {
-							output = "A " + roomObject.getName() + " is blocking your path!";
+							game.setOutput("A " + roomObject.getName() + " is blocking your path!");
 						}
 					} else {
-						output = moveRooms(player, room, noun);
+						game.moveRooms(player, noun);
 					}									
 				}
 			}
 			
 			if (!foundObstacleInPath) {
 				if (room.hasExit(noun)) {
-					output = moveRooms(player, room, noun);
+					game.moveRooms(player, noun);
 				} else {
-					output = "There is not an exit here.";
+					game.setOutput("There is not an exit here.");
 				}
 			}
 		}
-		
-		return output;
-	}
-	
-	private String moveRooms(Player player, Room room, String direction) {
-		String noun = getNoun();
-		
-		int roomID = room.getExit(noun).getRoomID();
-		player.setRoomID(roomID);
-		
-		String output = "You walk " + noun + "\n\n";
-		output += player.getRoom().getDescription();
-		
-		return output;
 	}
 }

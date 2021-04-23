@@ -7,12 +7,21 @@ public class Inventory {
 	
 	private HashMap<String, Item> items;
 	private Item emptyItem;
+	private int inventoryID;
 	
 	// identifier: create lookup table to check against items
 	
 	public Inventory() {
 		items = new HashMap<String, Item>();
 		emptyItem = new Item("emptyItem");
+	}
+	
+	public int getInventoryID() {
+		return inventoryID;
+	}
+	
+	public void setInventoryID(int inventoryID) {
+		this.inventoryID = inventoryID;
 	}
 	
 	public void addItem(String identifier, Item toAdd) {
@@ -27,6 +36,11 @@ public class Inventory {
 		} else {
 			return null;
 		}
+	}
+	
+	@SuppressWarnings("unlikely-arg-type")
+	public void removeItem(Item item) {
+		items.remove(item);
 	}
 	
 	public Item getItem(String identifier) {
@@ -55,6 +69,16 @@ public class Inventory {
 	public boolean contains(String identifier) {
 		identifier = identifier.toLowerCase();
 		return items.containsKey(identifier);
+	}
+	
+	public boolean contains(int id) {
+		for (Item item : items.values()) {
+			if (item.getItemID() == id) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public int getInventorySize() {
@@ -135,5 +159,9 @@ public class Inventory {
 	
 	public HashMap<String, Item> getAllItems() {
 		return items;
+	}
+	
+	public int getSize() {
+		return items.size();
 	}
 }

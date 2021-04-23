@@ -6,43 +6,29 @@ import map.RoomObject;
 import puzzle.Puzzle;
 
 public class TypeCommand extends UserCommand {
-	public TypeCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {
 		String noun = getNoun();
 		
 		Puzzle puzzle = getPuzzle();
 		Room room = getRoom();
+		Game game = getGame();
 		
 		if (puzzle.isWrittenSolution()) {
 			if (!puzzle.isSolved()) {
 				if (puzzle.getSolution().equals(noun)) {
-					puzzle.setSolved(true);
-					
+					System.out.println(puzzle.getUnlockObstacle());
 					RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());
 					
-					if (obstacle.isLocked()) {
-						obstacle.setLocked(false);
-						output = "A " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open!";
-					} else {
-						output = "You typed " + noun + ".";
-					}
+					game.type(puzzle, obstacle, noun);
 				} else {
-					output = noun + " is not correct.";
+					game.setOutput(noun + " is not correct.");
 				}
 			} else {
-				output = "You already solved this puzzle!";
+				game.setOutput("You already solved this puzzle!");
 			}						
 		} else {
-			output = "Could not find anything to solve...";
+			game.setOutput("Could not find anything to solve...");
 		}
-		
-		return output;
 	}
-
 }
