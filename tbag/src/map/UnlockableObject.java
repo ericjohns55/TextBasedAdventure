@@ -4,8 +4,9 @@ import items.Item;
 
 public class UnlockableObject extends RoomObject {
 	private boolean consumeItem;
-	private Item unlockItem;
-	
+	private boolean canBeLookedAtNow;
+	private boolean canBeClimbed;
+	private Item unlockItem;	
 	private int unlockItemID;
 	
 	public UnlockableObject(String name, String description, String direction, boolean blockingExit, Item unlockItem, int roomID) {
@@ -14,7 +15,8 @@ public class UnlockableObject extends RoomObject {
 		this.setLocked(true);
 		this.unlockItem = unlockItem;
 		this.consumeItem = true;
-//		this.unlockItemID = unlockItem.getItemID();
+		this.canBeLookedAtNow = true;
+		this.canBeClimbed = false;
 	}
 	
 	public Item getUnlockItem() {
@@ -32,7 +34,23 @@ public class UnlockableObject extends RoomObject {
 	public void setConsumeItem(boolean consumeItem) {
 		this.consumeItem = consumeItem;
 	}
-
+	
+	public boolean getCanBeLookedAtNow() {
+		return canBeLookedAtNow;
+	}
+	
+	public void setCanBeLookedAtNow(boolean setter) {
+		this.canBeLookedAtNow = setter;
+	}
+	
+	public boolean canBeClimbed() {
+		return canBeClimbed;
+	}
+	
+	public void setCanBeClimbed(boolean canBeClimbed) {
+		this.canBeClimbed = canBeClimbed;
+	}
+	
 	public int getUnlockItemID() {
 		return unlockItemID;
 	}

@@ -42,7 +42,6 @@ public class Game {
 		player.setRoomID(roomID);
 		room = db.getRoom(roomID);
 	}
-	
 	public void setOutput(String output) {
 		this.output = output;
 	}

@@ -16,9 +16,10 @@ public class RoomObject {
 	private boolean blockingExit;
 	private boolean moveable;
 	private boolean isObstacle;
-	private boolean coverable;
+	private boolean coverable;	
+	private boolean canBeFed;
+	private boolean canScan;
 	private boolean previouslyUnlocked;
-
 	private Inventory inventory;
 	
 	private int roomID;
@@ -40,9 +41,11 @@ public class RoomObject {
 		this.canHoldItems = false;
 		this.locked = false;
 		this.coverable = false;
-		this.previouslyUnlocked = false;
-		
+		this.canBeFed = false;
+		this.previouslyUnlocked = false;		
 		this.covered = "";
+		
+		this.canScan = false;
 		
 		this.inventory = new Inventory();
 		this.roomID = roomID;
@@ -192,5 +195,21 @@ public class RoomObject {
 	
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
+	}
+	
+	public boolean canBeFed() {
+		return canBeFed;
+	}
+	
+	public void setCanBeFed(boolean canBeFed) {
+		this.canBeFed = canBeFed;
+	}
+	
+	public boolean canScan() {
+		return canScan;
+	}
+	
+	public void setCanScan(boolean canScan) {
+		this.canScan = canScan;
 	}
 }

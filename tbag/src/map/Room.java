@@ -18,12 +18,15 @@ public class Room {
 	private int inventoryID;
 	private Connections connections;
 	
+	private boolean canSee;
+	
 	// Each room has to have a puzzle as well
 	
 	public Room(String description, int roomID) {
 		this.objects = new HashMap<String, RoomObject>(); 
 		this.description = description;
 		this.roomID = roomID;
+		this.canSee = true;
 		this.inventory = new Inventory();
 		this.inventoryID = inventory.getInventoryID(); 
 		this.connections = new Connections(roomID);
@@ -147,7 +150,17 @@ public class Room {
 	public void setPuzzle(Puzzle puzzle) {
 		this.puzzle = puzzle;
 	}
-
+	
+	public void setCanSee(boolean canSee)
+	{
+		this.canSee = canSee;
+	}
+	
+	public boolean getCanSee()
+	{
+		return canSee;
+	}
+	
 	public void addNpc(NPC npc)
 	{
 		this.npc = npc;

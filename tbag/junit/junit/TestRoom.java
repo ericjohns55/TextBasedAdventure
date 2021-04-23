@@ -55,7 +55,21 @@ public class TestRoom {
 	}
 	
 	// Need to test to make sure it has a puzzle too
+	
+	@Test
+	public void testGetCanSee() {
 
+		assertTrue(room.getCanSee() == true);
+	}
+	
+	@Test
+	public void testSetCanSee() {
+
+		room.setCanSee(false);
+		assertTrue(room.getCanSee() == false);
+	}
+	
+	
 	
 	
 	

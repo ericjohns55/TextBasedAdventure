@@ -13,6 +13,9 @@ public class Item {
 	private boolean readable;
 	private boolean pourable;
 	
+	private boolean lightable;
+	private boolean isLit;
+	private boolean producesFire;
 	private int itemID;
 	private int locationID;
 	
@@ -28,6 +31,9 @@ public class Item {
 		this.isEquipped = false;
 		this.readable = false;
 		this.pourable = false;
+		this.isLit = false;
+		this.lightable = false;
+		this.producesFire = false;		
 	}
 	
 	public Item(String name) {
@@ -154,4 +160,29 @@ public class Item {
 	public void setEquippable(boolean equippable) {
 		this.equippable = equippable;
 	}
+
+	public boolean isLightable() {
+		return lightable;
+	}
+
+	public void setLightable(boolean lightable) {
+		this.lightable = lightable;
+	}
+
+	public boolean isLit() {
+		return isLit;
+	}
+
+	public void setLit(boolean isLit) {
+		this.isLit = isLit;
+	}
+	
+	public boolean producesFire() {
+		return producesFire;
+	}
+
+	public void setProducesFire(boolean producesFire) {
+		this.producesFire = producesFire;
+	}
+	
 }
