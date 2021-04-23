@@ -30,7 +30,7 @@ public class RoomGeneration {
 				+ "a butcher knife and a note next to it. There is a door on the northern wall of the room.", 7);
 		Room room8 = new Room("You move into a living room with a westward door and a pentagram marked on the ground and blood vial on a table with a note next to it.", 8);
 		Room room9 = new Room("Big Room with a guy named bob in it and a door to the west.", 9);
-		Room room10 = new Room("Last current room.", 10);
+		Room room10 = new Room("There is nothing in this room but the door you came in through.", 10);
 
 		room1.addExit("west", room2);
 
@@ -57,6 +57,8 @@ public class RoomGeneration {
 		
 		room9.addExit("east", room8);
 		room9.addExit("west", room10);
+		
+		room10.addExit("east", room9);
 
 
 
@@ -286,20 +288,32 @@ public class RoomGeneration {
 		room9.addObject("room9Door", room9Door);
 		
 		NPC bob = new NPC(null, 1, "bob", "Just a nice guy.", cake, room9Door);
-		Node n = new Node(0, "Hi im Bob.", false);
-		Node p = new Node(1, "Im just a real swell guy, but I am quite hungry.", false);
-		Node o = new Node(2, "Ok then.", true);
-		Node q = new Node(3, "Give me the cake then.", false);
-		Node r = new Node(4, "Come back when you have a cake for me.", false);
+		Node n = new Node(0, "Hi im Bob.", false, "y/n");
+		Node p = new Node(1, "Im just a real swell guy, but I am quite hungry.", false, "y/n");
+		Node o = new Node(2, "Ok then. Why not?", true, "option");
+		Node q = new Node(3, "Give me the cake then.", false, "command");
+		Node r = new Node(4, "Come back when you have a cake for me.", false, "WC");
+		Node s = new Node(5, "That's ok.", false, "DE");
+		Node t = new Node(6, "Come back when you have time.", false, "DE");
+		Node u = new Node(7, "That's rude.", false, "DE");
 		Link l = new Link(p, n, true, "Would you like to know more about me?");
 		Link l2 = new Link(o, n, true, "");
 		Link l3 = new Link(q, p, true, "Do you have any cake?");
 		Link l4 = new Link(r, p, true, "");
+		Link l5 = new Link(s, o, true, "I just don't want to.");
+		Link l6 = new Link(t, o, true, "I don't have the time.");
+		Link l7 = new Link(u, o, true, "I just hate you.");
+		
 		n.addLink(l);
 		n.addLink(l2);
 		p.addLink(l3);
 		p.addLink(l4);
+		o.addLink(l5);
+		o.addLink(l6);
+		o.addLink(l7);
+		
 		bob.setCurrentNode(n);
+		bob.setRootNode(n);
 		
 		Item pie = new Item("pie");
 		pie.setWeight(0.3);

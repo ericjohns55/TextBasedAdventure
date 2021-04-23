@@ -7,12 +7,14 @@ public class Node{
 	private String message;
 	private ArrayList<Link> options;
 	private boolean wrong;
+	private String type;
 	
-	public Node(int ID, String message, boolean wrong) {
+	public Node(int ID, String message, boolean wrong, String type) {
 		this.nodeID = ID;
 		this.message = message;
 		options = new ArrayList<Link>();
 		this.wrong = wrong;
+		this.type = type;
 		
 	}
 	public int getNodeID() {
@@ -71,6 +73,12 @@ public class Node{
 	}
 	public void setWrong(boolean wrong) {
 		this.wrong = wrong;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }

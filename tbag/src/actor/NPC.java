@@ -10,6 +10,7 @@ public class NPC extends Actor {
 	private String description;
 	private Node currentNode;
 	private Node previousNode;
+	private Node rootNode;
 	private boolean talkedTo;
 	private boolean canTalkTo;
 	private boolean done;
@@ -103,6 +104,14 @@ public class NPC extends Actor {
 
 	public void setCanTalkTo(boolean canTalkTo) {
 		this.canTalkTo = canTalkTo;
+	}
+
+	public Node getRootNode() {
+		return rootNode;
+	}
+
+	public void setRootNode(Node rootNode) {
+		this.rootNode = rootNode;
 	}
 }
 

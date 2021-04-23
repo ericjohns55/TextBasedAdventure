@@ -3,6 +3,7 @@ package commands;
 import game.Game;
 import map.Room;
 import actor.NPC;
+import dialogue.Link;
 
 public class YesCommand extends UserCommand {
 	public YesCommand(Game game, String verb, String noun, String location) {
@@ -24,16 +25,31 @@ public class YesCommand extends UserCommand {
 					npc.setPreviousNode(npc.getCurrentNode());
 					npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(0).getNextNode());
 					if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
-						output = npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " Y/N \n";
+						String t = "";
+						int i = 1;
+						for(Link l : npc.getCurrentNode().getAvailableLinks()) {
+							t += l.getOption();
+							if (npc.getCurrentNode().getType().equals("option")) {
+								t += " option " + i + "\n";
+								i++;
+							}
+							else if (npc.getCurrentNode().getType().equals("y/n")) {
+								t += " y/n \n";
+							}
+							else {
+								
+							}
+						}
+						output = t;
 					}
 					else {
 						output = npc.getCurrentNode().getMessage();
-						if(npc.getCurrentNode().isWrong()) {
+						if(npc.getCurrentNode().getType().equals("WC")) {
 							npc.setCurrentNode(npc.getPreviousNode());
-							npc.setTalkedTo(false);
 						}
-						else {
-							npc.setDone(true);
+						else if (npc.getCurrentNode().getType().equals("DE")) {
+							npc.setCurrentNode(npc.getRootNode());
+							npc.setTalkedTo(false);
 						}
 					}
 				}
