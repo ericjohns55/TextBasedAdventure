@@ -157,11 +157,6 @@
 						<td><input type="Submit" id="button" name="submit" value="Clear Game"></td>
 					</tr>
 				</table>
-				<table>
-					<tr>		
-                        <td><textarea readonly id="commandText" name="commands" placeholder="Past inputs" rows="10" cols="25">${pastInputs}</textarea></td>
-                    </tr>
-				</table>
 			</center>
 		</form>
 	</body>

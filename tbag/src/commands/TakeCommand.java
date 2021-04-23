@@ -8,38 +8,29 @@ import map.RoomObject;
 import puzzle.Puzzle;
 
 public class TakeCommand extends UserCommand {
-	public TakeCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output;
-		
+	public void execute() {		
 		String noun = getNoun();
 		String location = getLocation();
 		
 		Room room = getRoom();
-		Inventory inventory = getInventory();
 		Puzzle puzzle = getPuzzle();
+		Game game = getGame();
 		
 		if (location == null || location.equals("room") || location.equals("floor")) {
 			if (room.hasItem(noun)) {
 				Item toGrab = room.getItem(noun);
 				
 				if (toGrab != null) {
-					toGrab.setInInventory(true);
-					inventory.addItem(noun, toGrab);
-					room.removeItem(noun);
-					
-					output = "You picked up " + noun + ".";
+					game.take(room, toGrab, getPlayer(), noun);
+					game.setOutput("You picked up " + noun + ".");
 				} else {
-					output = "This item does not exist in your current room.";
+					game.setOutput("This item does not exist in your current room.");
 				}
 			} else if (noun == null) {
-				output = "Please specify an item.";
+				game.setOutput("Please specify an item.");
 			} else {
-				output = "This item does not exist in your current room.";
+				game.setOutput("This item does not exist in your current room.");
 			}
 		} else {
 			if (room.hasObject(location)) {
@@ -51,39 +42,20 @@ public class TakeCommand extends UserCommand {
 					if (!roomObject.isLocked()) {
 						if (objectInventory.contains(noun)) {
 							Item toGrab = objectInventory.removeItem(noun);
-							inventory.addItem(noun, toGrab);
-							toGrab.setInInventory(true);
-							
-							output = "You picked up " + noun + ".";
-							
-							if (puzzle.getDescription().equals("weightPuzzle")) {
-								double weightSolution = Double.parseDouble(puzzle.getSolution());
-								
-								if (objectInventory.getCurrentWeight() < weightSolution) {
-									RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());	
-									
-									if (!obstacle.isLocked() && obstacle.wasPreviouslyUnlocked()) {
-										obstacle.setLocked(true);
-										obstacle.setPreviouslyUnlocked(false);
-										output += "\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " slams shut.";
-									}
-								}
-							}
+														
+							game.take(roomObject, toGrab, getPlayer(), puzzle, noun);
 						} else {
-							output = "This object does not have that item.";
+							game.setOutput("This object does not have that item.");
 						}
 					} else {
-						output = "This " + roomObject.getName() + " is locked.";
+						game.setOutput("This " + roomObject.getName() + " is locked.");
 					}									
 				} else {
-					output = "This object does not possess any items.";
+					game.setOutput("This object does not possess any items.");
 				}
 			} else {
-				output = "Could not find that object.";
+				game.setOutput("Could not find that object.");
 			}
 		}
-		
-		return output;
 	}
-
 }

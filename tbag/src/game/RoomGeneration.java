@@ -59,15 +59,15 @@ public class RoomGeneration {
 
 		room1.addItem("key", key);
 
-		UnlockableObject door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "key");
+		UnlockableObject door = new UnlockableObject("door", "Probably leads to another room...", "west", true, key, 1);
 		door.setLocked(true);
 		room1.addObject("door", door);
 
-		RoomObject table = new RoomObject("Table", "A table that can hold things!", "north", false, false, false);
+		RoomObject table = new RoomObject("Table", "A table that can hold things!", "north", false, false, false, 1);
 		table.setCanHoldItems(true);
 		room1.addObject("table", table);
 
-		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false, ""));
+		room1.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "Maybe the key will do something...", false, "", 1));
 
 		// Room 2
 		Item banana = new Item("banana");
@@ -106,19 +106,19 @@ public class RoomGeneration {
 
 		room2.addItem("small key", smallKey);
 
-		UnlockableObject lockedDoor = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
+		UnlockableObject lockedDoor = new UnlockableObject("door", "Probably leads to another room...", "west", true, null, 2);
 		lockedDoor.setLocked(true);
 		room2.addObject("weightObstacle", lockedDoor);
 
-		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true, "weightObstacle");
+		Puzzle weightPuzzle = new Puzzle("weightPuzzle", "5.3", "The sensor seems to be triggered by some amount of weight...", true, "weightObstacle", 2);
 		room2.setPuzzle(weightPuzzle);
 
-		RoomObject sensor = new RoomObject("sensor", "Triggers something by weight...", "north", false, false, false);
+		RoomObject sensor = new RoomObject("sensor", "Triggers something by weight...", "north", false, false, false, 2);
 		sensor.setCanHoldItems(true);
 		room2.addObject("sensory pad", sensor);
 
 		// Room 3
-		UnlockableObject chest = new UnlockableObject("chest", "Holds items.", "north", false, "small key");
+		UnlockableObject chest = new UnlockableObject("chest", "Holds items.", "north", false, smallKey, 3);
 		chest.setCanHoldItems(true);
 		chest.setLocked(true);
 
@@ -131,50 +131,50 @@ public class RoomGeneration {
 
 		room3.addObject("chest", chest);
 
-		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true, "writtenObstacle");
+		Puzzle math = new Puzzle("Math problem.", "1016", "Maybe PEMDAS can help you solve the problem?", true, "writtenObstacle", 3);
 
 		room3.setPuzzle(math);
 
-		UnlockableObject writtenDoor = new UnlockableObject("door", "Probably leads to another room...", "south", true, "none");
+		UnlockableObject writtenDoor = new UnlockableObject("door", "Probably leads to another room...", "south", true, null, 3);
 		writtenDoor.setLocked(true);
 		room3.addObject("writtenObstacle", writtenDoor);
 
 
 		// Room 4
-		RoomObject dresser = new RoomObject("dresser", "Holds clothes.","south", true, true, true);
-		RoomObject bed = new RoomObject("bed", "Place to sleep.","east", true, true, true);
-		RoomObject desk = new RoomObject("desk", "Workspace.","west", true, true, true);
+		RoomObject dresser = new RoomObject("dresser", "Holds clothes.","south", true, true, true, 4);
+		RoomObject bed = new RoomObject("bed", "Place to sleep.","east", true, true, true, 4);
+		RoomObject desk = new RoomObject("desk", "Workspace.","west", true, true, true, 4);
 
 		room4.addObject("dresser", dresser);
 		room4.addObject("bed", bed);
 		room4.addObject("desk", desk);
 
-		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false, ""));
+		room4.setPuzzle(new Puzzle("Furniture puzzle", "Move the furniture to reveal the door", "The furniture can be moved...", false, "", 4));
 
 
 		// Room 5
 		//	public RoomObject(String name, String description, boolean canHoldItems, boolean interactable, boolean locked) {
-		String[] cScale = new String[] {"C", "D", "E", "F", "G", "A", "B"};
-		PlayableObject piano = new PlayableObject("piano", "Could play music.", "south", cScale, true);
+		String cScale = "CDEFGAB";
+		PlayableObject piano = new PlayableObject("piano", "Could play music.", "south", cScale, true, 5);
 		room5.addObject("piano", piano);
 
-		PlayableObject cello = new PlayableObject("cello", "Could play music.", "north", cScale, true);
+		PlayableObject cello = new PlayableObject("cello", "Could play music.", "north", cScale, true, 5);
 		room5.addObject("cello", cello);
 
-		PlayableObject guitar = new PlayableObject("guitar", "Could play music.", "west", cScale, true);
+		PlayableObject guitar = new PlayableObject("guitar", "Could play music.", "west", cScale, true, 5);
 		room5.addObject("guitar", guitar);
 
-		room5.setPuzzle(new Puzzle("Music puzzle", "Play a scale on any instrument.", "Perhaps try playing a C scale (consists of 7 naturals)...?", false, "musicalObstacle"));
+		room5.setPuzzle(new Puzzle("Music puzzle", "Play a scale on any instrument.", "Perhaps try playing a C scale (consists of 7 naturals)...?", false, "musicalObstacle", 5));
 
-		UnlockableObject musicDoor = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
+		UnlockableObject musicDoor = new UnlockableObject("door", "Probably leads to another room...", "east", true, null, 5);
 		musicDoor.setLocked(true);
 		room5.addObject("musicalObstacle", musicDoor);
 
 		// Room 6
-		PlayableObject recordPlayer = new PlayableObject("record player", "Plays music.", "north", null, false);
+		PlayableObject recordPlayer = new PlayableObject("record player", "Plays music.", "north", "", false, 6);
 		room6.addObject("record player", recordPlayer);
 
-		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", "south", true, true, false);
+		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", "south", true, true, false, 6);
 		table6.setCanHoldItems(true);
 		table6.setInteractable(true);
 		room6.addObject("table", table6);
@@ -200,11 +200,11 @@ public class RoomGeneration {
 		table6.getInventory().addItem("Young Lust Record", record4);
 		table6.getInventory().addItem("Arnold Layne Record", record5);
 
-		UnlockableObject recordDoor = new UnlockableObject("door", "Probably leads to another room...", "east", true, "none");
+		UnlockableObject recordDoor = new UnlockableObject("door", "Probably leads to another room...", "east", true, null, 6);
 		recordDoor.setLocked(true);
 		room6.addObject("room6Door", recordDoor);
 
-		ObjectPuzzle puzzle = new ObjectPuzzle("Play a record on a record player", "Play 'Crumbling Land'", "Zabriskie Point sountrack", recordPlayer, record1, "room6Door");
+		ObjectPuzzle puzzle = new ObjectPuzzle("Play a record on a record player", "Play 'Crumbling Land'", "Zabriskie Point sountrack", recordPlayer, record1, "room6Door", 6);
 		room6.setPuzzle(puzzle);
 
 		// Room 7
@@ -217,7 +217,7 @@ public class RoomGeneration {
 		Item meat = new Item("meat", 1.0);
 		meat.setDescription("Could be used to eat or feed something?");
 
-		CompoundItem lambHeart = new CompoundItem("lamb heart", 2.0, true, "butcher knife");
+		CompoundItem lambHeart = new CompoundItem("lamb heart", 2.0, true, butcherKnife);
 		lambHeart.setDescription("A lamb heart; suspiciously heavy.");
 		lambHeart.getInventory().addItem("black key", blackKey);
 		lambHeart.getInventory().addItem("meat", meat);
@@ -226,18 +226,18 @@ public class RoomGeneration {
 		note7.setReadable(true);
 		note7.setDescription("That lamb heart looks like it has something in it...");
 
-		RoomObject table7 = new RoomObject("Table", "A table that can hold things!", "east", true, true, false);
+		RoomObject table7 = new RoomObject("Table", "A table that can hold things!", "east", true, true, false, 7);
 		table7.setCanHoldItems(true);
 		table7.getInventory().addItem("butcher knife", butcherKnife);
 		table7.getInventory().addItem("lamb heart", lambHeart);
 		table7.getInventory().addItem("note", note7);
 		room7.addObject("table", table7);
 
-		UnlockableObject door7 = new UnlockableObject("door", "Probably leads to another room...", "north", true, "black key");
+		UnlockableObject door7 = new UnlockableObject("door", "Probably leads to another room...", "north", true, blackKey, 7);
 		door7.setLocked(true);
 		room7.addObject("door", door7);
 
-		room7.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "The key may be hidden somewhere.", false, ""));
+		room7.setPuzzle(new Puzzle("Unlock door", "Use key to unlock door", "The key may be hidden somewhere.", false, "", 7));
 
 		// Room 8
 		Item bloodVial = new Item("blood vial", 0.2);
@@ -252,15 +252,15 @@ public class RoomGeneration {
 
 		room8.addItem("note", note8);
 
-		RoomObject pentagram = new RoomObject("pentagram", "Altar to Satan", "north", true, true, false);
+		RoomObject pentagram = new RoomObject("pentagram", "Altar to Satan", "north", true, true, false, 8);
 		pentagram.setCoverable(true);
 		room8.addObject("pentagram", pentagram);
 
-		UnlockableObject room8Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, "none");
+		UnlockableObject room8Door = new UnlockableObject("door", "Probably leads to another room...", "west", true, null, 8);
 		room8Door.setLocked(true);
 		room8.addObject("room8Door", room8Door);
 
-		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
+		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door", 8));
 
 		rooms.put(1, room1);
 		rooms.put(2, room2);

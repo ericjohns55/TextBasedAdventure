@@ -2,6 +2,7 @@ package input;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,8 +14,7 @@ public class Command {
 	private static Set<String> PREPOSITIONS = new HashSet<>(Arrays.asList("on", "from", "to", "in"));
 	private static Set<String> ARTICLES = new HashSet<>(Arrays.asList("the", "a", "an"));
 	
-	private static Set<String> VALID_COMMANDS = new HashSet<>(Arrays.asList("examine", "look", "open", "list", "grab", "take", "place",
-			"drop", "move", "walk", "unlock", "type", "solve", "read", "push", "play", "cut", "pour", "hint"));
+	private HashMap<String, UserCommand> commands;
 	
 	public final static String invalidCommand = "I do not understand that command";
 	private String input;
@@ -27,6 +27,28 @@ public class Command {
 	public Command(String input, Game game) {
 		this.input = replaceSynonyms(input);
 		this.game = game;
+		
+		commands = new HashMap<String, UserCommand>();
+		commands.put("examine", new LookCommand());
+		commands.put("look", new LookCommand());
+		commands.put("open", new OpenCommand());
+		commands.put("list", new ListCommand());
+		commands.put("grab", new TakeCommand());
+		commands.put("take", new TakeCommand());
+		commands.put("place", new DropCommand());
+		commands.put("drop", new DropCommand());
+		commands.put("move", new WalkCommand());
+		commands.put("walk", new WalkCommand());
+		commands.put("unlock", new UnlockCommand());
+		commands.put("type", new TypeCommand());
+		commands.put("solve", new TypeCommand());
+		commands.put("read", new ReadCommand());
+		commands.put("push", new PushCommand());
+		commands.put("play", new PlayCommand());
+		commands.put("cut", new CutCommand());
+		commands.put("pour", new PourCommand());
+		commands.put("hint", new HintCommand());
+		
 		parseCommands();
 	}
 	
@@ -85,74 +107,31 @@ public class Command {
 		return replace;
 	}
 	
-	public String execute() {
-		String output = null;
+	public void execute() {
+		System.err.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
 		
-		System.out.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
-		
+		// eat chocolate
 		if (verb != null) {
-			if (noun != null || SINGLE_WORD_COMMANDS.contains(verb)) {
-				switch (verb) {
-					case "examine":
-					case "look":
-						output = new LookCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "open":
-						output = new OpenCommand(game, verb, noun, location).getOutput();	
-						break;
-					case "list":
-						output = new ListCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "grab":
-					case "take":
-						output = new TakeCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "place":
-					case "drop":
-						output = new DropCommand(game, verb, noun, location).getOutput();					
-						break;
-					case "move":
-					case "walk":
-						output = new WalkCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "unlock":
-						output = new UnlockCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "solve":
-					case "type":
-						output = new TypeCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "read":
-						output = new ReadCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "push":
-						output = new PushCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "play":
-						output = new PlayCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "cut":
-						output = new CutCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "pour":
-						output = new PourCommand(game, verb, noun, location).getOutput();						
-						break;
-					case "hint":
-						output = new HintCommand(game, verb, noun, location).getOutput();
-						break;
+			if (commands.containsKey(verb)) {
+				if (noun != null || SINGLE_WORD_COMMANDS.contains(verb)) {
+					UserCommand command = commands.get(verb);
+					command.loadInputandGame(game, verb, noun, location);
+					command.execute();
+				} else {
+					game.setOutput("Missing argument for command \"" + verb + "\"");
 				}
 			} else {
-				if (VALID_COMMANDS.contains(verb)) {
-					output = "Missing argument for command \"" + verb + "\"";
-				} else {
-					output = "Unknown command.";
-				}
+				game.setOutput("Unknown command.");
 			}
 		} else {
-			output = "Unknown command.";
+			game.setOutput("Unknown command.");
 		}
 		
-		return output != null ? output.trim() : invalidCommand;
+		if (game.getOutput() == "") {
+			game.setOutput(invalidCommand);
+		} else {
+			game.setOutput(game.getOutput().trim());
+		}
 	}
 	
 	public String getBreakdown() {

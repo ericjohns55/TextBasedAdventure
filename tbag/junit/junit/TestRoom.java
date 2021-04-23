@@ -43,7 +43,7 @@ public class TestRoom {
 	public void testExit() {
 		Room room2 = new Room("room2", 5);
 		room.addExit("north", room2);
-		assertEquals(room2, room.getExit("north"));
+		assertEquals(room2.getRoomID(), room.getExit("north"));
 	}
 	
 	@Test

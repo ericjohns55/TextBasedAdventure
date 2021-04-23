@@ -1,0 +1,8 @@
+1|table|A table that can hold things!|north|0|0|0| |0|0|0|1|0|0|1|1011
+2|sensory pad|Triggers somethin by weight...|north|0|0|0| |0|0|0|1|0|0|2|1021
+3|dresser|Holds clothes.|south|1|1|1| |0|0|0|0|0|0|4|1041
+4|bed|Place to sleep.|east|1|1|1| |0|0|0|0|0|0|4|1042
+5|desk|Workspace|west|1|1|1| |0|0|0|0|0|0|4|1043
+6|table|A table that can hold things!|south|1|1|0| |0|0|1|1|0|0|6|1061
+7|table|A table that can hold things!|east|1|1|0| |0|0|0|1|0|0|7|1071
+8|pentagram|Altar to Satan|north|1|1|0| |0|0|0|0|1|0|8|1081

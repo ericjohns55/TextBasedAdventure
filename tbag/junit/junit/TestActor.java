@@ -33,6 +33,6 @@ public class TestActor {
 		actor.setRoomID(8);
 		assertEquals(8, actor.getRoomID());
 		
-		assertEquals(game.getRoom(8).getDescription(), actor.getRoom().getDescription());
+//		assertEquals(game.getRoom(8).getDescription(), actor.getRoom().getDescription());
 	}
 }

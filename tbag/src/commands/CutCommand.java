@@ -1,28 +1,21 @@
 package commands;
 
-import java.util.HashMap;
-
 import game.Game;
 import items.CompoundItem;
 import items.Inventory;
-import items.Item;
 import map.Room;
 import map.RoomObject;
 
 public class CutCommand extends UserCommand {
-	public CutCommand(Game game, String verb, String noun, String location) {
-		super(game, verb, noun, location);
-	}
-
 	@Override
-	public String getOutput() {
-		String output = null;
-		
+	public void execute() {		
 		String noun = getNoun();
 		String location = getLocation();
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
+		
+		Game game = getGame();
 		
 		if (location != null) {
 			if (room.hasObject(location)) {
@@ -33,32 +26,24 @@ public class CutCommand extends UserCommand {
 						CompoundItem item = (CompoundItem) object.getInventory().getItem(noun);
 						
 						if (item.isBreakable()) {
-							if (inventory.contains(item.getBreakIdentifier())) {
-								HashMap<String, Item> items = item.getItems();
-								
-								for (String identifier : items.keySet()) {
-									object.getInventory().addItem(identifier, items.get(identifier));
-									System.out.println("Adding " + identifier);
-								}
-								
-								object.getInventory().removeItem(noun);
-								item.getInventory().emptyInventory();
-								
-								output = "You break apart the " + noun + " and dump the contents on the " + location + ".";
+							System.out.println("COMPOUND ITEM ID: " + item.getItemID());
+							System.out.println("BREAK ITEM ID: " + item.getBreakItem().getItemID());
+							if (inventory.contains(item.getBreakItem().getItemID())) {
+								game.breakItem(object, item, noun, location);
 							} else {
-								output = "You do not possess the needed item to cut this.";
+								game.setOutput("You do not possess the needed item to cut this.");
 							}
 						} else {
-							output = "You cannot cut this item.";
+							game.setOutput("You cannot cut this item.");
 						}
 					} else {
-						output = "Cannot cut this item.";
+						game.setOutput("Cannot cut this item.");
 					}
 				} else {
-					output = "That " + location + " does not countain a " + noun + ".";
+					game.setOutput("That " + location + " does not countain a " + noun + ".");
 				}
 			} else {
-				output = "That location does not exist.";
+				game.setOutput("That location does not exist.");
 			}
 		} else {
 			if (room.hasItem(noun)) {
@@ -66,30 +51,19 @@ public class CutCommand extends UserCommand {
 					CompoundItem item = (CompoundItem) room.getItem(noun);
 					
 					if (item.isBreakable()) {
-						if (inventory.contains(item.getBreakIdentifier())) {
-							HashMap<String, Item> items = item.getItems();
-							
-							for (String identifier : items.keySet()) {
-								room.addItem(identifier, items.get(identifier));
-							}
-							
-							room.removeItem(noun);
-							item.getInventory().emptyInventory();
-							
-							output = "You break apart the " + noun + " and dumb the contents on the floor.";
+						if (inventory.contains(item.getBreakItem())) {
+							game.breakItem(room, item, noun);
 						} else {
-							output = "You do not possess the needed item to cut this.";
+							game.setOutput("You do not possess the needed item to cut this.");
 						}
 					} else {
-						output = "You cannot cut this item.";
+						game.setOutput("You cannot cut this item.");
 					}
 				}
 			} else {
-				output = "The " + noun + " item does not exist.";
+				game.setOutput("The " + noun + " item does not exist.");
 			}
 		}
-		
-		return output;
 	}
 
 }
