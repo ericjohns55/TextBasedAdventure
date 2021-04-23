@@ -15,6 +15,8 @@ import puzzle.Puzzle;
 public class RoomGeneration {
 	private IDatabase db;
 	
+	
+	
 	public RoomGeneration(IDatabase db) {
 		this.db = db;
 	}
