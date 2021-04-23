@@ -4,26 +4,32 @@ import java.util.HashMap;
 
 public class CompoundItem extends Item {
 	private Inventory inventory;
-	private String breakIdentifier;
+	private Item breakItem;
 	private boolean breakable;
 	
-	public CompoundItem(String name, double weight, boolean breakable, String breakIdentifier) {
+	private int inventoryID;
+	
+	public CompoundItem(String name, double weight, boolean breakable, Item breakItem) {
 		super(name, weight);
 		this.inventory = new Inventory();
 		this.breakable = breakable;
-		this.breakIdentifier = breakIdentifier;
+		this.breakItem = breakItem;
 	}
 	
 	public Inventory getInventory() {
 		return inventory;
 	}
-
-	public String getBreakIdentifier() {
-		return breakIdentifier;
+	
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
 	}
 
-	public void setBreakIdentifier(String breakIdentifier) {
-		this.breakIdentifier = breakIdentifier;
+	public Item getBreakItem() {
+		return breakItem;
+	}
+
+	public void setBreakItem(Item breakItem) {
+		this.breakItem = breakItem;
 	}
 
 	public boolean isBreakable() {
@@ -36,5 +42,13 @@ public class CompoundItem extends Item {
 	
 	public HashMap<String, Item> getItems() {
 		return inventory.getAllItems();
+	}
+
+	public int getInventoryID() {
+		return inventoryID;
+	}
+
+	public void setInventoryID(int inventoryID) {
+		this.inventoryID = inventoryID;
 	}
 }

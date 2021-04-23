@@ -1,0 +1,20 @@
+1|key|This key seems to be able to unlock a door.|0.1|0|1|0|0|0|0|0|0|101
+2|banana|Fruit.|0.3|0|1|0|0|0|0|0|0|102
+3|apple|Fruit.|0.5|0|1|0|0|0|0|0|0|102
+4|phonebook|Full of numbers.|2.5|0|1|0|0|0|0|0|0|102
+5|cookbook|Full of recipes.|2|0|1|0|0|0|0|0|0|102
+6|plate|Can holf food.|1|0|1|0|0|0|0|0|0|102
+7|small key|This small key seems to be able to unlocks something...|0.1|0|1|0|0|0|0|0|0|102
+8|note|(8/2(2+2)) + 1000|0.1|0|1|0|0|0|0|1|0|1031
+9|Crumbling Land Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|1061
+10|Another Brick Wall Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|1061
+11|Hey You Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|1061
+12|Young Lust Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|1061
+13|Arnold Layne Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|1061
+14|butcher knife|This butcher knife is used for cutting.|1.2|0|1|0|0|0|0|0|0|1071
+15|black key|This small black key seems to be able to unlock something...|0.1|0|1|0|0|0|0|0|0|10017
+16|meat|Could be used to eat or feed something?|1|0|1|0|0|0|0|0|0|10017
+18|note|That lamb heart looks like it has something in it...|0.1|0|1|0|0|0|0|1|0|1071
+19|blood vial|This vial contains blood.|0.2|0|1|0|0|0|0|0|1|108
+20|note|You may want to pour that vial on something.|0.1|0|1|0|0|0|0|1|0|108
+9999|none|does not exist|0|0|0|0|0|0|0|0|0|9999

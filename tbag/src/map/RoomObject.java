@@ -16,14 +16,17 @@ public class RoomObject {
 	private boolean blockingExit;
 	private boolean moveable;
 	private boolean isObstacle;
-	private boolean coverable;
-	
+	private boolean coverable;	
 	private boolean canBeFed;
 	private boolean canScan;
-	
+	private boolean previouslyUnlocked;
 	private Inventory inventory;
 	
-	public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable) {
+	private int roomID;
+	private int inventoryID;
+	private int objectID;
+	
+	public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable, int roomID) {
 		this.name = name;
 		this.description = description;
 		this.direction = direction;
@@ -39,12 +42,29 @@ public class RoomObject {
 		this.locked = false;
 		this.coverable = false;
 		this.canBeFed = false;
-		
+		this.previouslyUnlocked = false;		
 		this.covered = "";
 		
 		this.canScan = false;
 		
 		this.inventory = new Inventory();
+		this.roomID = roomID;
+	}
+	
+	public int getRoomID() {
+		return roomID;
+	}
+	
+	public void setRoomID(int roomID) {
+		this.roomID = roomID;
+	}
+
+	public int getInventoryID() {
+		return inventoryID;
+	}
+	
+	public void setInventoryID(int inventoryID) {
+		this.inventoryID = inventoryID;
 	}
 	
 	public boolean canHoldItems() {
@@ -154,7 +174,27 @@ public class RoomObject {
 	}
 	
 	public boolean isCovered() {
-		return covered != "";
+		return covered.length() > 1;
+	}
+	
+	public boolean wasPreviouslyUnlocked() {
+		return previouslyUnlocked;
+	}
+	
+	public void setPreviouslyUnlocked(boolean previouslyUnlocked) {
+		this.previouslyUnlocked = previouslyUnlocked;
+	}
+
+	public int getObjectID() {
+		return objectID;
+	}
+
+	public void setObjectID(int objectID) {
+		this.objectID = objectID;
+	}
+	
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
 	}
 	
 	public boolean canBeFed() {

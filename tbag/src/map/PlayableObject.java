@@ -1,24 +1,24 @@
 package map;
 
 public class PlayableObject extends RoomObject {
-	private String[] requiredNotes;
+	private char[] requiredNotes;
 	private String playedNotes;
 	private boolean isInstrument;
 	
-	public PlayableObject(String name, String description, String direction, String[] requiredNotes, boolean isInstrument) {
-		super(name, description, direction, false, false, false);
+	public PlayableObject(String name, String description, String direction, String requiredNotes, boolean isInstrument, int roomID) {
+		super(name, description, direction, false, false, false, roomID);
 		this.setInteractable(true);
-		this.requiredNotes = requiredNotes;
 		this.playedNotes = "";
 		this.isInstrument = isInstrument;
+		this.requiredNotes = requiredNotes.toCharArray();
 	}
 
-	public String[] getRequiredNotes() {
+	public char[] getRequiredNotes() {
 		return requiredNotes;
 	}
 
-	public void setRequiredNotes(String[] requiredNotes) {
-		this.requiredNotes = requiredNotes;
+	public void setRequiredNotes(String requiredNotes) {
+		this.requiredNotes = requiredNotes.toCharArray();
 	}
 
 	public String getPlayedNotes() {
@@ -40,8 +40,8 @@ public class PlayableObject extends RoomObject {
 	public boolean playedPassage() {
 		boolean playedPassage = true;
 		
-		for (String note : requiredNotes) {
-			if (!playedNotes.toUpperCase().contains(note)) {
+		for (int i = 0; i < requiredNotes.length; i++) {
+			if (!playedNotes.toUpperCase().contains(Character.toString(requiredNotes[i]))) {
 				return false;
 			}
 		}

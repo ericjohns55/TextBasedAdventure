@@ -1,0 +1,15 @@
+1|2|west
+2|1|east
+2|3|west
+3|2|east
+3|4|south
+4|3|north
+4|5|south
+5|4|north
+5|6|east
+6|5|west
+6|7|east
+7|6|west
+7|8|north
+8|7|south
+8|9|west

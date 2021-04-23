@@ -34,8 +34,6 @@
 			#timeleftText {
 				font-size: 24px;
 				font-family: Arial;
-				margin-left: 50px;
-				margin-right: 50px;
 				color: white;
 			} 
 			
@@ -71,8 +69,6 @@
 			#time{
 				font-size: 24px;
 				font-family: Arial;
-				margin-left: 50px;
-				margin-right: 50px;
 				color: white;
 			}
 		</style>
@@ -156,11 +152,6 @@
 						<td><input type="Submit" id="button" name="submit" value="Submit Text"></td>
 						<td><input type="Submit" id="button" name="submit" value="Clear Game"></td>
 					</tr>
-				</table>
-				<table>
-					<tr>		
-                        <td><textarea readonly id="commandText" name="commands" placeholder="Past inputs" rows="10" cols="25">${pastInputs}</textarea></td>
-                    </tr>
 				</table>
 			</center>
 		</form>

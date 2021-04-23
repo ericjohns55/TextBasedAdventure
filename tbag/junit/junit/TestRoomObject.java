@@ -14,7 +14,7 @@ public class TestRoomObject {
 	
 	@Before
 	public void setUp() {
-		object = new RoomObject("name", "desc", "dir", false, false, false);
+		object = new RoomObject("name", "desc", "dir", false, false, false, 4);
 	}
 	
 	@Test
@@ -30,6 +30,7 @@ public class TestRoomObject {
 		boolean moveable = true;
 		boolean isObstacle = true;
 		boolean coverable = true;
+		boolean previouslyUnlocked = true;
 		
 		object.setName(name);
 		object.setDescription(description);
@@ -42,6 +43,7 @@ public class TestRoomObject {
 		object.setMoveable(moveable);
 		object.setObstacle(isObstacle);
 		object.setCoverable(coverable);
+		object.setPreviouslyUnlocked(previouslyUnlocked);
 		
 		assertEquals(name, object.getName());
 		assertEquals(description, object.getDescription());
@@ -53,6 +55,7 @@ public class TestRoomObject {
 		assertEquals(moveable, object.isMoveable());
 		assertEquals(isObstacle, object.isObstacle());
 		assertEquals(coverable, object.isCoverable());
+		assertEquals(previouslyUnlocked, object.wasPreviouslyUnlocked());
 		assertEquals(0, object.getInventory().getInventorySize());
 	}
 	

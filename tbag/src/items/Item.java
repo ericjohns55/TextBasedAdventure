@@ -16,8 +16,10 @@ public class Item {
 	private boolean lightable;
 	private boolean isLit;
 	private boolean producesFire;
+	private int itemID;
+	private int locationID;
 	
-	public Item(String name, double weight) {
+	public Item(String name, double weight) {		
 		this.name = name;
 		this.weight = weight;
 		this.isInteractable = false;
@@ -40,6 +42,22 @@ public class Item {
 	
 	public Item() {
 		this("Item");
+	}
+	
+	public int getItemID() {
+		return itemID;
+	}
+	
+	public void setItemID(int itemID) {
+		this.itemID = itemID;
+	}
+	
+	public int getLocationID() {
+		return locationID;
+	}
+	
+	public void setLocationID(int locationID) {
+		this.locationID = locationID;
 	}
 	
 	public String getDescription() {
