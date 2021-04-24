@@ -4,6 +4,7 @@ import game.Game;
 import items.Inventory;
 import map.Room;
 import map.RoomObject;
+import map.UnlockableObject;
 
 public class LookCommand extends UserCommand {
 	@Override
@@ -28,7 +29,31 @@ public class LookCommand extends UserCommand {
 				RoomObject object = room.getObject(noun);
 				
 				if (object.isLocked()) {
-					game.setOutput("This object is locked, I cannot see what is inside.");
+					UnlockableObject painting = (UnlockableObject) object;
+					
+					if (painting.getCanBeLookedAtNow() == false)
+					{	
+						// So this checks if our unlockable object is an object where you need something to look at it with
+						// and checking if you have what it needs in your inventory
+						// Before it was just setting it to unlocked and you would have to examine again,
+						// but now it sends it out immediately.
+						if (inventory.contains(painting.getUnlockItem()))
+						{
+							game.setOutput("This " + room.getObject(noun).getName() + " reads " + room.getObject(noun).getDescription() + ".");
+						}
+						
+						else
+						{	
+							game.setOutput("You do not have what is needed to see this object.");
+						}
+					}									
+					
+					else
+					{	
+						game.setOutput("This object is locked, I cannot see what is inside.");
+					}
+
+				//	game.setOutput("This object is locked, I cannot see what is inside.");
 				} else {
 					game.setOutput(room.getObject(noun).getDescription());
 				}
