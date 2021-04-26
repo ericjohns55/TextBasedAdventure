@@ -104,46 +104,20 @@ public class Game {
 	}
 	
 	public void breakItem(RoomObject container, CompoundItem item, String noun, String location) {
-//		HashMap<String, Item> items = item.getItems();
-//		
-//		for (String identifier : items.keySet()) {
-//			Item containedItem = items.get(identifier);
-//			container.getInventory().addItem(identifier, containedItem);
-//			db.addItemToInventory(container.getInventory(), containedItem);	// update DB item inventory ID, also destroys item
-//		}
-//		
-//		container.getInventory().removeItem(noun);
-//		item.getInventory().emptyInventory();
-//		
-//		db.destroyCompoundItem(item);	// nuke item from existence
-		
 		db.breakItem(item, container.getInventory());
 		setOutput("You break apart the " + noun + " and dump the contents on the " + location + ".");
 	}
 	
 	public void breakItem(Room room, CompoundItem item, String noun) {
-		HashMap<String, Item> items = item.getItems();
-		
-		for (String identifier : items.keySet()) {
-			Item containedItem = items.get(identifier);
-			room.addItem(identifier, containedItem);
-			db.addItemToInventory(room.getInventory(), containedItem);	// update DB item inventory ID
-		}
-		
-		room.removeItem(noun);
-		item.getInventory().emptyInventory();
-		
-		db.destroyCompoundItem(item);	// nuke item from existence
-		
+		db.breakItem(item, room.getInventory());
 		setOutput("You break apart the " + noun + " and dumb the contents on the floor.");
 	}
 	
 	public void dropItem(RoomObject container, String item, Player player, Puzzle puzzle, String location) {
 		Inventory objectInventory = container.getInventory();
 		
-		Item toRemove = player.getInventory().removeItem(item);
+		Item toRemove = player.getInventory().getItem(item);
 		objectInventory.addItem(item, toRemove);
-		setOutput("You placed the " + item + " on the " + location + "."); 
 		db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
 		
 		if (puzzle.getDescription().equals("weightPuzzle")) {
@@ -166,18 +140,7 @@ public class Game {
 	public void dropItem(Room room, String item, Player player, Puzzle puzzle) {
 		Item toDrop = player.getInventory().getItem(item);
 		
-//		Item removed = player.getInventory().removeItem(item);
-//		room.getInventory().addItem(item, removed);
-		
-//		System.out.println(room.listItems());
-		System.out.println("ROOM ID " + room.getRoomID());
-		db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
-		
-		if (room.getInventory().contains(item)) {
-			System.out.println("what the fuck");
-		}
-		
-		setOutput("You dropped " + item + " on the floor.");	
+		db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID		
 	}
 	
 	public boolean play(PlayableObject object, Item item, Player player, Puzzle puzzle, String noun, String location) {

@@ -34,11 +34,15 @@ public class TakeCommand extends UserCommand {
 					game.setOutput("This item does not exist in your current room.");
 				}
 			} else if (noun.equals("all")) {
-				HashMap<String, Item> items = room.getInventory().getAllItems();
-				
-				for (String identifier : items.keySet()) {
-					game.take(room, items.get(identifier), getPlayer(), noun);
-					game.addOutput("You picked up " + identifier + ".\n");
+				if (!room.getInventory().isEmpty()) {
+					HashMap<String, Item> items = room.getInventory().getAllItems();
+					
+					for (String identifier : items.keySet()) {
+						game.take(room, items.get(identifier), getPlayer(), noun);
+						game.addOutput("You picked up " + identifier + ".\n");
+					}
+				} else {
+					game.setOutput("This room does not contain any items.");
 				}
 			} else {
 				game.setOutput("This item does not exist in your current room.");
@@ -79,11 +83,15 @@ public class TakeCommand extends UserCommand {
 							game.take(roomObject, toGrab, getPlayer(), puzzle, noun);
 							game.setOutput("You picked up " + noun + ".");	
 						} else if (noun.equals("all")) {
-							HashMap<String, Item> items = objectInventory.getAllItems();
-							
-							for (String identifier : items.keySet()) {
-								game.take(roomObject, objectInventory.getItem(identifier), getPlayer(), puzzle, noun);
-								game.addOutput("You picked up " + identifier + " from " + location + ".\n");
+							if (!objectInventory.isEmpty()) {
+								HashMap<String, Item> items = objectInventory.getAllItems();
+								
+								for (String identifier : items.keySet()) {
+									game.take(roomObject, objectInventory.getItem(identifier), getPlayer(), puzzle, noun);
+									game.addOutput("You picked up " + identifier + " from " + location + ".\n");
+								}								
+							} else {
+								game.setOutput("The " + location + " does not possess any items.");
 							}
 						} else {
 							game.setOutput("This object does not have that item.");

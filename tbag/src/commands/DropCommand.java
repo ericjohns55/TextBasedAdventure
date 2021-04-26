@@ -1,7 +1,10 @@
 package commands;
 
+import java.util.HashMap;
+
 import game.Game;
 import items.Inventory;
+import items.Item;
 import map.Room;
 import map.RoomObject;
 import puzzle.Puzzle;
@@ -18,15 +21,45 @@ public class DropCommand extends UserCommand {
 		
 		Game game = getGame();
 		
-		if (inventory.contains(noun)) {
+		if (noun == null) {
+			game.setOutput("Please specify an item.");
+		} else if (inventory.contains(noun) || noun.equals("all")) {
 			if (location == null || location.equals("room") || location.equals("floor")) {
-				game.dropItem(room, noun, getPlayer(), puzzle);
+				if (noun.equals("all")) {
+					if (!inventory.isEmpty()) {
+						HashMap<String, Item> items = inventory.getAllItems();
+						
+						for (String identifier : items.keySet()) {
+							game.dropItem(room, identifier, getPlayer(), puzzle);
+							game.addOutput("You dropped " + identifier + " on the floor.\n");
+						}
+					} else {
+						game.setOutput("You possess nothing to drop.");
+					}					
+				} else {
+					game.dropItem(room, noun, getPlayer(), puzzle);
+					game.setOutput("You dropped " + noun + " on the floor.");	
+				}
 			} else {
 				if (room.hasObject(location)) {
 					RoomObject roomObject = room.getObject(location);
 					
-					if (roomObject.canHoldItems()) {						
-						game.dropItem(roomObject, noun, getPlayer(), puzzle, location);
+					if (roomObject.canHoldItems()) {
+						if (noun.equals("all")) {
+							if (!inventory.isEmpty()) {
+								HashMap<String, Item> items = inventory.getAllItems();
+								
+								for (String identifier : items.keySet()) {
+									game.dropItem(roomObject, identifier, getPlayer(), puzzle, location);
+									game.addOutput("You placed the " + identifier + " on the " + location + ".\n"); 
+								}
+							} else {
+								game.setOutput("You possess nothing to drop.");
+							}
+						} else {
+							game.dropItem(roomObject, noun, getPlayer(), puzzle, location);
+							game.setOutput("You placed the " + noun + " on the " + location + "."); 
+						}
 					} else {
 						game.setOutput("This object cannot hold that...");
 					}
@@ -34,11 +67,8 @@ public class DropCommand extends UserCommand {
 					game.setOutput("Could not find that object.");
 				}
 			}
-		} else if (noun == null) {
-			game.setOutput("Please specify an item.");
 		} else {
 			game.setOutput("You do not possess this item.");
 		}
 	}
-
 }
