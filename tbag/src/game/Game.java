@@ -245,8 +245,6 @@ public class Game {
 		
 		db.addItemToInventory(player.getInventory(), item);	// update itemID in DB
 		
-		setOutput("You picked up " + noun + ".");	
-		
 		if (puzzle.getDescription().equals("weightPuzzle")) {
 			double weightSolution = Double.parseDouble(puzzle.getSolution());
 			

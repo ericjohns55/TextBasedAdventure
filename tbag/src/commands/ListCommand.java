@@ -28,5 +28,4 @@ public class ListCommand extends UserCommand {
 			game.setOutput("Could not find " + noun + " to list.");
 		}
 	}
-
 }
