@@ -9,32 +9,32 @@ import puzzle.Puzzle;
 
 public abstract class UserCommand {
 	private Game game;
-	
+
 	private String verb;
 	private String noun;
 	private String location;
-	
+
 	private Player player;
 	private Room room;
 	private Inventory inventory;
 	private Puzzle puzzle;
 	private NPC npc;
-		
+
 	public void loadInputandGame(Game game, String verb, String noun, String location) {
 
 		this.game = game;
-		
+
 		this.verb = verb;
 		this.noun = noun;
 		this.location = location;
-		
+
 		this.player = game.getPlayer();
 		this.room = player.getRoom();
 		this.inventory = player.getInventory();
 		this.puzzle = room.getPuzzle();
 		this.npc = room.getNpc();
-  }
-	
+	}
+
 	public abstract void execute();
 
 	public Game getGame() {
@@ -100,7 +100,7 @@ public abstract class UserCommand {
 	public void setPuzzle(Puzzle puzzle) {
 		this.puzzle = puzzle;
 	}
-	
+
 	public NPC getNpc() {
 		return npc;
 	}

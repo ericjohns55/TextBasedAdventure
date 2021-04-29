@@ -15,25 +15,11 @@
 				color: white;
 			}
 			
-			#movescounter {
-				font-size: 24px;
+			#extrainfo {
+				font-size: 18px;
 				font-family: Arial;
 				margin-left: 50px;
 				margin-right: 50px;
-				color: white;
-			} 
-			
-			#score {
-				font-size: 24px;
-				font-family: Arial;
-				margin-left: 100px;
-				margin-right: 100px;
-				color: white;
-			} 
-			
-			#timeleftText {
-				font-size: 24px;
-				font-family: Arial;
 				color: white;
 			} 
 			
@@ -76,14 +62,14 @@
 		<script type="text/javascript">
 			function autoScroll() {
     			var textarea = document.getElementById("storyText");
+    			textarea.scrollTop = textarea.scrollHeight;
     			if(textarea.selectionStart == textarea.selectionEnd) {
-    				 textarea.scrollTop = textarea.scrollHeight;
+    				 
  				 }
- 				 var txt = document.getElementById("commandText");
-    			if(txt.selectionStart == txt.selectionEnd) {
-    				 txt.scrollTop = txt.scrollHeight;
- 				}	
 			}
+			
+			
+			/*
 			function startTimer(duration, display) {
     			var timer = duration, minutes, seconds;
    				setInterval(function () {
@@ -110,47 +96,32 @@
     			display = document.getElementById("time");
     			console.log("${duration} aa");
     			startTimer(${duration}, display);
-			};
+			}; */
 		</script>
 		
 		
 	</head>
 
-	<body  onload="autoScroll(); start();" >
+	<body onload="autoScroll();" >
 		<form action="${pageContext.servletContext.contextPath}/tbag" method="post">			
 			<center>
-				<table>
-					<tr>
-						<p class="title">Welcome to the Text Based Adventure Game</p>
-					</tr>
-					
-					<tr>
-						<td>
-							<span id="movescounter">${moves}</span>
-						</td>
-						<td>
-							<span id="score">${score}</span>
-						</td>
-						<td>
-							<span id="timeleftText">${timeText}</span>
-							<span id="time" name="time"></span>
-							<input type="hidden" id="timeRem" name="duration" value="${duration}"/>
-						</td>
-					</tr>
-				</table>
-				<table>		
-					<tr>
-						<td><textarea readonly id="storyText" name="story" rows="16" cols="140">${story}</textarea></td>
-					</tr>			
-					<tr>
-						<td><input id="text" type="text" name="userInput" size="140" value="${userInput}" autofocus/></td>
-					</tr>	
-				</table>
+				<p class="title">Welcome to the Text Based Adventure Game</p>
+
+				<div>	
+					<textarea readonly id="storyText" name="story" rows="16" cols="140">${story}</textarea>
+					<input id="text" type="text" name="userInput" size="140" value="${userInput}" autofocus/>
+				</div>
 				
+				
+					
 				<table>
 					<tr>
-						<td><input type="Submit" id="button" name="submit" value="Submit Text"></td>
-						<td><input type="Submit" id="button" name="submit" value="Clear Game"></td>
+						<td>
+							<span id="extrainfo">${moves}</span>
+						</td>
+						<td>
+							<span id="extrainfo">${room}</span>
+						</td>
 					</tr>
 				</table>
 			</center>
