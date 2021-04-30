@@ -180,6 +180,83 @@ public class Game {
 		setOutput("You dropped " + item + " on the floor.");	
 	}
 	
+	public void feedItem(RoomObject object, Player player, Puzzle puzzle, String noun, String location) {
+
+				// pour(RoomObject object, Item item, Player player, Puzzle puzzle, String noun, String location)
+				// This transfers the object 
+				object.feed(noun);
+				
+				Item toDrop = player.getInventory().getItem(noun);
+				//db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
+			
+				setOutput("You fed " + noun + " to the " + location + ".");
+				
+				if (toDrop.consumeOnUse()) {
+					player.getInventory().removeItem(noun);	// update inventoryID in DB (make it something random so disappeared)
+					db.consumeItem(toDrop);
+				}
+				
+				if (puzzle.getSolution().equals(object.getFed())) 
+				{
+					
+					RoomObject toUnlock = player.getRoom().getObject(puzzle.getUnlockObstacle());
+					
+					if (toUnlock.isLocked()) 
+					{
+						toUnlock.setLocked(false);
+						// What is this doing? because it should be unlocking the door
+						db.toggleLocks((UnlockableObject) toUnlock, false);	// db update lock status
+						db.pushObject(object, "west");
+
+						// This changes the status of the hellhound, but we want the door and the hellhound
+						// to be updated. Want hellhound to move out of the way and for the door to open.
+						addOutput("\nThe " + location + " is occupied away from an open " + toUnlock.getName() + " to the " + toUnlock.getDirection() + "!!");
+						object.isFed();
+					}
+				}
+				
+	}
+	
+	
+	// Put your scan and climb commands in here
+	public void scanItem(RoomObject object, Player player, Puzzle puzzle, String noun, String location) {
+
+		// pour(RoomObject object, Item item, Player player, Puzzle puzzle, String noun, String location)
+		// This transfers the object 
+		object.scan(noun);
+		
+		Item toScan = player.getInventory().getItem(noun);
+		//db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
+	
+		setOutput("You scanned " + noun + " on the " + location + ".");
+		
+		if (toScan.consumeOnUse()) {
+			player.getInventory().removeItem(noun);	// update inventoryID in DB (make it something random so disappeared)
+			db.consumeItem(toScan);
+		}
+		
+		if (puzzle.getSolution().equals(object.getFed())) 
+		{
+			
+			RoomObject toUnlock = player.getRoom().getObject(puzzle.getUnlockObstacle());
+			
+			if (toUnlock.isLocked()) 
+			{
+				toUnlock.setLocked(false);
+				// What is this doing? because it should be unlocking the door
+				db.toggleLocks((UnlockableObject) toUnlock, false);	// db update lock status
+				
+
+				// This changes the status of the hellhound, but we want the door and the hellhound
+				// to be updated. Want hellhound to move out of the way and for the door to open.
+				addOutput("\nThe " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open!");
+				object.isScanned();
+			}
+		}
+		
+}
+	
+	
 	public boolean play(PlayableObject object, Item item, Player player, Puzzle puzzle, String noun, String location) {
 		object.getInventory().addItem(noun, item);
 		db.addItemToInventory(object.getInventory(), item);	// update DB inventoryID
@@ -227,7 +304,17 @@ public class Game {
 			if (solutionObject.isLocked()) {
 				solutionObject.setLocked(false);	// update locked in DB
 				db.toggleLocks((UnlockableObject) solutionObject, false);	// db update lock status
-				addOutput("\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!");
+				
+				if (room.getRoomID() == 8)
+				{
+					addOutput("\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open! Revealing a set of stairs going up!");
+
+				}
+				
+				else
+				{	
+					addOutput("\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!");
+				}
 			}
 		}
 	}

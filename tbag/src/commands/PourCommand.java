@@ -27,7 +27,7 @@ public class PourCommand extends UserCommand {
 					if (item.isPourable()) {
 						if (object.isCoverable()) {
 							if (!object.isCovered()) {						
-								game.pour(object, item, getPlayer(), puzzle, noun, location);								
+								game.pour(object, item, getPlayer(), puzzle, noun, location);														
 							} else {
 								game.setOutput("This object is already covered.");
 							}

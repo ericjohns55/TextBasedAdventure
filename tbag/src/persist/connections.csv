@@ -13,3 +13,13 @@
 7|8|north
 8|7|south
 8|9|west
+9|8|east
+9|10|north
+10|9|south
+10|11|east
+11|10|west
+11|12|east
+12|11|west
+12|13|south
+13|12|north
+13|14|south

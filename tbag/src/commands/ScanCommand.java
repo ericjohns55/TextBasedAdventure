@@ -31,12 +31,16 @@ public class ScanCommand extends UserCommand {
 							{	
 								if (noun.equals(puzzle.getSolution()))
 								{	
+									
 									game.setOutput("Scanned " + noun + " on the " + location + ".");
 
 									RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
 									toUnlock.setLocked(false);
 									game.setOutput("\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open!");
 
+									
+									
+									
 								}								
 								else 
 								{

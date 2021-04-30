@@ -24,7 +24,6 @@ public class DropCommand extends UserCommand {
 			} else {
 				if (room.hasObject(location)) {
 					RoomObject roomObject = room.getObject(location);
-					
 					if (roomObject.canHoldItems()) {						
 						game.dropItem(roomObject, noun, getPlayer(), puzzle, location);
 					} else {

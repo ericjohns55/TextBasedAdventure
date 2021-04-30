@@ -112,8 +112,8 @@ public class Command {
 		replace = replace.replace("right", "west");
 		replace = replace.replace("up", "north");
 		replace = replace.replace("down", "south");
-		replace = replace.replace("yes", "y");
-		replace = replace.replace("no", "n");
+//		replace = replace.replace("yes", "y");
+//		replace = replace.replace("no", "n");
 		return replace;
 	}
 	

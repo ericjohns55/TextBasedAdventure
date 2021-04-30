@@ -31,12 +31,14 @@ public class LookCommand extends UserCommand {
 				if (object.isLocked()) {
 					UnlockableObject painting = (UnlockableObject) object;
 					
+					// It isnt registering this line right here, maybe it has something to do with the instance above
 					if (painting.getCanBeLookedAtNow() == false)
 					{	
 						// So this checks if our unlockable object is an object where you need something to look at it with
 						// and checking if you have what it needs in your inventory
 						// Before it was just setting it to unlocked and you would have to examine again,
 						// but now it sends it out immediately.
+						
 						if (inventory.contains(painting.getUnlockItem()))
 						{
 							game.setOutput("This " + room.getObject(noun).getName() + " reads " + room.getObject(noun).getDescription() + ".");

@@ -3,7 +3,7 @@
 3|apple|Fruit.|0.5|0|1|0|0|0|0|0|0|102
 4|phonebook|Full of numbers.|2.5|0|1|0|0|0|0|0|0|102
 5|cookbook|Full of recipes.|2|0|1|0|0|0|0|0|0|102
-6|plate|Can holf food.|1|0|1|0|0|0|0|0|0|102
+6|plate|Can hold food.|1|0|1|0|0|0|0|0|0|102
 7|small key|This small key seems to be able to unlocks something...|0.1|0|1|0|0|0|0|0|0|102
 8|note|(8/2(2+2)) + 1000|0.1|0|1|0|0|0|0|1|0|1031
 9|Crumbling Land Record|This record has a song by Pink Floyd on it.|0.7|0|1|0|0|0|0|0|0|1061
@@ -17,4 +17,27 @@
 18|note|That lamb heart looks like it has something in it...|0.1|0|1|0|0|0|0|1|0|1071
 19|blood vial|This vial contains blood.|0.2|0|1|0|0|0|0|0|1|108
 20|note|You may want to pour that vial on something.|0.1|0|1|0|0|0|0|1|0|108
-9999|none|does not exist|0|0|0|0|0|0|0|0|0|9999
+21|circular glass shard|This shard of glass is circular.|0.6|0|1|0|0|0|0|0|0|110
+22|rectangular glass shard|This shard of glass is rectangular.|0.6|0|1|0|0|0|0|0|0|110
+23|jagged glass shard|This shard of glass is jagged.|0.6|0|1|0|0|0|0|0|0|110
+24|triangular glass shard|This shard of glass is triangular.|0.6|0|1|0|0|0|0|0|0|110
+25|lighter|This is a lighter with about 1 flicker left.|0.3|0|1|0|0|0|0|0|0|110
+26|glasses|This is a pair of glasses.|0.6|0|1|0|0|0|0|0|0|110
+27|red ball|This is a red ball.|0.8|0|1|0|0|0|0|0|0|110
+28|code|862451|0|0|0|0|0|0|0|1|0|110
+29|switchblade|This is a type of knife.|0.8|0|1|0|0|0|0|0|0|1122
+30|severed finger|Looks like someone lost a finger!|0.3|0|1|0|0|0|0|0|0|10031
+32|blanket|This blanket could keep you warm.|1.2|0|1|0|0|0|0|0|0|1123
+33|lamp|An object to see in the dark.|2.3|0|1|0|0|0|0|0|0|1122
+34|water glass|This glass has water in it.|0.5|0|1|0|0|0|0|0|0|1122
+35|amber pair of eyes|These pair of eyes are amber.|0.2|0|1|0|0|0|0|0|0|1144
+36|blue pair of eyes|These pair of eyes are blue.|0.2|0|1|0|0|0|0|0|0|1144
+37|brown pair of eyes|These pair of eyes are brown.|0.2|0|1|0|0|0|0|0|0|1144
+38|gray pair of eyes|These pair of eyes are gray.|0.2|0|1|0|0|0|0|0|0|1144
+39|green pair of eyes|These pair of eyes are green.|0.2|0|1|0|0|0|0|0|0|1144
+40|hazel pair of eyes|These pair of eyes are hazel.|0.2|0|1|0|0|0|0|0|0|1144
+41|red pair of eyes|These pair of eyes are red.|0.2|0|1|0|0|0|0|0|0|1144
+42|note|It seems my latest creature is almost complete now if I could only find the right pair of eyes for it...          -H|0.1|0|1|0|0|0|0|1|0|1142
+43|sticky gloves|These gloves are verrry sticky. They're probably able to hold onto/stick to anything.|1.5|0|1|0|0|0|0|0|0|1142
+44|broken beaker|This scientific beaker seems to be broken.|0.4|0|1|0|0|0|0|0|0|1142
+45|can of soda|This can is full of soda.|0.8|0|1|0|0|0|0|0|0|1142

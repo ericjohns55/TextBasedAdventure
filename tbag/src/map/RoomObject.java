@@ -8,6 +8,7 @@ public class RoomObject {
 	private String direction;
 	
 	private String covered;
+	private String fed;
 	
 	private boolean unlockable;
 	private boolean locked;
@@ -44,6 +45,7 @@ public class RoomObject {
 		this.canBeFed = false;
 		this.previouslyUnlocked = false;		
 		this.covered = "";
+		this.fed = "";
 		
 		this.canScan = false;
 		
@@ -203,6 +205,18 @@ public class RoomObject {
 	
 	public void setCanBeFed(boolean canBeFed) {
 		this.canBeFed = canBeFed;
+	}
+
+	public void feed(String toFeed) {
+		fed = toFeed;
+	}
+	
+	public String getFed() {
+		return fed;
+	}
+	
+	public boolean isFed() {
+		return fed.length() > 1;
 	}
 	
 	public boolean canScan() {
