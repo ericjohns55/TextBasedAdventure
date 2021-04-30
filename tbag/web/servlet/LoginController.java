@@ -13,10 +13,10 @@ public class LoginController {
 	}
 	
 	public boolean attemptLogin(String username, String password) {
-		return false;
+		return database.validateLogin(username, password);
 	}
 	
 	public void createAccount(String username, String password) {
-		
+		database.addUser(username, password);
 	}
 }
