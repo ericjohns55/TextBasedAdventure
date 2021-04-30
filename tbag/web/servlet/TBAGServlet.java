@@ -27,10 +27,10 @@ public class TBAGServlet extends HttpServlet {
 		
 		req.setAttribute("story", player.getLastOutput());
 		req.setAttribute("moves", "Moves: " + player.getMoves());
-		req.setAttribute("room", "Room " + player.getRoomID() + "/24");
+		req.setAttribute("room", String.format("Room %d/16 (%.2f%%)", player.getRoomID(), player.getRoomID() / 16.0 * 100));
 		req.setAttribute("duration", 900);
 		
-		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
+		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}
 	
 	@Override
@@ -62,6 +62,6 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("moves", "Moves: " + player.getMoves());
 		req.setAttribute("room", String.format("Room %d/16 (%.2f%%)", player.getRoomID(), player.getRoomID() / 16.0 * 100));
 
-		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
+		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}
 }

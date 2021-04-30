@@ -103,7 +103,7 @@
 	</head>
 
 	<body onload="autoScroll();" >
-		<form action="${pageContext.servletContext.contextPath}/tbag" method="post">			
+		<form action="${pageContext.servletContext.contextPath}/game" method="post">			
 			<center>
 				<p class="title">Welcome to the Text Based Adventure Game</p>
 
