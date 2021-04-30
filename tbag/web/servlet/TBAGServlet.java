@@ -15,8 +15,19 @@ public class TBAGServlet extends HttpServlet {
 	private boolean firstRun = true;
 	private String pastInputs = "";
 	
+	private boolean loggedIn = false;
+	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String username = (String) req.getSession().getAttribute("success");
+		
+		if (username != null) {
+			loggedIn = true;
+		} else if (!loggedIn) {
+			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
+			return;
+		}
+		
 		Game game = new Game();
 		Player player = game.getPlayer();
 		

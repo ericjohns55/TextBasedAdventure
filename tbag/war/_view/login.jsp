@@ -28,6 +28,14 @@
 				font-family: Arial;
 				color: white;
 			}
+			
+			
+			.error {
+				font-size: 16px;
+				font-family: Arial;
+				font-weight: bold;
+				color: red;
+			}
 		</style>
 	</head>
 
