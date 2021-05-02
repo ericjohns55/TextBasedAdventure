@@ -19,4 +19,4 @@
 19|jar|This jar might contain items.|south|0|0|0| |0|0|0|1|0|0|0| |0| |14|1144
 20|potion ingredient cabinet|This potion ingredient cabinet can hold potion ingredients.|north|0|0|0| |0|0|0|1|0|0|0| |0| |15|1151
 21|small table|This small table can hold things.|north|0|0|0| |0|0|0|1|0|0|0| |0| |15|1152
-22|witch's pot|This witch's pot can hold ingredients for making potions.|south|0|0|0| |0|0|0|1|0|0|0| |0| |15|1153
+22|witch's pot|This witch's pot can hold ingredients for making potions.|south|1|1|0| |0|0|0|1|0|0|0| |0| |15|1153

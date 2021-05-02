@@ -201,6 +201,30 @@ public class Game {
 				}
 			}
 		}
+		
+		
+		// This is for the potion puzzle
+		if (puzzle.getDescription().equals("Witch's Lair")) {
+			double weightSolution = Double.parseDouble(puzzle.getSolution());
+			
+			if (container.isBlockingExit() && container.getInventory().getInventorySize() >= 3)
+			{
+				setOutput("\nThis " + location + " is full! Try taking items from the witch's pot and replacing them with different ones.");
+			}
+			
+			if (container.getInventory().getCurrentWeight() >= weightSolution && container.getInventory().getInventorySize() == 3) 
+			{
+				System.out.println(puzzle.getUnlockObstacle());
+				RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
+				
+				if (obstacle.isLocked()) {	
+					obstacle.setLocked(false);
+					obstacle.setPreviouslyUnlocked(true);
+					db.toggleLocks((UnlockableObject) obstacle, false); // update obstacle locked and previously unlocked
+					setOutput("\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.");
+				}
+			}
+		}
 	}
 	
 	public void dropItem(Room room, String item, Player player, Puzzle puzzle) {
