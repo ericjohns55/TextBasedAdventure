@@ -313,6 +313,8 @@ public class DerbyDatabase implements IDatabase {
 						boolean previouslyUnlocked = resultSet.getInt(index++) == 1;
 						boolean canBeFed = resultSet.getInt(index++) == 1;
 						String fed = resultSet.getString(index++);
+						boolean canBeScanned = resultSet.getInt(index++) == 1;
+						String scanned = resultSet.getString(index++);
 						int roomID = resultSet.getInt(index++);
 						int inventoryID = resultSet.getInt(index++);
 						
@@ -327,6 +329,8 @@ public class DerbyDatabase implements IDatabase {
 						object.setPreviouslyUnlocked(previouslyUnlocked);
 						object.setCanBeFed(canBeFed);
 						object.feed(fed);
+						object.setCanBeScanned(canBeScanned);
+						object.scanned(scanned);
 						object.setInventoryID(inventoryID);
 						object.setInventory(getInventoryByID(inventoryID));
 						
@@ -369,6 +373,7 @@ public class DerbyDatabase implements IDatabase {
 							boolean canBeLookedAtNow = resultSet2.getInt(index++) == 1;
 							String fed = resultSet2.getString(index++);
 							boolean canBeFed = resultSet2.getInt(index++) == 1;
+							boolean canBeClimbed = resultSet2.getInt(index++) == 1;
 							int unlockItemID = resultSet2.getInt(index++);
 							
 							Item unlockItem = null;
@@ -394,6 +399,7 @@ public class DerbyDatabase implements IDatabase {
 							object.feed(fed);
 							object.setCanBeFed(canBeFed);
 							object.setCanBeLookedAtNow(canBeLookedAtNow);
+							object.setCanBeClimbed(canBeClimbed);
 							
 							return object;
 						}
@@ -573,6 +579,7 @@ public class DerbyDatabase implements IDatabase {
 						String fed = resultSet.getString(index++);
 						boolean canBeFed = resultSet.getInt(index++) == 1;
 						boolean canBeLookedAtNow = resultSet.getInt(index++) == 1;
+						boolean canBeClimbed = resultSet.getInt(index++) == 1;
 						int unlockItemID = resultSet.getInt(index++);
 						
 						Item unlockItem = null;
@@ -598,6 +605,7 @@ public class DerbyDatabase implements IDatabase {
 						object.feed(fed);
 						object.setCanBeFed(canBeFed);
 						object.setCanBeLookedAtNow(canBeLookedAtNow);
+						object.setCanBeClimbed(canBeClimbed);
 						
 						
 
@@ -887,6 +895,8 @@ public class DerbyDatabase implements IDatabase {
 						boolean previouslyUnlocked = resultSet.getInt(index++) == 1;
 						boolean canBeFed = resultSet.getInt(index++) == 1;
 						String fed = resultSet.getString(index++);
+						boolean canBeScanned = resultSet.getInt(index++) == 1;
+						String scanned = resultSet.getString(index++);
 						int roomID = resultSet.getInt(index++);
 						int inventoryID = resultSet.getInt(index++);
 						
@@ -901,6 +911,8 @@ public class DerbyDatabase implements IDatabase {
 						object.setPreviouslyUnlocked(previouslyUnlocked);
 						object.setCanBeFed(canBeFed);
 						object.feed(fed);
+						object.setCanBeScanned(canBeScanned);
+						object.scanned(scanned);
 						object.setInventoryID(inventoryID);
 						object.setInventory(getInventoryByID(inventoryID));
 						
@@ -942,6 +954,7 @@ public class DerbyDatabase implements IDatabase {
 						String fed = resultSet2.getString(index++);
 						boolean canBeFed = resultSet2.getInt(index++) == 1;
 						boolean canBeLookedAtNow = resultSet2.getInt(index++) == 1;
+						boolean canBeClimbed = resultSet2.getInt(index++) == 1;
 						int unlockItemID = resultSet2.getInt(index++);
 							
 						Item unlockItem = null;
@@ -967,6 +980,7 @@ public class DerbyDatabase implements IDatabase {
 						object.feed(fed);
 						object.setCanBeFed(canBeFed);
 						object.setCanBeLookedAtNow(canBeLookedAtNow);
+						object.setCanBeClimbed(canBeClimbed);
 						object.setUnlockItemID(unlockItemID);
 						
 						
@@ -1558,6 +1572,8 @@ public class DerbyDatabase implements IDatabase {
 						"	previouslyUnlocked integer," +
 						"   canBeFed integer," +
 						"	fed varchar(40)," +
+						"   canBeScanned integer," +
+						"	scanned varchar(40)," +
 						"	roomID integer," +
 						"	inventoryID integer" +
 						")"
@@ -1599,6 +1615,7 @@ public class DerbyDatabase implements IDatabase {
 						"	fed varchar(40)," +
 						"   canBeFed integer," +
 						"	canBeLookedAtNow integer," +
+						"	canBeClimbed integer," +
 						"	unlockItemID integer" +		
 						")"
 					);	
@@ -1749,8 +1766,8 @@ public class DerbyDatabase implements IDatabase {
 					insertRooms.executeBatch();
 					
 					
-					insertRoomObjects = conn.prepareStatement("insert into roomObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, canBeFed, fed, roomID, inventoryID) " + 
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertRoomObjects = conn.prepareStatement("insert into roomObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, canBeFed, fed, canBeScanned, scanned, roomID, inventoryID) " + 
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (RoomObject roomObject : roomObjects) {
 						insertRoomObjects.setInt(1, roomObject.getObjectID());
@@ -1769,8 +1786,10 @@ public class DerbyDatabase implements IDatabase {
 						insertRoomObjects.setInt(14, roomObject.wasPreviouslyUnlocked() ? 1 : 0);
 						insertRoomObjects.setInt(15, roomObject.canBeFed() ? 1 : 0);
 						insertRoomObjects.setString(16, roomObject.getFed());
-						insertRoomObjects.setInt(17, roomObject.getRoomID());
-						insertRoomObjects.setInt(18, roomObject.getInventoryID());
+						insertRoomObjects.setInt(17, roomObject.canBeScanned() ? 1 : 0);
+						insertRoomObjects.setString(18, roomObject.getScanned());
+						insertRoomObjects.setInt(19, roomObject.getRoomID());
+						insertRoomObjects.setInt(20, roomObject.getInventoryID());
 						insertRoomObjects.addBatch();
 					}
 					
@@ -1809,8 +1828,8 @@ public class DerbyDatabase implements IDatabase {
 					insertPlayableObjects.executeBatch();
 					
 					
-					insertUnlockableObjects = conn.prepareStatement("insert into unlockableObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID, consumeItem, fed, canBeFed, canBeLookedAtNow, unlockItemID) " + 
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertUnlockableObjects = conn.prepareStatement("insert into unlockableObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID, consumeItem, fed, canBeFed, canBeLookedAtNow, canBeClimbed, unlockItemID) " + 
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (UnlockableObject unlockableObject : unlockableObjects) {
 						insertUnlockableObjects.setInt(1, unlockableObject.getObjectID());
@@ -1833,7 +1852,8 @@ public class DerbyDatabase implements IDatabase {
 						insertUnlockableObjects.setString(18, unlockableObject.getFed());
 						insertUnlockableObjects.setInt(19, unlockableObject.canBeFed() ? 1 : 0);
 						insertUnlockableObjects.setInt(20, unlockableObject.getCanBeLookedAtNow() ? 1 : 0);
-						insertUnlockableObjects.setInt(21, unlockableObject.getUnlockItemID());
+						insertUnlockableObjects.setInt(21, unlockableObject.canBeClimbed() ? 1 : 0);
+						insertUnlockableObjects.setInt(22, unlockableObject.getUnlockItemID());
 						insertUnlockableObjects.addBatch();
 					}
 					

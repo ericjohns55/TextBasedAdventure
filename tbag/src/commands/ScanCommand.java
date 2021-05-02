@@ -1,4 +1,5 @@
 package commands;
+import actor.Player;
 import game.Game;
 import items.Inventory;
 import map.Room;
@@ -15,6 +16,8 @@ public class ScanCommand extends UserCommand {
 		Inventory inventory = getInventory();
 		Puzzle puzzle = getPuzzle();
 		Game game = getGame();
+		Player player = getPlayer();
+
 		
 		if (location != null) 
 		{
@@ -22,31 +25,37 @@ public class ScanCommand extends UserCommand {
 			{
 				if (room.getObject(location) instanceof RoomObject) 
 				{
+					// Its pretty ugly but just by going off of the feed command with setting the object 
+					// to a similar thing is easier to implement
 					RoomObject object = (RoomObject) room.getObject(location);
-					if (object.canScan() == true) 
+					if (object.canBeScanned() == true) 
 					{
 						if (inventory.contains(noun)) 
 						{
 							if (inventory.contains(puzzle.getSolution()))
 							{	
+		
 								if (noun.equals(puzzle.getSolution()))
 								{	
-									
-									game.setOutput("Scanned " + noun + " on the " + location + ".");
 
-									RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
-									toUnlock.setLocked(false);
-									game.setOutput("\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open!");
+									if (!object.isScanned())
+									{
+										game.scanItem(object, player, puzzle, noun, location);														
+									} 
+									
+									else 
+									{
+										game.setOutput("No need to scan anything else here.");
+									}
 
-									
-									
-									
 								}								
 								else 
 								{
 									game.setOutput("The " + location + " can't scan that!");
 
+								
 								}
+
 							}
 							else 
 							{
@@ -62,7 +71,7 @@ public class ScanCommand extends UserCommand {
 					}	
 					else
 					{
-						game.setOutput("The " + location + " can't scan that!");
+						game.setOutput("The " + location + " doesn't scan items.");
 
 					}		
 				} 		

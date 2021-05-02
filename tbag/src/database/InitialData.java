@@ -225,6 +225,8 @@ public class InitialData {
 				boolean previouslyUnlocked = Integer.parseInt(iter.next()) == 1;
 				boolean canBeFed = Integer.parseInt(iter.next()) == 1;
 				String fed = iter.next();
+				boolean canBeScanned = Integer.parseInt(iter.next()) == 1;
+				String scanned = iter.next();
 				int roomID = Integer.parseInt(iter.next());
 				int inventoryID = Integer.parseInt(iter.next());
 				
@@ -238,6 +240,8 @@ public class InitialData {
 				roomObject.setPreviouslyUnlocked(previouslyUnlocked);
 				roomObject.setCanBeFed(canBeFed);
 				roomObject.feed(fed);
+				roomObject.setCanBeScanned(canBeScanned);
+				roomObject.scanned(scanned);
 				roomObject.setInventoryID(inventoryID);
 				roomObject.setObjectID(objectID);
 				
@@ -351,6 +355,7 @@ public class InitialData {
 				String fed = iter.next();
 				boolean canBeFed = Integer.parseInt(iter.next()) == 1;
 				boolean canBeLookedAtNow = Integer.parseInt(iter.next()) == 1;
+				boolean canBeClimbed = Integer.parseInt(iter.next()) == 1;
 				int unlockItemID = Integer.parseInt(iter.next());
 				
 				Item unlockItem = null;
@@ -375,7 +380,7 @@ public class InitialData {
 				unlockableObject.feed(fed);
 				unlockableObject.setCanBeFed(canBeFed);	
 				unlockableObject.setCanBeLookedAtNow(canBeLookedAtNow);
-				
+				unlockableObject.setCanBeClimbed(canBeClimbed);
 				
 				unlockableObjectsList.add(unlockableObject);
 			}

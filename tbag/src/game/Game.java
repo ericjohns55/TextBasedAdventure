@@ -142,14 +142,54 @@ public class Game {
 		Inventory objectInventory = container.getInventory();
 		
 		Item toRemove = player.getInventory().removeItem(item);
-		objectInventory.addItem(item, toRemove);
-		setOutput("You placed the " + item + " on the " + location + "."); 
-		db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
 		
+		if (puzzle.getDescription().equals("Lab Room"))
+		{
+
+			// It comes in here when it you try to put anything on a different room object aka the counter
+			//if (location.equals("cadaver"))
+			if (container.isBlockingExit() && container.getInventory().getCurrentWeight() >= 0.2)
+			{
+				setOutput("\nThis " + location + "'s eye sockets are full already!");
+			}
+			
+			else 
+			{	
+				objectInventory.addItem(item, toRemove);
+				addOutput("You placed the " + item + " in the " + location + "."); 
+				db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
+				
+				if (objectInventory.contains(puzzle.getSolution())) 
+				{
+					System.out.println(puzzle.getUnlockObstacle());
+					RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
+					
+					if (obstacle.isLocked()) {	
+						obstacle.setLocked(false);
+						// What is this doing? because it should be unlocking the door
+						db.toggleLocks((UnlockableObject) obstacle, false);	// db update lock status
+					//	obstacle.setPreviouslyUnlocked(true);
+
+						
+						addOutput("\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.");
+					}
+				}
+			}
+			
+		}
+		
+		else
+		{
+			objectInventory.addItem(item, toRemove);
+			setOutput("You placed the " + item + " on the " + location + "."); 
+			db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
+		}
+			
 		if (puzzle.getDescription().equals("weightPuzzle")) {
 			double weightSolution = Double.parseDouble(puzzle.getSolution());
 			
-			if (objectInventory.getCurrentWeight() >= weightSolution) {
+			if (objectInventory.getCurrentWeight() >= weightSolution) 
+			{
 				System.out.println(puzzle.getUnlockObstacle());
 				RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
 				
@@ -217,13 +257,59 @@ public class Game {
 				
 	}
 	
-	
 	// Put your scan and climb commands in here
+	public void climbObject(RoomObject object, Player player, Puzzle puzzle, String noun) 
+	{
+				
+			
+		int roomID = player.getRoom().getExit(object.getName());
+		
+		if (roomID != -1) {
+			player.setRoomID(roomID);	
+			
+			db.moveRooms(player, roomID);  // update roomID in database
+			
+			addOutput("You climbed the " + object.getName() + "\n\n");
+			addOutput(db.getDescription(player.getRoomID()));	// grab room description from DB
+		} else {
+			addOutput("There is not an exit here!" + object.getName());
+		}
+		
+		/*
+				int roomID = player.getRoom().getExit(puzzle.getUnlockObstacle());
+		
+
+				
+				player.setRoomID(roomID);	
+				
+				db.moveRooms(player, roomID);  // update roomID in database
+			
+				setOutput("You climbed the " + noun + ".");
+				
+				addOutput(db.getDescription(player.getRoomID()));	// grab room description from DB
+				
+			
+				
+				int roomID = player.getRoom().getExit(direction);
+				
+				if (roomID != -1) {
+					player.setRoomID(roomID);	
+					
+					db.moveRooms(player, roomID);  // update roomID in database
+					
+					addOutput("You walk " + direction + "\n\n");
+					addOutput(db.getDescription(player.getRoomID()));	// grab room description from DB
+				} else {
+					addOutput("There is not an exit here!");
+				}
+		*/		
+	}
+	
 	public void scanItem(RoomObject object, Player player, Puzzle puzzle, String noun, String location) {
 
 		// pour(RoomObject object, Item item, Player player, Puzzle puzzle, String noun, String location)
 		// This transfers the object 
-		object.scan(noun);
+		object.scanned(noun);
 		
 		Item toScan = player.getInventory().getItem(noun);
 		//db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
@@ -235,7 +321,7 @@ public class Game {
 			db.consumeItem(toScan);
 		}
 		
-		if (puzzle.getSolution().equals(object.getFed())) 
+		if (puzzle.getSolution().equals(object.getScanned())) 
 		{
 			
 			RoomObject toUnlock = player.getRoom().getObject(puzzle.getUnlockObstacle());
@@ -246,16 +332,13 @@ public class Game {
 				// What is this doing? because it should be unlocking the door
 				db.toggleLocks((UnlockableObject) toUnlock, false);	// db update lock status
 				
-
-				// This changes the status of the hellhound, but we want the door and the hellhound
-				// to be updated. Want hellhound to move out of the way and for the door to open.
-				addOutput("\nThe " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open!");
+				addOutput("\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open!");
 				object.isScanned();
 			}
 		}
 		
-}
-	
+	}
+
 	
 	public boolean play(PlayableObject object, Item item, Player player, Puzzle puzzle, String noun, String location) {
 		object.getInventory().addItem(noun, item);
