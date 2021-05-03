@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Mon May 03 15:46:17 EDT 2021:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0179-33c4-5e95-00000825c860 
-on database directory C:\CS320-Windows98-DB\tbag.db with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/Eric/Github/TextBasedAdventure/tbag/lib/derby.jar
+Mon May 03 17:35:06 EDT 2021:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0179-3427-fc45-000007e4a9a0 
+on database directory C:\CS320-Windows98-DB\tbag.db with class loader sun.misc.Launcher$AppClassLoader@2a139a55 
+Loaded from file:/C:/Users/Eric/OneDrive/School/Spring%202021%20Semester/Software%20Engineering%20and%20Design/Windows98/TextBasedAdventure/tbag/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_271-b09
-user.dir=C:\Users\Eric\Github\TextBasedAdventure\tbag
+user.dir=C:\Users\Eric\OneDrive\School\Spring 2021 Semester\Software Engineering and Design\Windows98\TextBasedAdventure\tbag
 os.name=Windows 10
 os.arch=amd64
 os.version=10.0

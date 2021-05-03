@@ -232,6 +232,7 @@ public class DerbyDatabase implements IDatabase {
 						
 						int index = 1;
 						
+						resultSet.getInt(index++);	// CONSUME GAME ID
 						int itemID = resultSet.getInt(index++);
 						String name = resultSet.getString(index++);
 						String description = resultSet.getString(index++);
@@ -305,7 +306,8 @@ public class DerbyDatabase implements IDatabase {
 						found = true;
 						
 						int index = 1;
-						
+
+						resultSet.getInt(index++);	// CONSUME GAME ID
 						int objectID = resultSet.getInt(index++);
 						String name = resultSet.getString(index++);
 						String description = resultSet.getString(index++);
@@ -362,7 +364,8 @@ public class DerbyDatabase implements IDatabase {
 						while (resultSet2.next()) {
 							found = true;
 							int index = 1;
-							
+
+							resultSet2.getInt(index++);	// CONSUME GAME ID
 							int objectID = resultSet2.getInt(index++);
 							String name = resultSet2.getString(index++);
 							String description = resultSet2.getString(index++);
@@ -432,7 +435,8 @@ public class DerbyDatabase implements IDatabase {
 						while (resultSet3.next()) {
 							found = true;
 							int index = 1;
-							
+
+							resultSet3.getInt(index++);	// CONSUME GAME ID
 							int objectID = resultSet3.getInt(index++);
 							String name = resultSet3.getString(index++);
 							String description = resultSet3.getString(index++);
@@ -583,7 +587,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					while (resultSet.next()) {
 						int index = 1;
-						
+
+						resultSet.getInt(index++);	// CONSUME GAME ID
 						int objectID = resultSet.getInt(index++);
 						String name = resultSet.getString(index++);
 						String description = resultSet.getString(index++);
@@ -631,9 +636,6 @@ public class DerbyDatabase implements IDatabase {
 						object.setCanBeFed(canBeFed);
 						object.setCanBeLookedAtNow(canBeLookedAtNow);
 						object.setCanBeClimbed(canBeClimbed);
-						
-						
-
 					}
 					
 					return object;
@@ -670,7 +672,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					while (resultSet.next()) {
 						int index = 1;
-						
+
+						resultSet.getInt(index++);	// CONSUME GAME ID
 						int puzzleID = resultSet.getInt(index++);
 						String description = resultSet.getString(index++);
 						String solution = resultSet.getString(index++);
@@ -701,7 +704,8 @@ public class DerbyDatabase implements IDatabase {
 						
 						while (resultSet2.next()) {							
 							int index = 1;
-							
+
+							resultSet2.getInt(index++);	// CONSUME GAME ID
 							int puzzleID = resultSet2.getInt(index++);
 							String description = resultSet2.getString(index++);
 							String solution = resultSet2.getString(index++);
@@ -824,7 +828,8 @@ public class DerbyDatabase implements IDatabase {
 						int index = 1;
 						
 						found = true;
-						
+
+						resultSet2.getInt(index++);	// CONSUME GAME ID
 						int itemID = resultSet2.getInt(index++);
 						String name = resultSet2.getString(index++);
 						String description = resultSet2.getString(index++);
@@ -908,7 +913,8 @@ public class DerbyDatabase implements IDatabase {
 						found = true;
 						
 						int index = 1;
-						
+
+						resultSet.getInt(index++);	// CONSUME GAME ID
 						int objectID = resultSet.getInt(index++);
 						String name = resultSet.getString(index++);
 						String description = resultSet.getString(index++);
@@ -964,7 +970,8 @@ public class DerbyDatabase implements IDatabase {
 						int index = 1;
 						
 						found = true;
-						
+
+						resultSet2.getInt(index++);	// CONSUME GAME ID
 						int objectID = resultSet2.getInt(index++);
 						String name = resultSet2.getString(index++);
 						String description = resultSet2.getString(index++);
@@ -1035,7 +1042,8 @@ public class DerbyDatabase implements IDatabase {
 						int index = 1;
 						
 						found = true;
-						
+
+						resultSet3.getInt(index++);	// CONSUME GAME ID
 						int objectID = resultSet3.getInt(index++);
 						String name = resultSet3.getString(index++);
 						String description = resultSet3.getString(index++);
