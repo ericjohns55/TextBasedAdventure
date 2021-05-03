@@ -31,7 +31,7 @@ public class TBAGServlet extends HttpServlet {
 			return;
 		}
 		
-		Game game = new Game();
+		Game game = new Game(gameID);
 		Player player = game.getPlayer();
 		
 		if (firstRun) {
@@ -49,7 +49,7 @@ public class TBAGServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
-		Game game = new Game();
+		Game game = new Game(gameID);
 		Player player = game.getPlayer();
 		
 		String text = req.getParameter("userInput");

@@ -29,22 +29,17 @@ public class Game {
 	
 	private int gameID;
 	
-	public Game() {
-		DatabaseProvider.setInstance(new DerbyDatabase());
+	public Game(int gameID) {
+		DatabaseProvider.setInstance(new DerbyDatabase(gameID));
 		db = DatabaseProvider.getInstance();	
 		
 		this.player = db.getPlayer(0);
 		this.player.setGame(this);
 		this.room = db.getRoom(player.getRoomID());
 		this.output = "";
-		this.gameID = 0;
+		this.gameID = gameID;
 	}
 	
-	public Game(int roomID) {
-		this();
-		player.setRoomID(roomID);
-		room = db.getRoom(roomID);
-	}
 	public void setOutput(String output) {
 		this.output = output;
 	}

@@ -37,12 +37,6 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public Inventory getPlayerInventory(Player player) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Inventory getInventoryByID(int id) {
 		// TODO Auto-generated method stub
 		return null;

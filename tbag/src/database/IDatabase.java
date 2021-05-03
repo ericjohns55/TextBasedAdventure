@@ -16,7 +16,6 @@ import puzzle.Puzzle;
 public interface IDatabase {
 	public Item getItemByID(int itemID);
 	public RoomObject getRoomObjectByID(int objectID);
-	public Inventory getPlayerInventory(Player player);
 	public Inventory getInventoryByID(int id);
 	public List<RoomObject> findAllObjects(Room room);	
 	public List<Player> getAllPlayers();

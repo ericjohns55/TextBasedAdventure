@@ -8,7 +8,7 @@ public class LoginController {
 	private IDatabase database;
 	
 	public LoginController() {
-		DatabaseProvider.setInstance(new DerbyDatabase());
+		DatabaseProvider.setInstance(new DerbyDatabase(0));
 		database = DatabaseProvider.getInstance();	
 	}
 	

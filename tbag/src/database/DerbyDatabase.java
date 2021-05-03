@@ -37,9 +37,11 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	private static final int MAX_ATTEMPTS = 10;
+	private int gameID;
 
-	
-	
+	public DerbyDatabase(int gameID) {
+		this.gameID = gameID;
+	}
 	
 	// wrapper SQL transaction function that calls actual transaction function (which has retries)
 	public<ResultType> ResultType executeTransaction(Transaction<ResultType> txn) {
@@ -108,8 +110,9 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet = null;
 				
 				try {
-					stmt = conn.prepareStatement("select rooms.* from rooms where rooms.roomID = ?");
+					stmt = conn.prepareStatement("select rooms.* from rooms where rooms.roomID = ? and rooms.gameID = ?");
 					stmt.setInt(1, roomID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -118,6 +121,7 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet.next()) {
 						int index = 1;
 						
+						resultSet.getInt(index++);	// CONSUME GAME ID
 						int roomID = resultSet.getInt(index++);
 						String description = resultSet.getString(index++);
 						int inventoryID = resultSet.getInt(index++);
@@ -163,8 +167,9 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet = null;
 				
 				try {
-					stmt = conn.prepareStatement("select players.* from players where players.actorID = ?");
+					stmt = conn.prepareStatement("select players.* from players where players.actorID = ? and players.gameID = ?");
 					stmt.setInt(1, playerID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -173,13 +178,15 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet.next()) {
 						int index = 1;
 						
+						int gameID = resultSet.getInt(index++);
 						int actorID = resultSet.getInt(index++);
 						int roomID = resultSet.getInt(index++);
 						int inventoryID = resultSet.getInt(index++);
 						int moves = resultSet.getInt(index++);
 						String lastOutput = resultSet.getString(index++);
-												
+						
 						player = new Player(roomID);
+						player.setGameID(gameID);
 						player.setActorID(actorID);
 						player.setMoves(moves);
 						player.setLastOutput(lastOutput);
@@ -209,9 +216,10 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"select items.* " + 
 								"from items " +
-									"where items.itemID = ?");	
+									"where items.itemID = ? and items.gameID = ?");	
 					
 					stmt.setInt(1, itemID);
+					stmt.setInt(2, gameID);
 					
 					Item item = null;
 					
@@ -283,10 +291,11 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"select roomObjects.* " +
 								"from roomObjects " + 
-									"where roomObjects.objectID = ?"
+									"where roomObjects.objectID = ? and roomObjects.gameID = ?"
 					);	
 					
 					stmt.setInt(1, objectID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -342,10 +351,11 @@ public class DerbyDatabase implements IDatabase {
 						stmt2 = conn.prepareStatement(
 								"select unlockableObjects.* " +
 									"from unlockableObjects " + 
-										"where unlockableObjects.objectID = ?"
+										"where unlockableObjects.objectID = ? and unlockableObjects.gameID = ?"
 						);	
 						
 						stmt2.setInt(1, objectID);
+						stmt2.setInt(2, gameID);
 						
 						resultSet2 = stmt2.executeQuery();
 						
@@ -411,10 +421,11 @@ public class DerbyDatabase implements IDatabase {
 						stmt3 = conn.prepareStatement(
 								"select playableObjects.* " +
 									"from playableObjects " + 
-										"where playableObjects.objectID = ?"
+										"where playableObjects.objectID = ? and playableObjects.gameID = ?"
 						);	
 						
 						stmt3.setInt(1, objectID);
+						stmt3.setInt(2, gameID);
 						
 						resultSet3 = stmt3.executeQuery();
 						
@@ -547,54 +558,6 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
-
-	@Override
-	public Inventory getPlayerInventory(Player player) {
-		return executeTransaction(new Transaction<Inventory>() {
-			@Override
-			public Inventory execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
-				ResultSet resultSet = null;
-				
-				try {
-					stmt = conn.prepareStatement(
-							"select items.itemID " + 
-								"from items, inventories " +
-									"where inventories.inventoryID = ? and items.inventoryID = inventories.inventoryID");	
-					
-					stmt.setInt(1, player.getInventoryID());
-					
-					
-					Inventory inventory = new Inventory();
-					
-					resultSet = stmt.executeQuery();
-					
-					boolean found = false;
-					
-					while (resultSet.next()) {
-						found = true;
-						
-						int index = 1;
-						
-						int itemID = resultSet.getInt(index++);
-						
-						Item item = getItemByID(itemID);
-						
-						inventory.addItem(item.getName(), item);
-					}
-					
-					if (!found) {
-						System.out.println("Could not find any items to populate player inventory.");
-					}
-					
-					return inventory;
-				} finally {
-					DBUtil.closeQuietly(resultSet);
-					DBUtil.closeQuietly(stmt);
-				}
-			}
-		});
-	}
 	
 	@Override
 	public UnlockableObject getUnlockableObjectByID(int objectID) {
@@ -608,10 +571,11 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"select unlockableObjects.* " +
 								"from unlockableObjects " + 
-									"where unlockableObjects.objectID = ?"
+									"where unlockableObjects.objectID = ? and unlockableObjects.gameID = ?"
 					);	
 					
 					stmt.setInt(1, objectID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -694,10 +658,11 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement("select puzzles.* " +
 							"from puzzles " + 
-								"where puzzles.roomID = ?"
+								"where puzzles.roomID = ? and puzzles.gameID = ?"
 					);
 					
 					stmt.setInt(1, room.getRoomID());
+					stmt.setInt(2, gameID);
 					
 					Puzzle puzzle = null;
 					
@@ -726,10 +691,11 @@ public class DerbyDatabase implements IDatabase {
 					if (puzzle == null) {
 						stmt2 = conn.prepareStatement("select objectPuzzles.* " +
 								"from objectPuzzles " + 
-									"where objectPuzzles.roomID = ?"
+									"where objectPuzzles.roomID = ? and objectPuzzles.gameID = ?"
 						);
 						
 						stmt2.setInt(1, room.getRoomID());
+						stmt2.setInt(2, gameID);
 						
 						resultSet2 = stmt2.executeQuery();
 						
@@ -819,9 +785,10 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"select items.itemID " + 
 								"from items " +
-									"where items.inventoryID = ?");	
+									"where items.inventoryID = ? and items.gameID = ?");	
 					
 					stmt.setInt(1, id);
+					stmt.setInt(2, gameID);
 					
 					Inventory inventory = new Inventory();
 					inventory.setInventoryID(id);
@@ -846,9 +813,10 @@ public class DerbyDatabase implements IDatabase {
 					stmt2 = conn.prepareStatement(
 							"select compoundItems.* " + 
 								"from compoundItems " +
-									"where compoundItems.locationID = ?");	
+									"where compoundItems.locationID = ? and compoundItems.gameID = ?");	
 					
 					stmt2.setInt(1, id);
+					stmt2.setInt(2, gameID);
 					
 					resultSet2 = stmt2.executeQuery();
 					
@@ -924,10 +892,11 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"select roomObjects.* " +
 								"from roomObjects, rooms " + 
-									"where roomObjects.roomID = ? and roomObjects.roomID = rooms.roomID"
+									"where roomObjects.roomID = ? and roomObjects.roomID = rooms.roomID and roomObjects.gameID = ?"
 					);	
 					
 					stmt.setInt(1, room.getRoomID());
+					stmt.setInt(2, gameID);
 					
 					List<RoomObject> roomObjects = new ArrayList<RoomObject>();
 					
@@ -983,10 +952,11 @@ public class DerbyDatabase implements IDatabase {
 					stmt2 = conn.prepareStatement(
 							"select unlockableObjects.* " +
 								"from unlockableObjects, rooms " + 
-									"where unlockableObjects.roomID = ? and unlockableObjects.roomID = rooms.roomID"
+									"where unlockableObjects.roomID = ? and unlockableObjects.roomID = rooms.roomID and unlockableObjects.gameID = ?"
 					);	
 					
 					stmt2.setInt(1, room.getRoomID());
+					stmt2.setInt(2, gameID);
 					
 					resultSet2 = stmt2.executeQuery();
 					
@@ -1053,10 +1023,11 @@ public class DerbyDatabase implements IDatabase {
 					stmt3 = conn.prepareStatement(
 							"select playableObjects.* " +
 								"from playableObjects, rooms " + 
-									"where playableObjects.roomID = ? and playableObjects.roomID = rooms.roomID"
+									"where playableObjects.roomID = ? and playableObjects.roomID = rooms.roomID and playableObjects.gameID = ?"
 					);	
 					
 					stmt3.setInt(1, room.getRoomID());
+					stmt3.setInt(2, gameID);
 					
 					resultSet3 = stmt3.executeQuery();
 					
@@ -1113,8 +1084,6 @@ public class DerbyDatabase implements IDatabase {
 						System.out.println("Could not find any room objects.");
 					}
 					
-					// TODO: OBJECT PUZZLES
-					
 					return roomObjects;
 				} finally {
 					DBUtil.closeQuietly(stmt);
@@ -1137,7 +1106,9 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet = null;
 				
 				try {
-					stmt = conn.prepareStatement("select players.* from players");	
+					stmt = conn.prepareStatement("select players.* from players where players.playerID = ?");
+					
+					stmt.setInt(1, gameID);	
 					
 					List<Player> players = new ArrayList<Player>();
 					
@@ -1150,11 +1121,12 @@ public class DerbyDatabase implements IDatabase {
 						
 						int index = 1;
 
+						int gameID = resultSet.getInt(index++);
 						int actorID = resultSet.getInt(index++);
 						int roomID = resultSet.getInt(index++);
 						int inventoryID = resultSet.getInt(index++);
 						
-						Player actor = new Player(new Game(), roomID);
+						Player actor = new Player(new Game(gameID), roomID);
 						actor.setActorID(actorID);
 						actor.setRoomID(roomID);
 						actor.setInventoryID(inventoryID);
@@ -1185,15 +1157,17 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				
 				try {
-					stmt = conn.prepareStatement("update players set moves = ? where players.actorID = ?");
+					stmt = conn.prepareStatement("update players set moves = ? where players.actorID = ? and players.gameID = ?");
 					stmt.setInt(1, moves);
 					stmt.setInt(2, player.getActorID());
+					stmt.setInt(3, gameID);
 					
 					stmt.executeUpdate();
 					
-					stmt2 = conn.prepareStatement("update players set lastOutput = ? where players.actorID = ?");
+					stmt2 = conn.prepareStatement("update players set lastOutput = ? where players.actorID = ? and players.gameID = ?");
 					stmt2.setString(1, output);
 					stmt2.setInt(2, player.getActorID());
+					stmt2.setInt(3, gameID);
 					
 					return stmt2.executeUpdate();
 				} finally {
@@ -1212,10 +1186,11 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ? and items.gameID = ?");
 
 					stmt.setInt(1, inventory.getInventoryID());
 					stmt.setInt(2, item.getItemID());
+					stmt.setInt(3, gameID);
 
 					return stmt.executeUpdate();
 				} finally {
@@ -1233,10 +1208,11 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ? and items.gameID = ?");
 
 					stmt.setInt(1, destinationInventory.getInventoryID());
 					stmt.setInt(2, item.getItemID());
+					stmt.setInt(3, gameID);
 					
 					return stmt.executeUpdate();
 				} finally {
@@ -1255,17 +1231,19 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				
 				try {
-					stmt = conn.prepareStatement("update unlockableObjects set locked = ? where unlockableObjects.objectID = ?");
+					stmt = conn.prepareStatement("update unlockableObjects set locked = ? where unlockableObjects.objectID = ? and unlockableObjects.gameID = ?");
 
 					stmt.setInt(1, locked ? 1 : 0);
 					stmt.setInt(2, object.getObjectID());
+					stmt.setInt(3, gameID);
 					
 					stmt.executeUpdate();
 					
-					stmt2 = conn.prepareStatement("update unlockableObjects set previouslyUnlocked = ? where unlockableObjects.objectID = ?");
+					stmt2 = conn.prepareStatement("update unlockableObjects set previouslyUnlocked = ? where unlockableObjects.objectID = ? and unlockableObjects.gameID = ?");
 					
 					stmt2.setInt(1, !locked ? 1 : 0);
 					stmt2.setInt(2, object.getObjectID());
+					stmt2.setInt(3, gameID);
 
 					return stmt2.executeUpdate();
 				} finally {
@@ -1284,10 +1262,11 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update players set roomID = ? where players.actorID = ?");
+					stmt = conn.prepareStatement("update players set roomID = ? where players.actorID = ? and players.gameID = ?");
 
 					stmt.setInt(1, roomID);
 					stmt.setInt(2, player.getActorID());
+					stmt.setInt(3, gameID);
 
 					return stmt.executeUpdate();
 				} finally {
@@ -1306,15 +1285,16 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					if (object instanceof PlayableObject) {
-						stmt = conn.prepareStatement("update playableObjects set direction = ? where playableObjects.objectID = ?");
+						stmt = conn.prepareStatement("update playableObjects set direction = ? where playableObjects.objectID = ? and playableObjects.gameID = ?");
 					} else if (object instanceof UnlockableObject) {
-						stmt = conn.prepareStatement("update unlockableObjects set direction = ? where unlockableObjects.objectID = ?");
+						stmt = conn.prepareStatement("update unlockableObjects set direction = ? where unlockableObjects.objectID = ? and unlockableObjects.gameID = ?");
 					} else {
-						stmt = conn.prepareStatement("update roomObjects set direction = ? where roomObjects.objectID = ?");
+						stmt = conn.prepareStatement("update roomObjects set direction = ? where roomObjects.objectID = ? and roomObjects.gameID = ?");
 					}
 
 					stmt.setString(1, direction);
 					stmt.setInt(2, object.getObjectID());
+					stmt.setInt(3, gameID);
 
 					return stmt.executeUpdate();
 				} finally {
@@ -1333,21 +1313,23 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				
 				try {
-					stmt = conn.prepareStatement("update items set inventoryID = ? where items.inventoryID = ? and items.itemID = ?");
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.inventoryID = ? and items.itemID = ? and items.gameID = ?");
 
 					for (Item item : compoundItem.getInventory().getAllItems().values()) {
 						stmt.setInt(1, destinationInventory.getInventoryID());
 						stmt.setInt(2, compoundItem.getInventoryID());
 						stmt.setInt(3, item.getItemID());
+						stmt.setInt(4, gameID);
 						stmt.addBatch();
 					}
 
 					stmt.executeBatch();
 					
-					stmt2 = conn.prepareStatement("update compoundItems set locationID = ? where compoundItems.itemID = ?");
+					stmt2 = conn.prepareStatement("update compoundItems set locationID = ? where compoundItems.itemID = ? and compoundItems.gameID = ?");
 					
 					stmt2.setInt(1, -9999);
 					stmt2.setInt(2, compoundItem.getItemID());
+					stmt2.setInt(3, gameID);
 					
 					return stmt2.executeUpdate();
 				} finally {
@@ -1365,10 +1347,11 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ?");
+					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ? and items.gameID = ?");
 
 					stmt.setInt(1, -9999);
 					stmt.setInt(2, item.getItemID());
+					stmt.setInt(3, gameID);
 
 					return stmt.executeUpdate();
 				} finally {
@@ -1386,10 +1369,11 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update compoundItems set inventoryID = ? where compoundItems.itemID = ?");
+					stmt = conn.prepareStatement("update compoundItems set inventoryID = ? where compoundItems.itemID = ? and compoundItems.gameID = ?");
 
 					stmt.setInt(1, -9999);
 					stmt.setInt(2, item.getItemID());
+					stmt.setInt(3, gameID);
 
 					return stmt.executeUpdate();
 				} finally {
@@ -1428,10 +1412,11 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update playableObjects set playedNotes = ? where playableObjects.objectID = ?");
+					stmt = conn.prepareStatement("update playableObjects set playedNotes = ? where playableObjects.objectID = ? and playableObjects.gameID = ?");
 
 					stmt.setString(1, notes);
 					stmt.setInt(2, playableObject.getObjectID());
+					stmt.setInt(3, gameID);
 
 					return stmt.executeUpdate();
 				} finally {
@@ -1450,9 +1435,10 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet = null;
 				
 				try {
-					stmt = conn.prepareStatement("select rooms.description from rooms where rooms.roomID = ?");
+					stmt = conn.prepareStatement("select rooms.description from rooms where rooms.roomID = ? and rooms.gameID = ?");
 					
 					stmt.setInt(1, roomID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -1476,7 +1462,6 @@ public class DerbyDatabase implements IDatabase {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
 				PreparedStatement stmtCmpdItms = null;
-				PreparedStatement stmtInvs = null;
 				PreparedStatement stmtItms = null;	
 				PreparedStatement stmtObjPuzls = null;	
 				PreparedStatement stmtPlybleObjs = null;	
@@ -1491,6 +1476,7 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmtCmpdItms = conn.prepareStatement(
 						"create table compoundItems (" +
+						"   gameID integer," + 
 						"	itemID integer," +								
 						"	name varchar(40)," +
 						"	description varchar(255)," +
@@ -1513,13 +1499,9 @@ public class DerbyDatabase implements IDatabase {
 					
 					System.out.println("compoundItems table created");
 					
-					stmtInvs = conn.prepareStatement("create table inventories (inventoryID integer)");	
-					stmtInvs.executeUpdate();
-					
-					System.out.println("inventories table created");	
-					
 					stmtItms = conn.prepareStatement(
 						"create table items (" +
+						"   gameID integer," + 
 						"	itemID integer," +								
 						"	name varchar(40)," +
 						"	description varchar(255)," +
@@ -1541,6 +1523,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtObjPuzls = conn.prepareStatement(
 						"create table objectPuzzles (" +
+						"   gameID integer," + 
 						"	puzzleID integer," +								
 						"	description varchar(40)," +
 						"	solution varchar(255)," +
@@ -1559,6 +1542,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtPlybleObjs = conn.prepareStatement(
 						"create table playableObjects (" +
+						"   gameID integer," + 
 						"	objectID integer," +								
 						"	name varchar(40)," +
 						"	description varchar(255)," +								
@@ -1589,6 +1573,7 @@ public class DerbyDatabase implements IDatabase {
 								
 					stmtPlyrs = conn.prepareStatement(
 						"create table players (" +
+						"   gameID integer," + 
 						"	actorID integer," +
 						"	roomID integer," +
 						"	inventoryID integer," +
@@ -1615,6 +1600,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtPuzls = conn.prepareStatement(
 						"create table puzzles (" +
+						"   gameID integer," + 
 						"	puzzleID integer," +								
 						"	description varchar(40)," +
 						"	solution varchar(255)," +
@@ -1631,6 +1617,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtRmObjs = conn.prepareStatement(
 						"create table roomObjects (" +
+						"   gameID integer," + 
 						"	objectID integer," +								
 						"	name varchar(40)," +
 						"	description varchar(255)," +								
@@ -1659,6 +1646,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtRms = conn.prepareStatement(
 						"create table rooms (" +
+						"   gameID integer," + 
 						"	roomID integer," +			
 						"	description varchar(400)," +
 						"	inventoryID integer" +
@@ -1670,6 +1658,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtUnlckbleObjs = conn.prepareStatement(
 						"create table unlockableObjects (" +
+						"   gameID integer," + 
 						"	objectID integer," +								
 						"	name varchar(40)," +
 						"	description varchar(255)," +								
@@ -1709,7 +1698,6 @@ public class DerbyDatabase implements IDatabase {
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmtCmpdItms);
-					DBUtil.closeQuietly(stmtInvs);
 					DBUtil.closeQuietly(stmtItms);
 					DBUtil.closeQuietly(stmtObjPuzls);
 					DBUtil.closeQuietly(stmtPlybleObjs);
@@ -1768,136 +1756,142 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertTestUser = null;
 				
 				try {
-					insertItems = conn.prepareStatement("insert into items (itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, inventoryID) " +
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertItems = conn.prepareStatement("insert into items (gameID, itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, inventoryID) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (Item item : items) {
-						insertItems.setInt(1, item.getItemID());
-						insertItems.setString(2, item.getName());
-						insertItems.setString(3, item.getDescription());
-						insertItems.setDouble(4, item.getWeight());
-						insertItems.setInt(5, item.isInteractable() ? 1 : 0);
-						insertItems.setInt(6, item.canBePickedUp() ? 1 : 0);
-						insertItems.setInt(7, item.consumeOnUse() ? 1 : 0);
-						insertItems.setInt(8, item.inInventory() ? 1 : 0);
-						insertItems.setInt(9, item.isEquipped() ? 1 : 0);
-						insertItems.setInt(10, item.isEquippable() ? 1 : 0);
-						insertItems.setInt(11, item.isReadable() ? 1 : 0);
-						insertItems.setInt(12, item.isPourable() ? 1 : 0);
-						insertItems.setInt(13, item.getLocationID());
+						insertItems.setInt(1, gameID);
+						insertItems.setInt(2, item.getItemID());
+						insertItems.setString(3, item.getName());
+						insertItems.setString(4, item.getDescription());
+						insertItems.setDouble(5, item.getWeight());
+						insertItems.setInt(6, item.isInteractable() ? 1 : 0);
+						insertItems.setInt(7, item.canBePickedUp() ? 1 : 0);
+						insertItems.setInt(8, item.consumeOnUse() ? 1 : 0);
+						insertItems.setInt(9, item.inInventory() ? 1 : 0);
+						insertItems.setInt(10, item.isEquipped() ? 1 : 0);
+						insertItems.setInt(11, item.isEquippable() ? 1 : 0);
+						insertItems.setInt(12, item.isReadable() ? 1 : 0);
+						insertItems.setInt(13, item.isPourable() ? 1 : 0);
+						insertItems.setInt(14, item.getLocationID());
 						insertItems.addBatch();
 					}
 					
 					insertItems.executeBatch();
 					
 					
-					insertCompoundItems = conn.prepareStatement("insert into compoundItems (itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, locationID, inventoryID, breakItemID, breakable) " +
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
+					insertCompoundItems = conn.prepareStatement("insert into compoundItems (gameID, itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, locationID, inventoryID, breakItemID, breakable) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
 					
 					for (CompoundItem compoundItem : compoundItems) {
-						insertCompoundItems.setInt(1, compoundItem.getItemID());
-						insertCompoundItems.setString(2, compoundItem.getName());
-						insertCompoundItems.setString(3, compoundItem.getDescription());
-						insertCompoundItems.setDouble(4, compoundItem.getWeight());
-						insertCompoundItems.setInt(5, compoundItem.isInteractable() ? 1 : 0);
-						insertCompoundItems.setInt(6, compoundItem.canBePickedUp() ? 1 : 0);
-						insertCompoundItems.setInt(7, compoundItem.consumeOnUse() ? 1 : 0);
-						insertCompoundItems.setInt(8, compoundItem.inInventory() ? 1 : 0);
-						insertCompoundItems.setInt(9, compoundItem.isEquipped() ? 1 : 0);
-						insertCompoundItems.setInt(10, compoundItem.isEquippable() ? 1 : 0);
-						insertCompoundItems.setInt(11, compoundItem.isReadable() ? 1 : 0);
-						insertCompoundItems.setInt(12, compoundItem.isPourable() ? 1 : 0);
-						insertCompoundItems.setInt(13, compoundItem.getLocationID());
-						insertCompoundItems.setInt(14, compoundItem.getInventoryID());
-						insertCompoundItems.setInt(15, compoundItem.getBreakItem().getItemID());
-						insertCompoundItems.setInt(16, compoundItem.isBreakable() ? 1 : 0);
+						insertCompoundItems.setInt(1, gameID);
+						insertCompoundItems.setInt(2, compoundItem.getItemID());
+						insertCompoundItems.setString(3, compoundItem.getName());
+						insertCompoundItems.setString(4, compoundItem.getDescription());
+						insertCompoundItems.setDouble(5, compoundItem.getWeight());
+						insertCompoundItems.setInt(6, compoundItem.isInteractable() ? 1 : 0);
+						insertCompoundItems.setInt(7, compoundItem.canBePickedUp() ? 1 : 0);
+						insertCompoundItems.setInt(8, compoundItem.consumeOnUse() ? 1 : 0);
+						insertCompoundItems.setInt(9, compoundItem.inInventory() ? 1 : 0);
+						insertCompoundItems.setInt(10, compoundItem.isEquipped() ? 1 : 0);
+						insertCompoundItems.setInt(11, compoundItem.isEquippable() ? 1 : 0);
+						insertCompoundItems.setInt(12, compoundItem.isReadable() ? 1 : 0);
+						insertCompoundItems.setInt(13, compoundItem.isPourable() ? 1 : 0);
+						insertCompoundItems.setInt(14, compoundItem.getLocationID());
+						insertCompoundItems.setInt(15, compoundItem.getInventoryID());
+						insertCompoundItems.setInt(16, compoundItem.getBreakItem().getItemID());
+						insertCompoundItems.setInt(17, compoundItem.isBreakable() ? 1 : 0);
 						insertCompoundItems.addBatch();
 					}
 					
 					insertCompoundItems.executeBatch();
 					
 					
-					insertPlayers = conn.prepareStatement("insert into players (actorID, roomID, inventoryID, moves, lastOutput) values (?, ?, ?, ?, ?)");
+					insertPlayers = conn.prepareStatement("insert into players (gameID, actorID, roomID, inventoryID, moves, lastOutput) values (?, ?, ?, ?, ?, ?)");
 					
 					for (Player player : players) {
-						insertPlayers.setInt(1, player.getActorID());
-						insertPlayers.setInt(2, player.getRoomID());
-						insertPlayers.setInt(3, player.getInventoryID());
-						insertPlayers.setInt(4, player.getMoves());
-						insertPlayers.setString(5, player.getLastOutput());
+						insertPlayers.setInt(1, gameID);
+						insertPlayers.setInt(2, player.getActorID());
+						insertPlayers.setInt(3, player.getRoomID());
+						insertPlayers.setInt(4, player.getInventoryID());
+						insertPlayers.setInt(5, player.getMoves());
+						insertPlayers.setString(6, player.getLastOutput());
 						insertPlayers.addBatch();
 					}
 					
 					insertPlayers.executeBatch();
 					
 					
-					insertRooms = conn.prepareStatement("insert into rooms (roomID, description, inventoryID) values (?, ?, ?)");
+					insertRooms = conn.prepareStatement("insert into rooms (gameID, roomID, description, inventoryID) values (?, ?, ?, ?)");
 					
 					for (Room room : rooms) {
-						insertRooms.setInt(1, room.getRoomID());
-						insertRooms.setString(2, room.getDescription());
-						insertRooms.setInt(3, room.getInventoryID());
+						insertRooms.setInt(1, gameID);
+						insertRooms.setInt(2, room.getRoomID());
+						insertRooms.setString(3, room.getDescription());
+						insertRooms.setInt(4, room.getInventoryID());
 						insertRooms.addBatch();
 					}
 					
 					insertRooms.executeBatch();
 					
 					
-					insertRoomObjects = conn.prepareStatement("insert into roomObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, canBeFed, fed, canBeScanned, scanned, roomID, inventoryID) " + 
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertRoomObjects = conn.prepareStatement("insert into roomObjects (gameID, objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, canBeFed, fed, canBeScanned, scanned, roomID, inventoryID) " + 
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (RoomObject roomObject : roomObjects) {
-						insertRoomObjects.setInt(1, roomObject.getObjectID());
-						insertRoomObjects.setString(2, roomObject.getName());
-						insertRoomObjects.setString(3, roomObject.getDescription());
-						insertRoomObjects.setString(4, roomObject.getDirection());
-						insertRoomObjects.setInt(5, roomObject.isObstacle() ? 1 : 0);
-						insertRoomObjects.setInt(6, roomObject.isBlockingExit() ? 1 : 0);
-						insertRoomObjects.setInt(7, roomObject.isMoveable() ? 1 : 0);
-						insertRoomObjects.setString(8, roomObject.getCovering());
-						insertRoomObjects.setInt(9, roomObject.isUnlockable() ? 1 : 0);
-						insertRoomObjects.setInt(10, roomObject.isLocked() ? 1 : 0);
-						insertRoomObjects.setInt(11, roomObject.isInteractable() ? 1 : 0);
-						insertRoomObjects.setInt(12, roomObject.canHoldItems() ? 1 : 0);
-						insertRoomObjects.setInt(13, roomObject.isCoverable() ? 1 : 0);
-						insertRoomObjects.setInt(14, roomObject.wasPreviouslyUnlocked() ? 1 : 0);
-						insertRoomObjects.setInt(15, roomObject.canBeFed() ? 1 : 0);
-						insertRoomObjects.setString(16, roomObject.getFed());
-						insertRoomObjects.setInt(17, roomObject.canBeScanned() ? 1 : 0);
-						insertRoomObjects.setString(18, roomObject.getScanned());
-						insertRoomObjects.setInt(19, roomObject.getRoomID());
-						insertRoomObjects.setInt(20, roomObject.getInventoryID());
+						insertRoomObjects.setInt(1, gameID);
+						insertRoomObjects.setInt(2, roomObject.getObjectID());
+						insertRoomObjects.setString(3, roomObject.getName());
+						insertRoomObjects.setString(4, roomObject.getDescription());
+						insertRoomObjects.setString(5, roomObject.getDirection());
+						insertRoomObjects.setInt(6, roomObject.isObstacle() ? 1 : 0);
+						insertRoomObjects.setInt(7, roomObject.isBlockingExit() ? 1 : 0);
+						insertRoomObjects.setInt(8, roomObject.isMoveable() ? 1 : 0);
+						insertRoomObjects.setString(9, roomObject.getCovering());
+						insertRoomObjects.setInt(10, roomObject.isUnlockable() ? 1 : 0);
+						insertRoomObjects.setInt(11, roomObject.isLocked() ? 1 : 0);
+						insertRoomObjects.setInt(12, roomObject.isInteractable() ? 1 : 0);
+						insertRoomObjects.setInt(13, roomObject.canHoldItems() ? 1 : 0);
+						insertRoomObjects.setInt(14, roomObject.isCoverable() ? 1 : 0);
+						insertRoomObjects.setInt(15, roomObject.wasPreviouslyUnlocked() ? 1 : 0);
+						insertRoomObjects.setInt(16, roomObject.canBeFed() ? 1 : 0);
+						insertRoomObjects.setString(17, roomObject.getFed());
+						insertRoomObjects.setInt(18, roomObject.canBeScanned() ? 1 : 0);
+						insertRoomObjects.setString(19, roomObject.getScanned());
+						insertRoomObjects.setInt(20, roomObject.getRoomID());
+						insertRoomObjects.setInt(21, roomObject.getInventoryID());
 						insertRoomObjects.addBatch();
 					}
 					
 					insertRoomObjects.executeBatch();
 					
 					
-					insertPlayableObjects = conn.prepareStatement("insert into playableObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID, isInstrument, playedNotes, requiredNotes, fed, canBeFed) " + 
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertPlayableObjects = conn.prepareStatement("insert into playableObjects (gameID, objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID, isInstrument, playedNotes, requiredNotes, fed, canBeFed) " + 
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (PlayableObject playableObject : playableObjects) {
-						insertPlayableObjects.setInt(1, playableObject.getObjectID());
-						insertPlayableObjects.setString(2, playableObject.getName());
-						insertPlayableObjects.setString(3, playableObject.getDescription());
-						insertPlayableObjects.setString(4, playableObject.getDirection());
-						insertPlayableObjects.setInt(5, playableObject.isObstacle() ? 1 : 0);
-						insertPlayableObjects.setInt(6, playableObject.isBlockingExit() ? 1 : 0);
-						insertPlayableObjects.setInt(7, playableObject.isMoveable() ? 1 : 0);
-						insertPlayableObjects.setString(8, playableObject.getCovering());
-						insertPlayableObjects.setInt(9, playableObject.isUnlockable() ? 1 : 0);
-						insertPlayableObjects.setInt(10, playableObject.isLocked() ? 1 : 0);
-						insertPlayableObjects.setInt(11, playableObject.isInteractable() ? 1 : 0);
-						insertPlayableObjects.setInt(12, playableObject.canHoldItems() ? 1 : 0);
-						insertPlayableObjects.setInt(13, playableObject.isCoverable() ? 1 : 0);
-						insertPlayableObjects.setInt(14, playableObject.wasPreviouslyUnlocked() ? 1 : 0);
-						insertPlayableObjects.setInt(15, playableObject.getRoomID());
-						insertPlayableObjects.setInt(16, playableObject.getInventoryID());
-						insertPlayableObjects.setInt(17, playableObject.isInstrument() ? 1 : 0);
-						insertPlayableObjects.setString(18, playableObject.getPlayedNotes());
-						insertPlayableObjects.setString(19, String.valueOf(playableObject.getRequiredNotes()));
-						insertPlayableObjects.setString(20, playableObject.getFed());
-						insertPlayableObjects.setInt(21, playableObject.canBeFed() ? 1 : 0);
+						insertPlayableObjects.setInt(1, gameID);
+						insertPlayableObjects.setInt(2, playableObject.getObjectID());
+						insertPlayableObjects.setString(3, playableObject.getName());
+						insertPlayableObjects.setString(4, playableObject.getDescription());
+						insertPlayableObjects.setString(5, playableObject.getDirection());
+						insertPlayableObjects.setInt(6, playableObject.isObstacle() ? 1 : 0);
+						insertPlayableObjects.setInt(7, playableObject.isBlockingExit() ? 1 : 0);
+						insertPlayableObjects.setInt(8, playableObject.isMoveable() ? 1 : 0);
+						insertPlayableObjects.setString(9, playableObject.getCovering());
+						insertPlayableObjects.setInt(10, playableObject.isUnlockable() ? 1 : 0);
+						insertPlayableObjects.setInt(11, playableObject.isLocked() ? 1 : 0);
+						insertPlayableObjects.setInt(12, playableObject.isInteractable() ? 1 : 0);
+						insertPlayableObjects.setInt(13, playableObject.canHoldItems() ? 1 : 0);
+						insertPlayableObjects.setInt(14, playableObject.isCoverable() ? 1 : 0);
+						insertPlayableObjects.setInt(15, playableObject.wasPreviouslyUnlocked() ? 1 : 0);
+						insertPlayableObjects.setInt(16, playableObject.getRoomID());
+						insertPlayableObjects.setInt(17, playableObject.getInventoryID());
+						insertPlayableObjects.setInt(18, playableObject.isInstrument() ? 1 : 0);
+						insertPlayableObjects.setString(19, playableObject.getPlayedNotes());
+						insertPlayableObjects.setString(20, String.valueOf(playableObject.getRequiredNotes()));
+						insertPlayableObjects.setString(21, playableObject.getFed());
+						insertPlayableObjects.setInt(22, playableObject.canBeFed() ? 1 : 0);
 						
 						insertPlayableObjects.addBatch();
 					}
@@ -1905,70 +1899,73 @@ public class DerbyDatabase implements IDatabase {
 					insertPlayableObjects.executeBatch();
 					
 					
-					insertUnlockableObjects = conn.prepareStatement("insert into unlockableObjects (objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID, consumeItem, fed, canBeFed, canBeLookedAtNow, canBeClimbed, unlockItemID) " + 
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertUnlockableObjects = conn.prepareStatement("insert into unlockableObjects (gameID, objectID, name, description, direction, isObstacle, blockingExit, moveable, covered, unlockable, locked, isInteractable, canHoldItems, coverable, previouslyUnlocked, roomID, inventoryID, consumeItem, fed, canBeFed, canBeLookedAtNow, canBeClimbed, unlockItemID) " + 
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (UnlockableObject unlockableObject : unlockableObjects) {
-						insertUnlockableObjects.setInt(1, unlockableObject.getObjectID());
-						insertUnlockableObjects.setString(2, unlockableObject.getName());
-						insertUnlockableObjects.setString(3, unlockableObject.getDescription());
-						insertUnlockableObjects.setString(4, unlockableObject.getDirection());
-						insertUnlockableObjects.setInt(5, unlockableObject.isObstacle() ? 1 : 0);
-						insertUnlockableObjects.setInt(6, unlockableObject.isBlockingExit() ? 1 : 0);
-						insertUnlockableObjects.setInt(7, unlockableObject.isMoveable() ? 1 : 0);
-						insertUnlockableObjects.setString(8, unlockableObject.getCovering());
-						insertUnlockableObjects.setInt(9, unlockableObject.isUnlockable() ? 1 : 0);
-						insertUnlockableObjects.setInt(10, unlockableObject.isLocked() ? 1 : 0);
-						insertUnlockableObjects.setInt(11, unlockableObject.isInteractable() ? 1 : 0);
-						insertUnlockableObjects.setInt(12, unlockableObject.canHoldItems() ? 1 : 0);
-						insertUnlockableObjects.setInt(13, unlockableObject.isCoverable() ? 1 : 0);
-						insertUnlockableObjects.setInt(14, unlockableObject.wasPreviouslyUnlocked() ? 1 : 0);
-						insertUnlockableObjects.setInt(15, unlockableObject.getRoomID());
-						insertUnlockableObjects.setInt(16, unlockableObject.getInventoryID());
-						insertUnlockableObjects.setInt(17, unlockableObject.consumeItem() ? 1 : 0);
-						insertUnlockableObjects.setString(18, unlockableObject.getFed());
-						insertUnlockableObjects.setInt(19, unlockableObject.canBeFed() ? 1 : 0);
-						insertUnlockableObjects.setInt(20, unlockableObject.getCanBeLookedAtNow() ? 1 : 0);
-						insertUnlockableObjects.setInt(21, unlockableObject.canBeClimbed() ? 1 : 0);
-						insertUnlockableObjects.setInt(22, unlockableObject.getUnlockItemID());
+						insertUnlockableObjects.setInt(1, gameID);
+						insertUnlockableObjects.setInt(2, unlockableObject.getObjectID());
+						insertUnlockableObjects.setString(3, unlockableObject.getName());
+						insertUnlockableObjects.setString(4, unlockableObject.getDescription());
+						insertUnlockableObjects.setString(5, unlockableObject.getDirection());
+						insertUnlockableObjects.setInt(6, unlockableObject.isObstacle() ? 1 : 0);
+						insertUnlockableObjects.setInt(7, unlockableObject.isBlockingExit() ? 1 : 0);
+						insertUnlockableObjects.setInt(8, unlockableObject.isMoveable() ? 1 : 0);
+						insertUnlockableObjects.setString(9, unlockableObject.getCovering());
+						insertUnlockableObjects.setInt(10, unlockableObject.isUnlockable() ? 1 : 0);
+						insertUnlockableObjects.setInt(11, unlockableObject.isLocked() ? 1 : 0);
+						insertUnlockableObjects.setInt(12, unlockableObject.isInteractable() ? 1 : 0);
+						insertUnlockableObjects.setInt(13, unlockableObject.canHoldItems() ? 1 : 0);
+						insertUnlockableObjects.setInt(14, unlockableObject.isCoverable() ? 1 : 0);
+						insertUnlockableObjects.setInt(15, unlockableObject.wasPreviouslyUnlocked() ? 1 : 0);
+						insertUnlockableObjects.setInt(16, unlockableObject.getRoomID());
+						insertUnlockableObjects.setInt(17, unlockableObject.getInventoryID());
+						insertUnlockableObjects.setInt(18, unlockableObject.consumeItem() ? 1 : 0);
+						insertUnlockableObjects.setString(19, unlockableObject.getFed());
+						insertUnlockableObjects.setInt(20, unlockableObject.canBeFed() ? 1 : 0);
+						insertUnlockableObjects.setInt(21, unlockableObject.getCanBeLookedAtNow() ? 1 : 0);
+						insertUnlockableObjects.setInt(22, unlockableObject.canBeClimbed() ? 1 : 0);
+						insertUnlockableObjects.setInt(23, unlockableObject.getUnlockItemID());
 						insertUnlockableObjects.addBatch();
 					}
 					
 					insertUnlockableObjects.executeBatch();
 					
 					
-					insertPuzzles = conn.prepareStatement("insert into puzzles (puzzleID, description, solution, hint, writtenSolution, unlockObstacle, solved, roomID) " +
-							"values (?, ?, ?, ?, ?, ?, ?, ?)");
+					insertPuzzles = conn.prepareStatement("insert into puzzles (gameID, puzzleID, description, solution, hint, writtenSolution, unlockObstacle, solved, roomID) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (Puzzle puzzle : puzzles) {
-						insertPuzzles.setInt(1, puzzle.getPuzzleID());
-						insertPuzzles.setString(2, puzzle.getDescription());
-						insertPuzzles.setString(3, puzzle.getSolution());
-						insertPuzzles.setString(4, puzzle.getHint());
-						insertPuzzles.setInt(5, puzzle.isWrittenSolution() ? 1 : 0);
-						insertPuzzles.setInt(6, puzzle.getUnlockObstacleID());
-						insertPuzzles.setInt(7, puzzle.isSolved() ? 1 : 0);
-						insertPuzzles.setInt(8, puzzle.getRoomID());
+						insertPuzzles.setInt(1, gameID);
+						insertPuzzles.setInt(2, puzzle.getPuzzleID());
+						insertPuzzles.setString(3, puzzle.getDescription());
+						insertPuzzles.setString(4, puzzle.getSolution());
+						insertPuzzles.setString(5, puzzle.getHint());
+						insertPuzzles.setInt(6, puzzle.isWrittenSolution() ? 1 : 0);
+						insertPuzzles.setInt(7, puzzle.getUnlockObstacleID());
+						insertPuzzles.setInt(8, puzzle.isSolved() ? 1 : 0);
+						insertPuzzles.setInt(9, puzzle.getRoomID());
 						insertPuzzles.addBatch();
 					}
 					
 					insertPuzzles.executeBatch();
 					
 					
-					insertObjectPuzzles = conn.prepareStatement("insert into objectPuzzles (puzzleID, description, solution, hint, solved, writtenSolution, unlockObstacle, roomID, objectID, itemID) " +
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					insertObjectPuzzles = conn.prepareStatement("insert into objectPuzzles (gameID, puzzleID, description, solution, hint, solved, writtenSolution, unlockObstacle, roomID, objectID, itemID) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					
 					for (ObjectPuzzle objectPuzzle : objectPuzzles) {
-						insertObjectPuzzles.setInt(1, objectPuzzle.getPuzzleID());
-						insertObjectPuzzles.setString(2, objectPuzzle.getDescription());
-						insertObjectPuzzles.setString(3, objectPuzzle.getSolution());
-						insertObjectPuzzles.setString(4, objectPuzzle.getHint());
-						insertObjectPuzzles.setInt(5, objectPuzzle.isSolved() ? 1 : 0);
-						insertObjectPuzzles.setInt(6, objectPuzzle.isWrittenSolution() ? 1 : 0);
-						insertObjectPuzzles.setInt(7, objectPuzzle.getUnlockObstacleID());
-						insertObjectPuzzles.setInt(8, objectPuzzle.getRoomID());
-						insertObjectPuzzles.setInt(9, objectPuzzle.getObjectID());
-						insertObjectPuzzles.setInt(10, objectPuzzle.getItemID());
+						insertObjectPuzzles.setInt(1, gameID);
+						insertObjectPuzzles.setInt(2, objectPuzzle.getPuzzleID());
+						insertObjectPuzzles.setString(3, objectPuzzle.getDescription());
+						insertObjectPuzzles.setString(4, objectPuzzle.getSolution());
+						insertObjectPuzzles.setString(5, objectPuzzle.getHint());
+						insertObjectPuzzles.setInt(6, objectPuzzle.isSolved() ? 1 : 0);
+						insertObjectPuzzles.setInt(7, objectPuzzle.isWrittenSolution() ? 1 : 0);
+						insertObjectPuzzles.setInt(8, objectPuzzle.getUnlockObstacleID());
+						insertObjectPuzzles.setInt(9, objectPuzzle.getRoomID());
+						insertObjectPuzzles.setInt(10, objectPuzzle.getObjectID());
+						insertObjectPuzzles.setInt(11, objectPuzzle.getItemID());
 						insertObjectPuzzles.addBatch();
 					}
 					
@@ -2016,7 +2013,7 @@ public class DerbyDatabase implements IDatabase {
 //	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
 		System.out.println("Creating tables...");
-		DerbyDatabase db = new DerbyDatabase();
+		DerbyDatabase db = new DerbyDatabase(0);
 		db.createTables();
 		
 		System.out.println("\nLoading initial data...");

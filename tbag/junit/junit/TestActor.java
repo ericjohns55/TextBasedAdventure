@@ -14,7 +14,7 @@ public class TestActor {
 	
 	@Before
 	public void setUp() {
-		game = new Game();
+		game = new Game(0);
 		actor = new Actor(game, 1);
 	}
 	
