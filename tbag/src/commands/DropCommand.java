@@ -43,7 +43,7 @@ public class DropCommand extends UserCommand {
 			} else {
 				if (room.hasObject(location)) {
 					RoomObject roomObject = room.getObject(location);
-					
+
 					if (roomObject.canHoldItems()) {
 						if (noun.equals("all")) {
 							if (!inventory.isEmpty()) {

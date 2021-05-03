@@ -1,4 +1,4 @@
-9|piano|Could play music.|south|0|0|0| |0|0|1|0|0|0|5|1051|1| |CDEFGAB
-10|cello|Could play music.|north|0|0|0| |0|0|1|0|0|0|5|1052|1| |CDEFGAB
-11|guitar|Could play music.|west|0|0|0| |0|0|1|0|0|0|5|1053|1| |CDEFGAB
-12|record player|Plays music. |north|0|0|0| |0|0|1|1|0|0|6|1062|0| | 
+9|piano|Could play music.|south|0|0|0| |0|0|1|0|0|0|5|1051|1| |CDEFGAB| |0|
+10|cello|Could play music.|north|0|0|0| |0|0|1|0|0|0|5|1052|1| |CDEFGAB| |0|
+11|guitar|Could play music.|west|0|0|0| |0|0|1|0|0|0|5|1053|1| |CDEFGAB| |0|
+12|record player|Plays music. |north|0|0|0| |0|0|1|1|0|0|6|1062|0| | | |0|
