@@ -62,6 +62,10 @@ public class TBAGServlet extends HttpServlet {
 			
 		}
 		
+		if (story.length() >= 8000) {
+			story = story.substring(story.length() - 8000, story.length());
+		}
+		
 		player.setLastOutput(story);
 		player.setMoves(player.getMoves() + 1);
 		
