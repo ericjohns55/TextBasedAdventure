@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import actor.NPC;
 import actor.Player;
+import dialogue.Link;
+import dialogue.Node;
 import items.CompoundItem;
 import items.Item;
 import map.Connections;
@@ -20,6 +23,7 @@ public class InitialData {
 	private static List<Item> items = null;
 	private static List<UnlockableObject> unlockableObjects = null;
 	private static List<PlayableObject> playableObjects = null;
+	private static List<Node> nodes = null;
 	
 	public static List<Item> getAllItems() throws IOException {
 		List<Item> itemList = new ArrayList<Item>();
@@ -491,6 +495,156 @@ public class InitialData {
 		}
 	}
 	
+	public static List<Node> getAllNodes() throws IOException {
+		List<Node> nodeList = new ArrayList<Node>();
+		ReadCSV readItems = new ReadCSV("nodes.csv");
+		
+		try {
+			while (true) {
+				List<String> nodeRow = readItems.next();
+				
+				if (nodeRow == null) {
+					break;
+				}
+				
+				Iterator<String> iter = nodeRow.iterator();
+				
+				int npcID = Integer.parseInt(iter.next());
+				int nodeID = Integer.parseInt(iter.next());
+				String message = iter.next();
+				String type = iter.next();
+				Node node = new Node(npcID, nodeID, message, type);
+				
+				nodeList.add(node);
+			}
+			
+			System.out.println("nodeList loaded");
+			
+			nodes = nodeList;
+			
+			return nodeList;
+		} finally {
+			readItems.close();
+		}
+	}
+	
+	public static List<NPC> getAllNpcs() throws IOException {
+		List<NPC> npcList = new ArrayList<NPC>();
+		ReadCSV readItems = new ReadCSV("npcs.csv");
+		
+		try {			
+			while (true) {
+				List<String> itemRow = readItems.next();
+				
+				if (itemRow == null) {
+					break;
+				}				
+				
+				Iterator<String> iter = itemRow.iterator();
+				
+				int npcID = Integer.parseInt(iter.next());
+				int roomID = Integer.parseInt(iter.next());
+				int inventoryID = Integer.parseInt(iter.next());
+				String name = iter.next();
+				String description = iter.next();
+				int currentNodeID = Integer.parseInt(iter.next());
+				int previousNodeID = Integer.parseInt(iter.next());
+				int rootNodeID = Integer.parseInt(iter.next());
+				boolean talkedTo = Integer.parseInt(iter.next()) == 1;
+				boolean canTalkTo = Integer.parseInt(iter.next()) == 1;
+				boolean done = Integer.parseInt(iter.next()) == 1;
+				int requiredItemID = Integer.parseInt(iter.next());
+				int unlockObstacleID = Integer.parseInt(iter.next());
+				
+				Item requiredItem = null;
+				if (items.size() >= requiredItemID) {
+					requiredItem = items.get(requiredItemID);
+				}
+				
+				RoomObject unlockObstacle = null;
+				if (unlockableObjects.size() >= unlockObstacleID) {
+					unlockObstacle = unlockableObjects.get(unlockObstacleID);
+				}
+				
+				Node currentNode = null;
+				if (nodes.size() >= currentNodeID) {
+					currentNode = nodes.get(currentNodeID);
+				}
+				
+				Node previousNode = null;
+				if (nodes.size() >= previousNodeID) {
+					previousNode = nodes.get(previousNodeID);
+				}
+		
+				Node rootNode = null;
+				if (nodes.size() >= rootNodeID) {
+					rootNode = nodes.get(rootNodeID);
+				}
+				
+				NPC npc = new NPC(null, roomID, name, description, requiredItem, unlockObstacle);
+				npc.setActorID(npcID);
+				npc.setRoomID(roomID);
+				npc.setInventoryID(inventoryID);
+				npc.setCurrentNode(currentNode);
+				npc.setPreviousNode(previousNode);
+				npc.setRootNode(rootNode);
+				npc.setTalkedTo(talkedTo);
+				npc.setCanTalkTo(canTalkTo);
+				npc.setDone(done);
+				npc.setRequiredItemID(requiredItemID);
+				npc.setUnlockObstacleID(unlockObstacleID);
+				npcList.add(npc);
+			}
+			
+			System.out.println("npcList loaded");
+			return npcList;
+		} finally {
+			readItems.close();
+		}
+	}
+	
+	public static List<Link> getAllLinks() throws IOException {
+		List<Link> linksList = new ArrayList<Link>();
+		ReadCSV readItems = new ReadCSV("links.csv");
+		
+		try {			
+			while (true) {
+				List<String> linkRow = readItems.next();
+				
+				if (linkRow == null) {
+					break;
+				}				
+				
+				Iterator<String> iter = linkRow.iterator();
+				
+				int linkID = Integer.parseInt(iter.next());
+				int nextNodeID = Integer.parseInt(iter.next());
+				int previousNodeID = Integer.parseInt(iter.next());
+				boolean isAvailable = Integer.parseInt(iter.next()) == 1;
+				String option = iter.next();
+				
+				Node nextNode = null;
+				if (nodes.size() >= nextNodeID) {
+					nextNode = nodes.get(nextNodeID);
+				}
+				
+				Node previousNode = null;
+				if (nodes.size() >= previousNodeID) {
+					previousNode = nodes.get(previousNodeID);
+				}
+
+				Link link = new Link(linkID, nextNode, previousNode, isAvailable, option);
+				
+				linksList.add(link);
+			}
+			
+			System.out.println("linksList loaded");
+			return linksList;
+		} finally {
+			readItems.close();
+		}
+	}
+	
 	private static UnlockableObject getUnlockableObjectByID(int objectID) {
 		for (UnlockableObject object : unlockableObjects) {
 			if (object.getObjectID() == objectID) {
@@ -515,6 +669,16 @@ public class InitialData {
 		for (PlayableObject object : playableObjects) {
 			if (object.getObjectID() == objectID) {
 				return object;
+			}
+		}
+		
+		return null;
+	}
+	
+	private static Node getNodeByID(int nodeID) {
+		for (Node node : nodes) {
+			if (node.getNodeID() == nodeID) {
+				return node;
 			}
 		}
 		

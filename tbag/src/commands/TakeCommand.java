@@ -44,7 +44,7 @@ public class TakeCommand extends UserCommand {
 					getInventory().addItem(noun, toGrab);
 					// TODO: DB take for NPC
 					npc.getInventory().removeItem(noun);
-					
+					game.take(room, toGrab, getPlayer(), noun);
 					game.setOutput("You picked up " + noun + ".");
 				} else {
 					game.setOutput(npc.getName() + " doesn't have that item.");

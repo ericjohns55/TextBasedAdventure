@@ -17,4 +17,8 @@
 18|note|That lamb heart looks like it has something in it...|0.1|0|1|0|0|0|0|1|0|1071
 19|blood vial|This vial contains blood.|0.2|0|1|0|0|0|0|0|1|108
 20|note|You may want to pour that vial on something.|0.1|0|1|0|0|0|0|1|0|108
+0| | |0.3|0|1|0|0|0|0|0|0|9999
+21|penny|penny.|0.1|0|1|0|0|0|0|0|0|117
+56|fortuine card|.|0.1|0|1|0|0|0|0|0|0|1
+9998|none|does not exist|0|0|0|0|0|0|0|0|0|1211
 9999|none|does not exist|0|0|0|0|0|0|0|0|0|9999

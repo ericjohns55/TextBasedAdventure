@@ -1,6 +1,7 @@
 package commands;
 
 import game.Game;
+import input.Command;
 import map.Room;
 import actor.NPC;
 import dialogue.Link;
@@ -14,7 +15,7 @@ public class YesCommand extends UserCommand {
 		
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
-			if (!npc.isDone()) {
+			if (!npc.isDone() && npc.getCurrentNode().getType().equals("y/n")) {
 				if(npc.isTalkedTo()) {
 					npc.setPreviousNode(npc.getCurrentNode());
 					npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(0).getNextNode());
@@ -28,23 +29,21 @@ public class YesCommand extends UserCommand {
 								i++;
 							}
 							else if (npc.getCurrentNode().getType().equals("y/n")) {
-								t += " y/n \n";
+								t += "\n";
 							}
-							else {
-								
+							else if (npc.getCurrentNode().getType().equals("gCommand")) {
+								game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());
 							}
 						}
-						game.setOutput(t);
+						game.setOutput(npc.getCurrentNode().getMessage() + "\n" + t);
+						game.npcDialogue(npc, npc.getCurrentNode());
 					}
 					else {
-						game.setOutput(npc.getCurrentNode().getMessage());
-						if(npc.getCurrentNode().getType().equals("WC")) {
-							npc.setCurrentNode(npc.getPreviousNode());
+						game.setOutput(npc.getCurrentNode().getMessage() + "\n");
+						if (npc.getCurrentNode().getType().equals("gCommand")) {
+							game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());
 						}
-						else if (npc.getCurrentNode().getType().equals("DE")) {
-							npc.setCurrentNode(npc.getRootNode());
-							npc.setTalkedTo(false);
-						}
+						game.npcDialogue(npc, npc.getCurrentNode());
 					}
 				}
 				else {

@@ -621,7 +621,7 @@ public class RoomGeneration {
 		// Room 9
 		Item cake = new Item("cake");
 		cake.setWeight(0.3);
-		cake.setDescription("apple pie.");
+		cake.setDescription("cake");
 		room9.addItem("cake", cake);
 		
 		Item key2 = new Item("key", 0.1);
@@ -635,15 +635,15 @@ public class RoomGeneration {
    
 		
 		NPC bob = new NPC(null, 1, "bob", "Just a nice guy.", cake, room9Door);
-		Node n = new Node(0, "Hi im Bob.", false, "y/n");
-		Node p = new Node(1, "Im just a real swell guy, but I am quite hungry.", false, "y/n");
-		Node o = new Node(2, "Ok then. Why not?", true, "option");
-		Node q = new Node(3, "Give me the cake then.", false, "command");
-		Node r = new Node(4, "Come back when you have a cake for me.", false, "WC");
-		Node s = new Node(5, "That's ok.", false, "DE");
-		Node t = new Node(6, "Come back when you have time.", false, "DE");
-		Node u = new Node(7, "That's rude.", false, "DE");
-		Link l = new Link(p, n, true, "Would you like to know more about me?");
+	0	Node n = new Node(0, "Hi im Bob.", false, "y/n");
+	1	Node p = new Node(1, "Im just a real swell guy, but I am quite hungry.", false, "y/n");
+	2	Node o = new Node(2, "Ok then. Why not?", true, "option");
+	3	Node q = new Node(3, "Give me the cake then.", false, "command");
+	4	Node r = new Node(4, "Come back when you have a cake for me.", false, "WC");
+	5	Node s = new Node(5, "That's ok.", false, "DE");
+	6	Node t = new Node(6, "Come back when you have time.", false, "DE");
+	7	Node u = new Node(7, "That's rude.", false, "DE");
+		Link l1 = new Link(p, n, true, "Would you like to know more about me?");
 		Link l2 = new Link(o, n, true, "");
 		Link l3 = new Link(q, p, true, "Do you have any cake?");
 		Link l4 = new Link(r, p, true, "");
@@ -651,7 +651,7 @@ public class RoomGeneration {
 		Link l6 = new Link(t, o, true, "I don't have the time.");
 		Link l7 = new Link(u, o, true, "I just hate you.");
 		
-		n.addLink(l);
+		n.addLink(l1);
 		n.addLink(l2);
 		p.addLink(l3);
 		p.addLink(l4);

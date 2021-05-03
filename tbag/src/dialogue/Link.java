@@ -1,12 +1,15 @@
 package dialogue;
 
 public class Link{
-	private Node nextNode; 
+	private int linkID;
+	private Node nextNode;
+	private int nextNodeID;
 	private Node previousNode;
 	private boolean isAvailable;
 	private String option;
 	
-	public Link(Node next, Node previous, boolean available, String option) {
+	public Link(int linkID, Node next, Node previous, boolean available, String option) {
+		this.setLinkID(linkID);
 		this.isAvailable = available;
 		this.nextNode = next;
 		this.previousNode = previous;
@@ -43,7 +46,23 @@ public class Link{
 
 	public void setOption(String option) {
 		this.option = option;
-	} 
+	}
+
+	public int getLinkID() {
+		return linkID;
+	}
+
+	public void setLinkID(int linkID) {
+		this.linkID = linkID;
+	}
+
+	public int getNextNodeID() {
+		return nextNodeID;
+	}
+
+	public void setNextNodeID(int nextNodeID) {
+		this.nextNodeID = nextNodeID;
+	}
 }
 
 

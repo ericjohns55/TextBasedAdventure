@@ -3,7 +3,10 @@ package database;
 import java.io.IOException;
 import java.util.List;
 
+import actor.NPC;
 import actor.Player;
+import dialogue.Link;
+import dialogue.Node;
 import items.CompoundItem;
 import items.Inventory;
 import items.Item;
@@ -164,6 +167,30 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public Integer updateGameState(String output, int moves, Player player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Link> getAllLinks(int NodeID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public NPC getNpc(int roomID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Node> getAllNodes(int npcID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer npcDialogue(NPC npc, boolean talkedTo, int nextNodeID, boolean canTalkTo) {
 		// TODO Auto-generated method stub
 		return null;
 	}

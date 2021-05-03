@@ -9,10 +9,12 @@ import puzzle.Puzzle;
 
 import java.util.HashMap;
 
+import actor.NPC;
 import actor.Player;
 import database.DatabaseProvider;
 import database.DerbyDatabase;
 import database.IDatabase;
+import dialogue.Node;
 import input.Command;
 import items.CompoundItem;
 import items.Inventory;
@@ -295,5 +297,9 @@ public class Game {
 		} else {
 			addOutput("There is not an exit here!");
 		}
+	}
+	
+	public void npcDialogue(NPC npc, Node currentNode) {
+		db.npcDialogue(npc, npc.isTalkedTo(), currentNode.getNodeID(), npc.CanTalkTo());
 	}
 }

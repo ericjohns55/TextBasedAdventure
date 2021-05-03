@@ -16,39 +16,42 @@ public class OptionsCommand extends UserCommand {
 
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
-			if (!npc.isDone()) {
+			if (!npc.isDone() && npc.getCurrentNode().getType().equals("option")) {
 				if(npc.isTalkedTo()) {
 					if(npc.getCurrentNode().getType().equals("option")) {
-						if(noun != null && noun.matches("[0-9.]+")) {
+						if(noun != null && noun.matches("[1-3.]+")) {
 							npc.setPreviousNode(npc.getCurrentNode());
-							npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(Integer.valueOf(noun) - 1).getNextNode());
-							if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
-								String t = "";
-								int i = 1;
-								for(Link l : npc.getCurrentNode().getAvailableLinks()) {
-									t += l.getOption();
-									if (npc.getCurrentNode().getType().equals("option")) {
-										t += " option " + i + "\n";
-										i++;
+							if(Integer.valueOf(noun) <= npc.getCurrentNode().getOptions().size()) {
+								npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(Integer.valueOf(noun) - 1).getNextNode());
+								if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
+									String t = "";
+									int i = 1;
+									for(Link l : npc.getCurrentNode().getAvailableLinks()) {
+										t += l.getOption();
+										if (npc.getCurrentNode().getType().equals("option")) {
+											t += " option " + i + "\n";
+											i++;
+										}
+										else if (npc.getCurrentNode().getType().equals("y/n")) {
+											t += "\n";
+										}
+										else if (npc.getCurrentNode().getType().equals("gCommand")) {
+											game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());
+										}
 									}
-									else if (npc.getCurrentNode().getType().equals("y/n")) {
-										t += " y/n \n";
-									}
-									else {
-
-									}
+									game.setOutput(npc.getCurrentNode().getMessage() + "\n" + t);
+									game.npcDialogue(npc, npc.getCurrentNode());
 								}
-								game.setOutput(t);
+								else {
+									game.setOutput(npc.getCurrentNode().getMessage() + "\n");
+									if (npc.getCurrentNode().getType().equals("gCommand")) {
+										game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());
+									}
+									game.npcDialogue(npc, npc.getCurrentNode());
+								}
 							}
 							else {
-								game.setOutput(npc.getCurrentNode().getMessage());
-								if(npc.getCurrentNode().getType().equals("WC")) {
-									npc.setCurrentNode(npc.getPreviousNode());
-								}
-								else if (npc.getCurrentNode().getType().equals("DE")) {
-									npc.setCurrentNode(npc.getRootNode());
-									npc.setTalkedTo(false);
-								}
+								game.setOutput("Select and available option.");
 							}
 						} 
 						else {

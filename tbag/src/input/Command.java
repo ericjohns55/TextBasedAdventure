@@ -48,10 +48,11 @@ public class Command {
 		commands.put("cut", new CutCommand());
 		commands.put("pour", new PourCommand());
 		commands.put("hint", new HintCommand());
-    commands.put("y", new  YesCommand());
-    commands.put("n", new NoCommand());
-    commands.put("give", new GiveCommand());
-    commands.put("options", new OptionsCommand());
+		commands.put("talk", new TalkCommand());
+		commands.put("y", new  YesCommand());
+		commands.put("n", new NoCommand());
+		commands.put("give", new GiveCommand());
+		commands.put("option", new OptionsCommand());
 		parseCommands();
 	}
 	
@@ -107,8 +108,6 @@ public class Command {
 		replace = replace.replace("right", "west");
 		replace = replace.replace("up", "north");
 		replace = replace.replace("down", "south");
-		replace = replace.replace("yes", "y");
-		replace = replace.replace("no", "n");
 		return replace;
 	}
 	

@@ -1,5 +1,9 @@
 package actor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import dialogue.Link;
 import dialogue.Node;
 import game.Game;
 import items.Item;
@@ -15,7 +19,10 @@ public class NPC extends Actor {
 	private boolean canTalkTo;
 	private boolean done;
 	private RoomObject unlockObstacle;
+	private int unlockObstacleID;
 	private Item requiredItem;
+	private int requiredItemID;
+	private ArrayList<Node> nodes; 
 	
 	
 	public NPC(Game game, int roomID, String name, String description, Item requiredItem, RoomObject unlockObstacle) {
@@ -27,6 +34,7 @@ public class NPC extends Actor {
 		this.unlockObstacle = unlockObstacle;
 		this.requiredItem = requiredItem;
 		canTalkTo = true;
+		nodes = new ArrayList<Node>();
 		
 	}
 
@@ -113,6 +121,38 @@ public class NPC extends Actor {
 	public void setRootNode(Node rootNode) {
 		this.rootNode = rootNode;
 	}
+
+	public int getRequiredItemID() {
+		return requiredItemID;
+	}
+
+	public void setRequiredItemID(int requiredItemID) {
+		this.requiredItemID = requiredItemID;
+	}
+
+	public int getUnlockObstacleID() {
+		return unlockObstacleID;
+	}
+
+	public void setUnlockObstacleID(int unlockObstacleID) {
+		this.unlockObstacleID = unlockObstacleID;
+	}
+
+	public List<Node> getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(ArrayList<Node> nodes) {
+		this.nodes = nodes;
+	}
+	
+	public void addNode(Node node) {
+        nodes.add(node);
+    }
+
+    public void removeNodes(Node node) {
+        nodes.remove(node);
+    }
 }
 
 

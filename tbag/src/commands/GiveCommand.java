@@ -34,6 +34,8 @@ public class GiveCommand extends UserCommand {
 							npc.getInventory().addItem(noun, toGive);
 							inventory.removeItem(noun);
 							npc.setCanTalkTo(false);
+							game.unlockObject(roomObject, false);
+							game.npcDialogue(npc, npc.getCurrentNode());
 						
 						}
 						else {
