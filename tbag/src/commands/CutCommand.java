@@ -26,8 +26,6 @@ public class CutCommand extends UserCommand {
 						CompoundItem item = (CompoundItem) object.getInventory().getItem(noun);
 						
 						if (item.isBreakable()) {
-							System.out.println("COMPOUND ITEM ID: " + item.getItemID());
-							System.out.println("BREAK ITEM ID: " + item.getBreakItem().getItemID());
 							if (inventory.contains(item.getBreakItem().getItemID())) {
 								game.breakItem(object, item, noun, location);
 							} else {

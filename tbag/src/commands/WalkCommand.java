@@ -24,7 +24,7 @@ public class WalkCommand extends UserCommand {
 		} else {
 			boolean foundObstacleInPath = false;
 			
-			for (RoomObject roomObject : room.getAllObjects().values()) {
+			for (RoomObject roomObject : room.getAllObjects().values()) {				
 				if (roomObject.getDirection().equals(noun)) {
 					
 					foundObstacleInPath = true;

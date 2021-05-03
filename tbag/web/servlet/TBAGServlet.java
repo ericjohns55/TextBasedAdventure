@@ -15,8 +15,19 @@ public class TBAGServlet extends HttpServlet {
 	private boolean firstRun = true;
 	private String pastInputs = "";
 	
+	private boolean loggedIn = false;
+	
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String username = (String) req.getSession().getAttribute("success");
+		
+		if (username != null) {
+			loggedIn = true;
+		} else if (!loggedIn) {
+			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
+			return;
+		}
+		
 		Game game = new Game();
 		Player player = game.getPlayer();
 		
@@ -27,11 +38,10 @@ public class TBAGServlet extends HttpServlet {
 		
 		req.setAttribute("story", player.getLastOutput());
 		req.setAttribute("moves", "Moves: " + player.getMoves());
-		req.setAttribute("score", "Score: 0");
-		req.setAttribute("timeText", "Time Left: ");
+		req.setAttribute("room", String.format("Room %d/16 (%.2f%%)", player.getRoomID(), player.getRoomID() / 16.0 * 100));
 		req.setAttribute("duration", 900);
 		
-		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
+		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}
 	
 	@Override
@@ -39,37 +49,34 @@ public class TBAGServlet extends HttpServlet {
 		Game game = new Game();
 		Player player = game.getPlayer();
 		
-		if (req.getParameter("submit").equals("Clear Game")) {
-			req.setAttribute("story", player.getLastOutput());
-		} else {
-			String text = req.getParameter("userInput");
-			String story = req.getParameter("story");
+		String text = req.getParameter("userInput");
+		String story = req.getParameter("story");
+		
+		if (text.length() != 0) {
+			pastInputs += text + "\n";
+			story += " > " + text + "\n";
 			
-			if (text.length() != 0) {
-				pastInputs += text + "\n";
-				story += " > " + text + "\n";
-				
-				game.runCommand(text);
-				
-				story += game.getOutput() + "\n";
-				
-			}
+			game.runCommand(text);
 			
-			player.setLastOutput(story);
-			player.setMoves(player.getMoves() + 1);
-			
-			game.updateGameState(story, player.getMoves());
-			
-			req.setAttribute("story", story);
-			req.setAttribute("pastInputs", pastInputs + "\n");
-			req.setAttribute("duration", req.getParameter("duration"));
+			story += game.getOutput() + "\n";
 			
 		}
 		
+		if (story.length() >= 8000) {
+			story = story.substring(story.length() - 8000, story.length());
+		}
+		
+		player.setLastOutput(story);
+		player.setMoves(player.getMoves() + 1);
+		
+		game.updateGameState(story, player.getMoves());
+		
+		req.setAttribute("story", story);
+		req.setAttribute("pastInputs", pastInputs + "\n");
+		req.setAttribute("duration", req.getParameter("duration"));
 		req.setAttribute("moves", "Moves: " + player.getMoves());
-		req.setAttribute("score", "Score: 0");
-		req.setAttribute("timeText", "Time Left: ");
+		req.setAttribute("room", String.format("Room %d/16 (%.2f%%)", player.getRoomID(), player.getRoomID() / 16.0 * 100));
 
-		req.getRequestDispatcher("/_view/tbag.jsp").forward(req, resp);
+		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}
 }

@@ -167,4 +167,16 @@ public class FakeDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean validateLogin(String username, String password) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Integer addUser(String username, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

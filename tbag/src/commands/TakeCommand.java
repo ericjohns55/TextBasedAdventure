@@ -1,5 +1,7 @@
 package commands;
 
+import java.util.HashMap;
+
 import actor.NPC;
 import game.Game;
 import items.Inventory;
@@ -20,7 +22,9 @@ public class TakeCommand extends UserCommand {
 		Game game = getGame();
 
 		if (location == null || location.equals("room") || location.equals("floor")) {
-			if (room.hasItem(noun)) {
+			if (noun == null) {
+				game.setOutput("Please specify an item.");
+			} else if (room.hasItem(noun)) {
 				Item toGrab = room.getItem(noun);
 				
 				if (toGrab != null) {
@@ -29,8 +33,17 @@ public class TakeCommand extends UserCommand {
 				} else {
 					game.setOutput("This item does not exist in your current room.");
 				}
-			} else if (noun == null) {
-				game.setOutput("Please specify an item.");
+			} else if (noun.equals("all")) {
+				if (!room.getInventory().isEmpty()) {
+					HashMap<String, Item> items = room.getInventory().getAllItems();
+					
+					for (String identifier : items.keySet()) {
+						game.take(room, items.get(identifier), getPlayer(), noun);
+						game.addOutput("You picked up " + identifier + ".\n");
+					}
+				} else {
+					game.setOutput("This room does not contain any items.");
+				}
 			} else {
 				game.setOutput("This item does not exist in your current room.");
 			}
@@ -68,6 +81,18 @@ public class TakeCommand extends UserCommand {
 							Item toGrab = objectInventory.removeItem(noun);
 														
 							game.take(roomObject, toGrab, getPlayer(), puzzle, noun);
+							game.setOutput("You picked up " + noun + ".");	
+						} else if (noun.equals("all")) {
+							if (!objectInventory.isEmpty()) {
+								HashMap<String, Item> items = objectInventory.getAllItems();
+								
+								for (String identifier : items.keySet()) {
+									game.take(roomObject, objectInventory.getItem(identifier), getPlayer(), puzzle, noun);
+									game.addOutput("You picked up " + identifier + " from " + location + ".\n");
+								}								
+							} else {
+								game.setOutput("The " + location + " does not possess any items.");
+							}
 						} else {
 							game.setOutput("This object does not have that item.");
 						}

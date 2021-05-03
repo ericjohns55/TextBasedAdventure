@@ -26,6 +26,9 @@ public interface IDatabase {
 	
 	public Integer updateGameState(String output, int moves, Player player);
 	
+	public boolean validateLogin(String username, String password);
+	public Integer addUser(String username, String password);
+	
 	public Room getRoom(int roomID);
 	public Player getPlayer(int playerID);
 	public Integer addItemToInventory(Inventory destinationInventory, Item item);

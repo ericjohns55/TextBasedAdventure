@@ -488,6 +488,67 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
+	public boolean validateLogin(String username, String password) {
+		return executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select * " + 
+								"from users " +
+									"where users.username = ? and users.password = ?");	
+
+					stmt.setString(1, username);
+					stmt.setString(2, password);
+					
+					resultSet = stmt.executeQuery();
+					
+					boolean found = false;
+					
+					while (resultSet.next()) {
+						found = true;
+					}
+					
+					if (!found) {
+						System.out.println("Could not find user " + username);
+					}
+					
+					return found;
+				} finally {
+					DBUtil.closeQuietly(resultSet);
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+			
+		});
+	}
+
+	@Override
+	public Integer addUser(String username, String password) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				
+				try {
+					stmt = conn.prepareStatement("insert into users (username, password, playerID) values (?, ?, ?)");
+
+					stmt.setString(1, username);
+					stmt.setString(2, password);
+					stmt.setInt(3, 0);
+
+					return stmt.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+				}
+			}
+		});
+	}
+
+	@Override
 	public Inventory getPlayerInventory(Player player) {
 		return executeTransaction(new Transaction<Inventory>() {
 			@Override
@@ -1424,7 +1485,8 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmtRmObjs = null;
 				PreparedStatement stmtRms = null;
 				PreparedStatement stmtUnlckbleObjs = null;	
-				PreparedStatement stmtCnnctns = null;				
+				PreparedStatement stmtCnnctns = null;	
+				PreparedStatement stmtUsers = null;
 			
 				try {
 					stmtCmpdItms = conn.prepareStatement(
@@ -1538,6 +1600,19 @@ public class DerbyDatabase implements IDatabase {
 					
 					System.out.println("players table created");	
 					
+					stmtUsers = conn.prepareStatement(
+							"create table users (" +
+									"	gameID integer primary key " +
+									"		generated always as identity (start with 1, increment by 1), " +									
+									"	username varchar(40)," +
+									"	password varchar(40)," +
+									"	playerID integer" +
+									")"
+					);	
+					stmtUsers.executeUpdate();
+					
+					System.out.println("users table created");
+					
 					stmtPuzls = conn.prepareStatement(
 						"create table puzzles (" +
 						"	puzzleID integer," +								
@@ -1644,6 +1719,7 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmtRms);
 					DBUtil.closeQuietly(stmtUnlckbleObjs);	
 					DBUtil.closeQuietly(stmtCnnctns);
+					DBUtil.closeQuietly(stmtUsers);
 				}
 			}
 		});
@@ -1689,6 +1765,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertPuzzles = null;
 				PreparedStatement insertObjectPuzzles = null;
 				PreparedStatement insertConnections = null;
+				PreparedStatement insertTestUser = null;
 				
 				try {
 					insertItems = conn.prepareStatement("insert into items (itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, inventoryID) " +
@@ -1909,6 +1986,14 @@ public class DerbyDatabase implements IDatabase {
 					
 					insertConnections.executeBatch();
 					
+					insertTestUser = conn.prepareStatement("insert into users (username, password, playerID) values (?, ?, ?)");
+					insertTestUser.setString(1, "test");
+					insertTestUser.setString(2, "test");
+					insertTestUser.setInt(3, -1);
+					insertTestUser.executeUpdate();
+					
+					System.out.println("Added test user");
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertItems);
@@ -1921,6 +2006,7 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(insertPuzzles);
 					DBUtil.closeQuietly(insertObjectPuzzles);
 					DBUtil.closeQuietly(insertConnections);
+					DBUtil.closeQuietly(insertTestUser);
 				}
 			}
 		});
