@@ -1725,7 +1725,7 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	public void loadInitialData() {
+	public void loadInitialData(int gameID) {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
 			public Boolean execute(Connection conn) throws SQLException {
@@ -2020,7 +2020,7 @@ public class DerbyDatabase implements IDatabase {
 		db.createTables();
 		
 		System.out.println("\nLoading initial data...");
-		db.loadInitialData();
+		db.loadInitialData(0);
 		
 		System.out.println("\nText Based Adventure Game DB successfully initialized!");
 	}

@@ -16,6 +16,7 @@ public class TBAGServlet extends HttpServlet {
 	private String pastInputs = "";
 	
 	private boolean loggedIn = false;
+	private int gameID = -1;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,6 +24,8 @@ public class TBAGServlet extends HttpServlet {
 		
 		if (username != null) {
 			loggedIn = true;
+			gameID = 0; // get from username
+			// generate new data with game ID
 		} else if (!loggedIn) {
 			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
 			return;

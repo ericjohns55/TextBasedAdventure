@@ -27,6 +27,8 @@ public class Game {
 	
 	private IDatabase db;
 	
+	private int gameID;
+	
 	public Game() {
 		DatabaseProvider.setInstance(new DerbyDatabase());
 		db = DatabaseProvider.getInstance();	
@@ -35,6 +37,7 @@ public class Game {
 		this.player.setGame(this);
 		this.room = db.getRoom(player.getRoomID());
 		this.output = "";
+		this.gameID = 0;
 	}
 	
 	public Game(int roomID) {
@@ -82,6 +85,14 @@ public class Game {
 
 	public Room getRoom(int ID) {
 		return db.getRoom(ID);
+	}
+	
+	public int getGameID() {
+		return gameID;
+	}
+	
+	public void setGameID(int gameID) {
+		this.gameID = gameID;
 	}
 	
 	public void updateGameState(String lastOutput, int moves) {
