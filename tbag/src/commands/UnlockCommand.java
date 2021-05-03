@@ -25,10 +25,23 @@ public class UnlockCommand extends UserCommand {
 						UnlockableObject unlockableObject = (UnlockableObject) roomObject;
 						Item unlockItem = unlockableObject.getUnlockItem();
 						
+						
+						
+						
+
+						
+						
+						
 						if (inventory.contains(unlockItem)) {
 							game.unlock(unlockableObject, unlockItem, getPlayer());
 							game.setOutput("You successfully unlocked the " + unlockableObject.getName() + ".");
 						} else {
+							
+							
+						//	game.setOutput("The item id is:" + unlockItem.getItemID() + "   " + "The unlock item id is:" + unlockableObject.getUnlockItemID() +
+						//			"\n" + "The item name is:" + unlockItem.getName() + "   " + "The unlock item name is:" + unlockableObject.getName());
+							
+							
 							game.setOutput("You do not have the required item to unlock this " + unlockableObject.getName() + ".");
 						}
 					} else {

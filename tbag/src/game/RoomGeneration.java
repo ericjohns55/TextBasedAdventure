@@ -38,7 +38,7 @@ public class RoomGeneration {
 		Room room11 = new Room("You are in a room, on the wall there is a sign that says \"There is nothing wrong here\". "
 				+ "This room is very clean, quiet, and cold; and you can't help but to feel like you're not alone as you hear murmurs in the walls. On a table in the exact center of the room there is a computer that says \"What is the capital of New Jersey?\" on the screen.", 11);
 		Room room12 = new Room("You are in a bedroom with a bed, nightstand and a scanner.", 12);
-		Room room13 = new Room("You are in a room with a keypad. On the kepad is a standard set of numbers but the 1, 3, 6, and 8 buttons are clearly worn.", 13);
+		Room room13 = new Room("You are in a room with a keypad. On the keypad is a standard set of numbers but the 1, 3, 6, and 8 buttons are clearly worn.", 13);
 		Room room14 = new Room("You are in a dark room where you can not see a thing.", 14);
 		Room room15 = new Room("You are in a room with an undead doorman.", 15);	
 		Room room16 = new Room("You are in a room where to the north there is a ladder covered in grease going through the ceiling.", 16);
@@ -336,9 +336,23 @@ public class RoomGeneration {
 		pentagram.setCoverable(true);
 		room8.addObject("pentagram", pentagram);
 
-		UnlockableObject room8Door = new UnlockableObject("door", "Probably leads to another room...", "west up stairs", true, "none");
+		
+		
+	
+		// Messed with stuff after here
+	
+		
+		
+		
+		
+		
+		// 	public UnlockableObject(String name, String description, String direction, boolean blockingExit, Item unlockItem, int roomID) {
+
+		UnlockableObject room8Door = new UnlockableObject("door", "Probably leads to another room...", "west up stairs", true, null, 8);
 		room8Door.setLocked(true);
 		room8.addObject("room8Door", room8Door);
+
+		// public Puzzle(String description, String solution, String hint, boolean writtenSolution, String unlockObstacle, int roomID) {
 
 		room8.setPuzzle(new Puzzle("Bloody Pentagram", "blood vial", "Maybe the vial can be used to cover something?", false, "room8Door"));
 
@@ -346,7 +360,8 @@ public class RoomGeneration {
 		
 		
 		// Room 9 
-		RoomObject hellhound = new RoomObject("hellhound", "Looks hungry for meat.", "north", false, false, false);
+		// 	public RoomObject(String name, String description, String direction, boolean isObstacle, boolean blockingExit, boolean moveable, int roomID) {
+		RoomObject hellhound = new RoomObject("hellhound", "Looks hungry for meat.", "north", false, false, false, 9);
 		hellhound.setCanHoldItems(true);
 		hellhound.setCanBeFed(true);
 		room9.addObject("hellhound", hellhound);

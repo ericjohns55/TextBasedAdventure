@@ -8,6 +8,8 @@ public class RoomObject {
 	private String direction;
 	
 	private String covered;
+	private String fed;
+	private String scanned;
 	
 	private boolean unlockable;
 	private boolean locked;
@@ -18,7 +20,7 @@ public class RoomObject {
 	private boolean isObstacle;
 	private boolean coverable;	
 	private boolean canBeFed;
-	private boolean canScan;
+	private boolean canBeScanned;
 	private boolean previouslyUnlocked;
 	private Inventory inventory;
 	
@@ -44,8 +46,10 @@ public class RoomObject {
 		this.canBeFed = false;
 		this.previouslyUnlocked = false;		
 		this.covered = "";
+		this.fed = "";
 		
-		this.canScan = false;
+		this.canBeScanned = false;
+		this.scanned = "";
 		
 		this.inventory = new Inventory();
 		this.roomID = roomID;
@@ -204,12 +208,37 @@ public class RoomObject {
 	public void setCanBeFed(boolean canBeFed) {
 		this.canBeFed = canBeFed;
 	}
-	
-	public boolean canScan() {
-		return canScan;
+
+	public void feed(String toFeed) {
+		fed = toFeed;
 	}
 	
-	public void setCanScan(boolean canScan) {
-		this.canScan = canScan;
+	public String getFed() {
+		return fed;
 	}
+	
+	public boolean isFed() {
+		return fed.length() > 1;
+	}
+
+	public boolean canBeScanned() {
+		return canBeScanned;
+	}
+	
+	public void setCanBeScanned(boolean canBeScanned) {
+		this.canBeScanned = canBeScanned;
+	}
+	
+	public void scanned(String toScan) {
+		scanned = toScan;
+	}
+	
+	public String getScanned() {
+		return scanned;
+	}
+	
+	public boolean isScanned() {
+		return scanned.length() > 1;
+	}	
+	
 }
