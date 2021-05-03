@@ -38,14 +38,13 @@
 			}
 		</style>
 	</head>
-
+	
 	<body>
 		<form action="${pageContext.servletContext.contextPath}/login" method="post">			
 			<center>
 				<p class="title">Welcome to the Text Based Adventure Game</p>
 				<p id="extrainfo">Please Login to Continue</p>
-				
-				
+
 				<c:if test="${! empty errorMessage}">
 					<div class="error">${errorMessage}</div>
 				</c:if>
@@ -57,7 +56,7 @@
 					</tr>
 					<tr>
 						<td id="infolabel">Password:</td>
-						<td><input type="text" name="password" size="12" value="${password}" /></td>
+						<td><input type="password" name="password" size="12" value="${password}" /></td>
 					</tr>
 				</table>
 				
