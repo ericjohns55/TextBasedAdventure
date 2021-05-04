@@ -26,19 +26,26 @@ public class LoginServlet extends HttpServlet {
 		
 		boolean validLogin = false;
 		
+		int gameID = 0;
+		
 		if (username == null || password == null || username.equals("") || password.equals("")) {
 			errorMessage = "Please input both a username and password.";
 		} else {
 			controller = new LoginController();
 			
-			if (req.getParameter("submit") != null) {
+			if (req.getParameter("login") != null) {
 				validLogin = controller.attemptLogin(username, password);
 				
 				if (!validLogin) {
 					errorMessage = "You entered an invalid username or password!";
+				} else {
+					gameID = controller.getGameID(username, password);
+					System.out.println("GRABBED EXISTING GAME");
 				}
 			} else if (req.getParameter("create") != null) {
-				controller.createAccount(username, password);
+				System.out.println("CREATING ACCOUNT");
+				gameID = controller.createAccount(username, password);
+								
 				validLogin = true;
 			}
 		}
@@ -48,7 +55,7 @@ public class LoginServlet extends HttpServlet {
 		req.setAttribute("errorMessage", errorMessage);
 		
 		if (validLogin) {
-			req.getSession().setAttribute("success", username);
+			req.getSession().setAttribute("success", "" + gameID);
 			resp.sendRedirect(req.getContextPath() + "/game");
 		} else {
 			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);

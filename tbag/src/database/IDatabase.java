@@ -27,6 +27,7 @@ public interface IDatabase {
 	
 	public boolean validateLogin(String username, String password);
 	public Integer addUser(String username, String password);
+	public Integer getGameID(String username, String password);
 	
 	public Room getRoom(int roomID);
 	public Player getPlayer(int playerID);
@@ -41,4 +42,6 @@ public interface IDatabase {
 	public Integer destroyItem(Item item);
 	public Integer playNotes(PlayableObject playableObject, String notes);
 	public String getDescription(int roomID);
+	
+	public void loadInitialData(int gameID);
 }

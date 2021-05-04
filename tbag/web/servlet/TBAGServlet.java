@@ -15,18 +15,18 @@ public class TBAGServlet extends HttpServlet {
 	private boolean firstRun = true;
 	private String pastInputs = "";
 	
-	private boolean loggedIn = false;
+//	private boolean loggedIn = false;
 	private int gameID = -1;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String username = (String) req.getSession().getAttribute("success");
+		String success = (String) req.getSession().getAttribute("success");
 		
-		if (username != null) {
-			loggedIn = true;
-			gameID = 0; // get from username
-			// generate new data with game ID
-		} else if (!loggedIn) {
+		if (success != null) {
+//			loggedIn = true;
+			gameID = Integer.parseInt(success); 			
+			System.out.println("--- GRABBED LOG IN INFO --- GAME ID: " + success);
+		} else {
 			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
 			return;
 		}
@@ -54,6 +54,8 @@ public class TBAGServlet extends HttpServlet {
 		
 		String text = req.getParameter("userInput");
 		String story = req.getParameter("story");
+		
+		System.out.println("========== REQ STATUS: " + (String) req.getSession().getAttribute("success"));
 		
 		if (text.length() != 0) {
 			pastInputs += text + "\n";

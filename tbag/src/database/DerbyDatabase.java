@@ -564,6 +564,37 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	@Override
+	public Integer getGameID(String username, String password) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement("select users.gameID from users where users.username = ? and users.password = ?");
+					
+					stmt.setString(1, username);
+					stmt.setString(2, password);
+					
+					resultSet = stmt.executeQuery();
+					
+					int gameID = 0;
+					
+					while (resultSet.next()) {
+						gameID = resultSet.getInt(1);
+					}
+					
+					return gameID;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
+				}
+			}
+		});
+	}
+	
+	@Override
 	public UnlockableObject getUnlockableObjectByID(int objectID) {
 		return executeTransaction(new Transaction<UnlockableObject>() {
 			@Override
@@ -1721,6 +1752,7 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	@Override
 	public void loadInitialData(int gameID) {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
@@ -1761,7 +1793,6 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertPuzzles = null;
 				PreparedStatement insertObjectPuzzles = null;
 				PreparedStatement insertConnections = null;
-				PreparedStatement insertTestUser = null;
 				
 				try {
 					insertItems = conn.prepareStatement("insert into items (gameID, itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, inventoryID) " +
@@ -1991,14 +2022,6 @@ public class DerbyDatabase implements IDatabase {
 					
 					insertConnections.executeBatch();
 					
-					insertTestUser = conn.prepareStatement("insert into users (username, password, playerID) values (?, ?, ?)");
-					insertTestUser.setString(1, "test");
-					insertTestUser.setString(2, "test");
-					insertTestUser.setInt(3, -1);
-					insertTestUser.executeUpdate();
-					
-					System.out.println("Added test user");
-					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertItems);
@@ -2011,6 +2034,28 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(insertPuzzles);
 					DBUtil.closeQuietly(insertObjectPuzzles);
 					DBUtil.closeQuietly(insertConnections);
+				}
+			}
+		});
+	}
+	
+	public Integer createTestUser() {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement insertTestUser = null;
+				
+				try {
+					insertTestUser = conn.prepareStatement("insert into users (username, password, playerID) values (?, ?, ?)");
+					insertTestUser.setString(1, "test");
+					insertTestUser.setString(2, "test");
+					insertTestUser.setInt(3, 0);
+					insertTestUser.executeUpdate();
+					
+					System.out.println("Added test user");
+					
+					return 0;
+				} finally {
 					DBUtil.closeQuietly(insertTestUser);
 				}
 			}
@@ -2018,14 +2063,14 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	// The main method creates the database tables and loads the initial data.
-//	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
 		System.out.println("Creating tables...");
-		DerbyDatabase db = new DerbyDatabase(0);
+		DerbyDatabase db = new DerbyDatabase(1);
 		db.createTables();
 		
 		System.out.println("\nLoading initial data...");
-		db.loadInitialData(0);
+		db.loadInitialData(1);
+		db.createTestUser();
 		
 		System.out.println("\nText Based Adventure Game DB successfully initialized!");
 	}

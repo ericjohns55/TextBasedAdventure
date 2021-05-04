@@ -16,7 +16,19 @@ public class LoginController {
 		return database.validateLogin(username, password);
 	}
 	
-	public void createAccount(String username, String password) {
+	public int createAccount(String username, String password) {
 		database.addUser(username, password);
+		
+		System.out.println("CREATING ACCOUNT !---------------------------------------------------------");
+		
+		int gameID = getGameID(username, password);
+		
+		database.loadInitialData(gameID);
+		
+		return gameID;
+	}
+	
+	public int getGameID(String username, String password) {
+		return database.getGameID(username, password);
 	}
 }

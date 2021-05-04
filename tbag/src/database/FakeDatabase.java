@@ -173,4 +173,16 @@ public class FakeDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Integer getGameID(String username, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void loadInitialData(int gameID) {
+		// TODO Auto-generated method stub
+		
+	}
 }
