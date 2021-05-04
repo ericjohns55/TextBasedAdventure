@@ -927,8 +927,8 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement(
 							"select roomObjects.* " +
-								"from roomObjects, rooms " + 
-									"where roomObjects.roomID = ? and roomObjects.roomID = rooms.roomID and roomObjects.gameID = ?"
+								"from roomObjects " + 
+									"where roomObjects.roomID = ? and roomObjects.gameID = ?"
 					);	
 					
 					stmt.setInt(1, room.getRoomID());
@@ -988,8 +988,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmt2 = conn.prepareStatement(
 							"select unlockableObjects.* " +
-								"from unlockableObjects, rooms " + 
-									"where unlockableObjects.roomID = ? and unlockableObjects.roomID = rooms.roomID and unlockableObjects.gameID = ?"
+								"from unlockableObjects " + 
+									"where unlockableObjects.roomID = ? and unlockableObjects.gameID = ?"
 					);	
 					
 					stmt2.setInt(1, room.getRoomID());
@@ -1060,8 +1060,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmt3 = conn.prepareStatement(
 							"select playableObjects.* " +
-								"from playableObjects, rooms " + 
-									"where playableObjects.roomID = ? and playableObjects.roomID = rooms.roomID and playableObjects.gameID = ?"
+								"from playableObjects " + 
+									"where playableObjects.roomID = ? and playableObjects.gameID = ?"
 					);	
 					
 					stmt3.setInt(1, room.getRoomID());
