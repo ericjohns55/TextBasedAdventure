@@ -50,7 +50,6 @@ public class DropCommand extends UserCommand {
 								HashMap<String, Item> items = inventory.getAllItems();
 								
 								for (String identifier : items.keySet()) {
-									game.addOutput("You placed the " + identifier + " on the " + location + ".\n"); 
 									game.dropItem(roomObject, identifier, getPlayer(), puzzle, location);
 								}
 							} else {

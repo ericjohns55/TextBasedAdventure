@@ -156,7 +156,7 @@ public class Game {
 		} else {
 			objectInventory.addItem(item, toRemove);
 			db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
-			addOutput("You placed the " + item + " on the " + location + "."); 
+			addOutput("You placed the " + item + " on the " + location + ".\n"); 
 		}
 		
 		if (puzzle.getDescription().equals("weightPuzzle")) {
