@@ -41,8 +41,15 @@ public class TBAGServlet extends HttpServlet {
 		
 		req.setAttribute("story", player.getLastOutput());
 		req.setAttribute("moves", "Moves: " + player.getMoves());
-		req.setAttribute("room", String.format("Room %d/16 (%.2f%%)", player.getRoomID(), player.getRoomID() / 16.0 * 100));
 		req.setAttribute("duration", 900);
+		
+		String roomProgress = String.format("Room: %d/16 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 16.0 * 100);
+		
+		if (player.getRoomID() == 17) {
+			roomProgress = "YOU ESCAPED!";
+		}
+		
+		req.setAttribute("room", roomProgress);
 		
 		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}
@@ -80,7 +87,14 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("pastInputs", pastInputs + "\n");
 		req.setAttribute("duration", req.getParameter("duration"));
 		req.setAttribute("moves", "Moves: " + player.getMoves());
-		req.setAttribute("room", String.format("Room %d/16 (%.2f%%)", player.getRoomID(), player.getRoomID() / 16.0 * 100));
+		
+		String roomProgress = String.format("Room: %d/16 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 16.0 * 100);
+		
+		if (player.getRoomID() == 17) {
+			roomProgress = "YOU ESCAPED!";
+		}
+		
+		req.setAttribute("room", roomProgress);
 
 		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}

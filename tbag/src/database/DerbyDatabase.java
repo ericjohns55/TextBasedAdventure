@@ -167,7 +167,7 @@ public class DerbyDatabase implements IDatabase {
 				ResultSet resultSet = null;
 				
 				try {
-					stmt = conn.prepareStatement("select players.* from players where players.actorID = ? and players.gameID = ?");
+					stmt = conn.prepareStatement("select players.* from players where players.playerID = ? and players.gameID = ?");
 					stmt.setInt(1, playerID);
 					stmt.setInt(2, gameID);
 					
@@ -179,7 +179,7 @@ public class DerbyDatabase implements IDatabase {
 						int index = 1;
 						
 						int gameID = resultSet.getInt(index++);
-						int actorID = resultSet.getInt(index++);
+						int playerID = resultSet.getInt(index++);
 						int roomID = resultSet.getInt(index++);
 						int inventoryID = resultSet.getInt(index++);
 						int moves = resultSet.getInt(index++);
@@ -187,7 +187,7 @@ public class DerbyDatabase implements IDatabase {
 						
 						player = new Player(roomID);
 						player.setGameID(gameID);
-						player.setActorID(actorID);
+						player.setActorID(playerID);
 						player.setMoves(moves);
 						player.setLastOutput(lastOutput);
 						player.setInventoryID(inventoryID);
@@ -1196,14 +1196,14 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt2 = null;
 				
 				try {
-					stmt = conn.prepareStatement("update players set moves = ? where players.actorID = ? and players.gameID = ?");
+					stmt = conn.prepareStatement("update players set moves = ? where players.playerID = ? and players.gameID = ?");
 					stmt.setInt(1, moves);
 					stmt.setInt(2, player.getActorID());
 					stmt.setInt(3, gameID);
 					
 					stmt.executeUpdate();
 					
-					stmt2 = conn.prepareStatement("update players set lastOutput = ? where players.actorID = ? and players.gameID = ?");
+					stmt2 = conn.prepareStatement("update players set lastOutput = ? where players.playerID = ? and players.gameID = ?");
 					stmt2.setString(1, output);
 					stmt2.setInt(2, player.getActorID());
 					stmt2.setInt(3, gameID);
@@ -1301,7 +1301,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update players set roomID = ? where players.actorID = ? and players.gameID = ?");
+					stmt = conn.prepareStatement("update players set roomID = ? where players.playerID = ? and players.gameID = ?");
 
 					stmt.setInt(1, roomID);
 					stmt.setInt(2, player.getActorID());
@@ -1613,7 +1613,7 @@ public class DerbyDatabase implements IDatabase {
 					stmtPlyrs = conn.prepareStatement(
 						"create table players (" +
 						"   gameID integer," + 
-						"	actorID integer," +
+						"	playerID integer," +
 						"	roomID integer," +
 						"	inventoryID integer," +
 						"	moves integer," +
@@ -1846,7 +1846,7 @@ public class DerbyDatabase implements IDatabase {
 					insertCompoundItems.executeBatch();
 					
 					
-					insertPlayers = conn.prepareStatement("insert into players (gameID, actorID, roomID, inventoryID, moves, lastOutput) values (?, ?, ?, ?, ?, ?)");
+					insertPlayers = conn.prepareStatement("insert into players (gameID, playerID, roomID, inventoryID, moves, lastOutput) values (?, ?, ?, ?, ?, ?)");
 					
 					for (Player player : players) {
 						insertPlayers.setInt(1, gameID);

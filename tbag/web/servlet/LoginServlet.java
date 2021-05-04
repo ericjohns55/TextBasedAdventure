@@ -11,8 +11,6 @@ public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private LoginController controller = null;
 	
-	
-	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {	
 		req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
@@ -40,13 +38,15 @@ public class LoginServlet extends HttpServlet {
 					errorMessage = "You entered an invalid username or password!";
 				} else {
 					gameID = controller.getGameID(username, password);
-					System.out.println("GRABBED EXISTING GAME");
 				}
 			} else if (req.getParameter("create") != null) {
-				System.out.println("CREATING ACCOUNT");
-				gameID = controller.createAccount(username, password);
-								
-				validLogin = true;
+				if (controller.attemptLogin(username, password)) {
+					errorMessage = "This account already exists.";
+				} else {
+					gameID = controller.createAccount(username, password);
+									
+					validLogin = true;
+				}
 			}
 		}
 

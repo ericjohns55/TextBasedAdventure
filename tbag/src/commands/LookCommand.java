@@ -39,29 +39,18 @@ public class LookCommand extends UserCommand {
 						// Before it was just setting it to unlocked and you would have to examine again,
 						// but now it sends it out immediately.
 						
-						if (inventory.contains(painting.getUnlockItem()))
-						{
+						if (inventory.contains(painting.getUnlockItem())) {
 							game.setOutput("This " + room.getObject(noun).getName() + " reads " + room.getObject(noun).getDescription() + ".");
-						}
-						
-						else
-						{	
+						} else {	
 							game.setOutput("You do not have what is needed to see this object.");
 						}
-					}									
-					
-					else
-					{	
+					} else {	
 						game.setOutput("This object is locked, I cannot see what is inside.");
 					}
-
-				//	game.setOutput("This object is locked, I cannot see what is inside.");
 				} else {
 					game.setOutput(room.getObject(noun).getDescription());
 				}
-			}
-			
-			else {
+			} else {
 				game.setOutput("That item doesn't exist!");
 			}
 		}
