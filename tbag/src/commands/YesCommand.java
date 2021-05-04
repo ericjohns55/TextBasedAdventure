@@ -26,12 +26,8 @@ public class YesCommand extends UserCommand {
 							if (npc.getCurrentNode().getType().equals("option")) {
 								t += " option " + i + "\n";
 								i++;
-							}
-							else if (npc.getCurrentNode().getType().equals("y/n")) {
+							} else if (npc.getCurrentNode().getType().equals("y/n")) {
 								t += " y/n \n";
-							}
-							else {
-								
 							}
 						}
 						game.setOutput(t);
@@ -40,22 +36,18 @@ public class YesCommand extends UserCommand {
 						game.setOutput(npc.getCurrentNode().getMessage());
 						if(npc.getCurrentNode().getType().equals("WC")) {
 							npc.setCurrentNode(npc.getPreviousNode());
-						}
-						else if (npc.getCurrentNode().getType().equals("DE")) {
+						} else if (npc.getCurrentNode().getType().equals("DE")) {
 							npc.setCurrentNode(npc.getRootNode());
 							npc.setTalkedTo(false);
 						}
 					}
-				}
-				else {
+				} else {
 					game.setOutput("You should talk to " + npc.getName() + ".");
 				}
-			}
-			else {
+			} else {
 				game.setOutput("I don't understand that command.");
 			}
-		}
-		else {
+		} else {
 			game.setOutput("I don't understand that command.");
 		}
 	}

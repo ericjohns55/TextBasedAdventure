@@ -15,20 +15,23 @@ public class TBAGServlet extends HttpServlet {
 	private boolean firstRun = true;
 	private String pastInputs = "";
 	
-	private boolean loggedIn = false;
+//	private boolean loggedIn = false;
+	private int gameID = -1;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String username = (String) req.getSession().getAttribute("success");
+		String success = (String) req.getSession().getAttribute("success");
 		
-		if (username != null) {
-			loggedIn = true;
-		} else if (!loggedIn) {
+		if (success != null) {
+//			loggedIn = true;
+			gameID = Integer.parseInt(success); 			
+			System.out.println("--- GRABBED LOG IN INFO --- GAME ID: " + success);
+		} else {
 			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
 			return;
 		}
 		
-		Game game = new Game();
+		Game game = new Game(gameID);
 		Player player = game.getPlayer();
 		
 		if (firstRun) {
@@ -38,19 +41,28 @@ public class TBAGServlet extends HttpServlet {
 		
 		req.setAttribute("story", player.getLastOutput());
 		req.setAttribute("moves", "Moves: " + player.getMoves());
-		req.setAttribute("room", String.format("Room %d/16 (%.2f%%)", player.getRoomID(), player.getRoomID() / 16.0 * 100));
 		req.setAttribute("duration", 900);
+		
+		String roomProgress = String.format("Room: %d/16 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 16.0 * 100);
+		
+		if (player.getRoomID() == 17) {
+			roomProgress = "YOU ESCAPED!";
+		}
+		
+		req.setAttribute("room", roomProgress);
 		
 		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
-		Game game = new Game();
+		Game game = new Game(gameID);
 		Player player = game.getPlayer();
 		
 		String text = req.getParameter("userInput");
 		String story = req.getParameter("story");
+		
+		System.out.println("========== REQ STATUS: " + (String) req.getSession().getAttribute("success"));
 		
 		if (text.length() != 0) {
 			pastInputs += text + "\n";
@@ -75,7 +87,14 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("pastInputs", pastInputs + "\n");
 		req.setAttribute("duration", req.getParameter("duration"));
 		req.setAttribute("moves", "Moves: " + player.getMoves());
-		req.setAttribute("room", String.format("Room %d/16 (%.2f%%)", player.getRoomID(), player.getRoomID() / 16.0 * 100));
+		
+		String roomProgress = String.format("Room: %d/16 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 16.0 * 100);
+		
+		if (player.getRoomID() == 17) {
+			roomProgress = "YOU ESCAPED!";
+		}
+		
+		req.setAttribute("room", roomProgress);
 
 		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}

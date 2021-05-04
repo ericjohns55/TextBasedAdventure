@@ -30,8 +30,8 @@ public class DropCommand extends UserCommand {
 						HashMap<String, Item> items = inventory.getAllItems();
 						
 						for (String identifier : items.keySet()) {
-							game.dropItem(room, identifier, getPlayer(), puzzle);
 							game.addOutput("You dropped " + identifier + " on the floor.\n");
+							game.dropItem(room, identifier, getPlayer(), puzzle);
 						}
 					} else {
 						game.setOutput("You possess nothing to drop.");
@@ -51,14 +51,12 @@ public class DropCommand extends UserCommand {
 								
 								for (String identifier : items.keySet()) {
 									game.dropItem(roomObject, identifier, getPlayer(), puzzle, location);
-									game.addOutput("You placed the " + identifier + " on the " + location + ".\n"); 
 								}
 							} else {
 								game.setOutput("You possess nothing to drop.");
 							}
 						} else {
 							game.dropItem(roomObject, noun, getPlayer(), puzzle, location);
-							game.setOutput("You placed the " + noun + " on the " + location + "."); 
 						}
 					} else {
 						game.setOutput("This object cannot hold that...");

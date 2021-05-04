@@ -60,7 +60,7 @@
 					</tr>
 				</table>
 				
-				<input type="Submit" name="submit" value="Login">
+				<input type="Submit" name="login" value="Login">
 				<input type="Submit" name="create" value="Create Account">
 			</center>
 		</form>

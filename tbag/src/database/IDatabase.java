@@ -16,7 +16,6 @@ import puzzle.Puzzle;
 public interface IDatabase {
 	public Item getItemByID(int itemID);
 	public RoomObject getRoomObjectByID(int objectID);
-	public Inventory getPlayerInventory(Player player);
 	public Inventory getInventoryByID(int id);
 	public List<RoomObject> findAllObjects(Room room);	
 	public List<Player> getAllPlayers();
@@ -28,6 +27,7 @@ public interface IDatabase {
 	
 	public boolean validateLogin(String username, String password);
 	public Integer addUser(String username, String password);
+	public Integer getGameID(String username, String password);
 	
 	public Room getRoom(int roomID);
 	public Player getPlayer(int playerID);
@@ -42,4 +42,6 @@ public interface IDatabase {
 	public Integer destroyItem(Item item);
 	public Integer playNotes(PlayableObject playableObject, String notes);
 	public String getDescription(int roomID);
+	
+	public void loadInitialData(int gameID);
 }

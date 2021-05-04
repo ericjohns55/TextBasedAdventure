@@ -37,12 +37,6 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public Inventory getPlayerInventory(Player player) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Inventory getInventoryByID(int id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -178,5 +172,17 @@ public class FakeDatabase implements IDatabase {
 	public Integer addUser(String username, String password) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Integer getGameID(String username, String password) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void loadInitialData(int gameID) {
+		// TODO Auto-generated method stub
+		
 	}
 }

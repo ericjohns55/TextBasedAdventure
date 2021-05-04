@@ -13,6 +13,7 @@ public class Actor {
 	private int roomID;
 	private int inventoryID;
 	private int actorID;
+	private int gameID;
 
 	public Actor(Game game, int roomID) {
 		inventory = new Inventory();
@@ -90,5 +91,13 @@ public class Actor {
 
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
+	}
+	
+	public void setGameID(int gameID) {
+		this.gameID = gameID;
+	}
+	
+	public int getGameID() {
+		return gameID;
 	}
 }
