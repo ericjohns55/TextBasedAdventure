@@ -4,7 +4,6 @@ import actor.Player;
 import game.Game;
 
 import items.Inventory;
-import items.Item;
 import map.Room;
 import map.RoomObject;
 import puzzle.Puzzle;

@@ -4,8 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import dialogue.Link;
 import dialogue.Node;
 
@@ -13,7 +11,6 @@ import dialogue.Node;
 public class TestNode {
 	private int nodeID;
 	private String message;
-	private ArrayList<Link> options;
 	private Node n, p;
 	
 	@Before

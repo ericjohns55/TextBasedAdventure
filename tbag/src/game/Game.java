@@ -381,4 +381,26 @@ public class Game {
 			addOutput("There is not an exit here!");
 		}
 	}
+
+	public void reloadDatabaseForJUnit() {
+		db.deleteData(gameID);
+		db.loadInitialData(gameID);
+		
+		reloadData();
+	}
+	
+	public void movePlayerJUnit(int roomID) {
+		player = db.getPlayer(0);
+		player.setRoomID(roomID);
+		player.setGame(this);
+		room = db.getRoom(player.getRoomID());
+		output = "";
+	}
+	
+	public void reloadData() {
+		player = db.getPlayer(0);
+		player.setGame(this);
+		room = db.getRoom(player.getRoomID());
+		output = "";
+	}
 }

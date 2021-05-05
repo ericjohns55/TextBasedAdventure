@@ -2,11 +2,9 @@ package junit;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import game.Game;
-import input.Command;
 
 public class TestGame {	
 	@Test

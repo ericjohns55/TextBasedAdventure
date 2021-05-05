@@ -4,12 +4,21 @@ import org.junit.Test;
 
 import game.Game;
 import items.Item;
+import map.Room;
 import map.RoomObject;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
+
 public class TestCommandLogic {
 	private Game game;
+	
+	@Before
+	public void setUp() {
+		game = new Game(1);
+		game.reloadDatabaseForJUnit();
+	}
 
 	@Test
 	public void testExamineLook() {
@@ -20,6 +29,8 @@ public class TestCommandLogic {
 		String commandOutput = game.getOutput();
 		
 		assertEquals(expectedOutput, commandOutput);
+		
+		System.out.println("EXAMINE TEST");
 	}
 	
 	@Test
@@ -41,7 +52,7 @@ public class TestCommandLogic {
 	}
 	
 	@Test
-	public void testList() {
+	public void testListRoom() {
 		game = new Game(1);
 		
 		game.runCommand("list table");
@@ -55,16 +66,24 @@ public class TestCommandLogic {
 		commandOutput = game.getOutput();
 		
 		assertEquals(expectedOutput, commandOutput);
-		
-		game = new Game(7);
+	}
+	
+	@Test
+	public void testListObject() {
+		game = new Game(1);
+		game.movePlayerJUnit(7);
 		
 		game.runCommand("list table");
-		expectedOutput = "This object has a lamb heart, note, butcher knife";
-		commandOutput = game.getOutput();
+		String expectedOutput = "This object has a lamb heart, note, butcher knife";
+		String commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
 		
 		game.runCommand("list room");
 		expectedOutput = "This room does not contain any items.";
 		commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
 	}
 	
 	@Test
@@ -136,6 +155,12 @@ public class TestCommandLogic {
 		
 		assertEquals(expectedOutput, commandOutput);
 		
+		game.runCommand("move east");
+		expectedOutput = "There is not an exit here.";
+		commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+		
 		game.runCommand("move west");
 		expectedOutput = "This door appears to be locked... perhaps there is something in the room that can help you.";
 		commandOutput = game.getOutput();
@@ -147,7 +172,8 @@ public class TestCommandLogic {
 		
 		assertEquals(2, game.getPlayer().getRoomID());
 		
-		game = new Game(4);
+		game = new Game(1);
+		game.movePlayerJUnit(4);
 		
 		game.runCommand("move south");
 		expectedOutput = "A dresser is blocking your path!";
@@ -178,12 +204,12 @@ public class TestCommandLogic {
 		commandOutput = game.getOutput();
 		
 		assertEquals(expectedOutput, commandOutput);
-		
 	}
 	
 	@Test
 	public void testTypeSolve() {
-		game = new Game(3);
+		game = new Game(1);
+		game.movePlayerJUnit(3);
 		
 		game.runCommand("type LEEDLE");
 		String expectedOutput = "leedle is not correct.";
@@ -200,7 +226,8 @@ public class TestCommandLogic {
 	
 	@Test
 	public void testRead() {
-		game = new Game(3);
+		game = new Game(1);
+		game.movePlayerJUnit(3);
 		
 		Item key = game.getRoom(2).getItem("small key");
 		game.getPlayer().getInventory().addItem("small key", key);
@@ -233,7 +260,8 @@ public class TestCommandLogic {
 	
 	@Test
 	public void testPush() {
-		game = new Game(4);
+		game = new Game(1);
+		game.movePlayerJUnit(4);
 		
 		game.runCommand("push yeet");
 		String expectedOutput = "Cannot find yeet to move.";
@@ -256,7 +284,8 @@ public class TestCommandLogic {
 	
 	@Test
 	public void testPlay() {
-		game = new Game(5);
+		game = new Game(1);
+		game.movePlayerJUnit(5);
 		
 		game.runCommand("play A on piano");
 		String expectedOutput = "You played a on the piano.";
@@ -270,7 +299,8 @@ public class TestCommandLogic {
 		
 		assertEquals(expectedOutput, commandOutput);
 
-		game = new Game(6);
+		game = new Game(1);
+		game.movePlayerJUnit(6);
 		
 		game.runCommand("play h on record player");
 		expectedOutput = "You do not have that item!";
@@ -290,7 +320,8 @@ public class TestCommandLogic {
 	
 	@Test
 	public void testCut() {
-		game = new Game(7);
+		game = new Game(1);
+		game.movePlayerJUnit(7);
 		
 		game.runCommand("cut lamb heart on table");
 		String expectedOutput = "You do not possess the needed item to cut this.";
@@ -315,7 +346,8 @@ public class TestCommandLogic {
 	
 	@Test
 	public void testPour() {
-		game = new Game(8);
+		game = new Game(1);
+		game.movePlayerJUnit(8);
 		
 		Item apple = game.getRoom(2).getItem("apple");
 		game.getPlayer().getInventory().addItem("apple", apple);
@@ -335,7 +367,7 @@ public class TestCommandLogic {
 		assertTrue(commandOutput.contains(expectedOutput));
 		
 		RoomObject table6 = new RoomObject("Table", "A table that can hold things!", "south", true, true, false, 8);
-		game.getRoom(8).addObject("table", table6);
+		game.getRoom().addObject("table", table6);
 		
 		game.runCommand("pour blood vial on table");
 		expectedOutput = "Cannot pour blood vial on table.";
