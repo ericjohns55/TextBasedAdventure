@@ -45,16 +45,13 @@ public class YesCommand extends UserCommand {
 						}
 						game.npcDialogue(npc, npc.getCurrentNode());
 					}
-				}
-				else {
+				} else {
 					game.setOutput("You should talk to " + npc.getName() + ".");
 				}
-			}
-			else {
+			} else {
 				game.setOutput("I don't understand that command.");
 			}
-		}
-		else {
+		} else {
 			game.setOutput("I don't understand that command.");
 		}
 	}

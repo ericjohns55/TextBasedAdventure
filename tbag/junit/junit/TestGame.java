@@ -2,23 +2,25 @@ package junit;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import game.Game;
 
-public class TestGame {
-	private Game game;
-	
-	@Before
-	public void setUp() {
-		game = new Game();
+public class TestGame {	
+	@Test
+	public void testBadCommand() {
+		Game game = new Game(1);
+		game.runCommand("eat chocolate");
+		assertEquals("Unknown command.", game.getOutput());
 	}
 	
 	@Test
-	public void testBadCommand() {
-		game.runCommand("eat chocolate");
-		String feedback = game.getOutput();
-		assertEquals(feedback, "Unknown command.");
+	public void testOutput() {
+		Game game = new Game(1);
+		game.setOutput("OUTPUT");
+		assertEquals("OUTPUT", game.getOutput());
+		
+		game.addOutput("TUPTUO");
+		assertEquals("OUTPUTTUPTUO", game.getOutput());
 	}
 }

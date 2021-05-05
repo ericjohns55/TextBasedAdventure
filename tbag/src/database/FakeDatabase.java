@@ -40,12 +40,6 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public Inventory getPlayerInventory(Player player) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Inventory getInventoryByID(int id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -179,12 +173,25 @@ public class FakeDatabase implements IDatabase {
 
 	@Override
 	public NPC getNpc(int roomID) {
+		return null;
+	}
+	public boolean validateLogin(String username, String password) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Integer addUser(String username, String password) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+
 	public List<Node> getAllNodes(int npcID) {
+		return null;
+	}
+	public Integer getGameID(String username, String password) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -193,5 +200,15 @@ public class FakeDatabase implements IDatabase {
 	public Integer npcDialogue(NPC npc, boolean talkedTo, int nextNodeID, boolean canTalkTo) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void loadInitialData(int gameID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteData(int gameID) {
+		// TODO Auto-generated method stub
 	}
 }

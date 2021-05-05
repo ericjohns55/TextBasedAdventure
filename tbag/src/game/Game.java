@@ -8,7 +8,6 @@ import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 import java.util.HashMap;
-
 import actor.NPC;
 import actor.Player;
 import database.DatabaseProvider;
@@ -29,21 +28,19 @@ public class Game {
 	
 	private IDatabase db;
 	
-	public Game() {
-		DatabaseProvider.setInstance(new DerbyDatabase());
+	private int gameID;
+	
+	public Game(int gameID) {
+		DatabaseProvider.setInstance(new DerbyDatabase(gameID));
 		db = DatabaseProvider.getInstance();	
 		
 		this.player = db.getPlayer(0);
 		this.player.setGame(this);
 		this.room = db.getRoom(player.getRoomID());
 		this.output = "";
+		this.gameID = gameID;
 	}
 	
-	public Game(int roomID) {
-		this();
-		player.setRoomID(roomID);
-		room = db.getRoom(roomID);
-	}
 	public void setOutput(String output) {
 		this.output = output;
 	}
@@ -59,14 +56,6 @@ public class Game {
 	public Player getPlayer() {
 		return player;
 	}
-//	
-//	public String getLastOutput() {
-//		return player.getLastOutput();
-//	}
-//	
-//	public void setLastOutput(String lastOutput) {
-//		player.setLastOutput(lastOutput);
-//	}
 
 	public void runCommand(String input) {
 		this.output = "";
@@ -74,16 +63,20 @@ public class Game {
 		command.execute();
 	}
 	
-//	public void addRoom(Room room) {
-//		rooms.put(room.getRoomID(), room);
-//	}
-	
 	public Room getRoom() {
 		return room;
 	}
 
 	public Room getRoom(int ID) {
 		return db.getRoom(ID);
+	}
+	
+	public int getGameID() {
+		return gameID;
+	}
+	
+	public void setGameID(int gameID) {
+		this.gameID = gameID;
 	}
 	
 	public void updateGameState(String lastOutput, int moves) {
@@ -106,53 +99,74 @@ public class Game {
 	}
 	
 	public void breakItem(RoomObject container, CompoundItem item, String noun, String location) {
-//		HashMap<String, Item> items = item.getItems();
-//		
-//		for (String identifier : items.keySet()) {
-//			Item containedItem = items.get(identifier);
-//			container.getInventory().addItem(identifier, containedItem);
-//			db.addItemToInventory(container.getInventory(), containedItem);	// update DB item inventory ID, also destroys item
-//		}
-//		
-//		container.getInventory().removeItem(noun);
-//		item.getInventory().emptyInventory();
-//		
-//		db.destroyCompoundItem(item);	// nuke item from existence
-		
 		db.breakItem(item, container.getInventory());
 		setOutput("You break apart the " + noun + " and dump the contents on the " + location + ".");
 	}
 	
 	public void breakItem(Room room, CompoundItem item, String noun) {
-		HashMap<String, Item> items = item.getItems();
-		
-		for (String identifier : items.keySet()) {
-			Item containedItem = items.get(identifier);
-			room.addItem(identifier, containedItem);
-			db.addItemToInventory(room.getInventory(), containedItem);	// update DB item inventory ID
-		}
-		
-		room.removeItem(noun);
-		item.getInventory().emptyInventory();
-		
-		db.destroyCompoundItem(item);	// nuke item from existence
-		
+		db.breakItem(item, room.getInventory());
 		setOutput("You break apart the " + noun + " and dumb the contents on the floor.");
 	}
 	
 	public void dropItem(RoomObject container, String item, Player player, Puzzle puzzle, String location) {
 		Inventory objectInventory = container.getInventory();
 		
-		Item toRemove = player.getInventory().removeItem(item);
-		objectInventory.addItem(item, toRemove);
-		setOutput("You placed the " + item + " on the " + location + "."); 
-		db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
+		Item toRemove = player.getInventory().getItem(item);
+		
+		if (puzzle.getDescription().equals("Lab Room") && location.equals("cadaver")) {			
+			if (container.getInventory().getCurrentWeight() + toRemove.getWeight() > 0.2) {
+				setOutput("\nThis " + location + "'s eye sockets are full already!");
+				return;
+			} else {	
+				objectInventory.addItem(item, toRemove);
+				addOutput("You placed the " + item + " in the " + location + "."); 
+				db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
+				
+				if (objectInventory.contains(puzzle.getSolution())) {
+					RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
+					
+					if (obstacle.isLocked()) {	
+						System.out.println("----- UNLOCKING DOOR");
+						obstacle.setLocked(false);
+						db.toggleLocks((UnlockableObject) obstacle, false);	// db update lock status
+						addOutput("\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.");
+					}
+				}
+			}
+		} else if (puzzle.getDescription().equals("Witch's Lair") && location.equals("witch's pot")) {
+			double weightSolution = Double.parseDouble(puzzle.getSolution());
+			
+			if (container.getInventory().getInventorySize() >= 3) {
+				setOutput("\nThis " + location + " is full! Try taking items from the witch's pot and replacing them with different ones.");
+				return;
+			}
+			
+			objectInventory.addItem(item, toRemove);
+			addOutput("You placed the " + item + " in the " + location + "."); 
+			db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
+			
+			if (container.getInventory().getCurrentWeight() >= weightSolution && container.getInventory().getInventorySize() == 3) {
+				RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
+				
+				if (obstacle.isLocked()) {	
+					System.out.println("----- UNLOCKING DOOR");
+					obstacle.setLocked(false);
+					obstacle.setPreviouslyUnlocked(true);
+					db.toggleLocks((UnlockableObject) obstacle, false); // update obstacle locked and previously unlocked
+					setOutput("\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.");
+				}
+			}
+		} else {
+			objectInventory.addItem(item, toRemove);
+			db.removeItemFromInventory(objectInventory, toRemove); // update DB item inventory ID
+			addOutput("You placed the " + item + " on the " + location + ".\n"); 
+		}
 		
 		if (puzzle.getDescription().equals("weightPuzzle")) {
 			double weightSolution = Double.parseDouble(puzzle.getSolution());
 			
-			if (objectInventory.getCurrentWeight() >= weightSolution) {
-				System.out.println(puzzle.getUnlockObstacle());
+			if (objectInventory.getCurrentWeight() >= weightSolution) 
+			{
 				RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
 				
 				if (obstacle.isLocked()) {	
@@ -168,19 +182,88 @@ public class Game {
 	public void dropItem(Room room, String item, Player player, Puzzle puzzle) {
 		Item toDrop = player.getInventory().getItem(item);
 		
-//		Item removed = player.getInventory().removeItem(item);
-//		room.getInventory().addItem(item, removed);
+		db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID		
+	}
+	
+	public void feedItem(RoomObject object, Player player, Puzzle puzzle, String noun, String location) {
+		// pour(RoomObject object, Item item, Player player, Puzzle puzzle, String noun, String location)
+		// This transfers the object 
+		object.feed(noun);
 		
-//		System.out.println(room.listItems());
-		System.out.println("ROOM ID " + room.getRoomID());
-		db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
+		Item toDrop = player.getInventory().getItem(noun);
+		//db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
+	
+		setOutput("You fed " + noun + " to the " + location + ".");
 		
-		if (room.getInventory().contains(item)) {
-			System.out.println("what the fuck");
+		if (toDrop.consumeOnUse()) {
+			player.getInventory().removeItem(noun);	// update inventoryID in DB (make it something random so disappeared)
+			db.consumeItem(toDrop);
 		}
 		
-		setOutput("You dropped " + item + " on the floor.");	
+		if (puzzle.getSolution().equals(object.getFed())) {
+			RoomObject toUnlock = player.getRoom().getObject(puzzle.getUnlockObstacle());
+			
+			if (toUnlock.isLocked()) {
+				toUnlock.setLocked(false);
+				// What is this doing? because it should be unlocking the door
+				db.toggleLocks((UnlockableObject) toUnlock, false);	// db update lock status
+				db.pushObject(object, "west");
+
+				// This changes the status of the hellhound, but we want the door and the hellhound
+				// to be updated. Want hellhound to move out of the way and for the door to open.
+				addOutput("\nThe " + location + " is occupied away from an open " + toUnlock.getName() + " to the " + toUnlock.getDirection() + "!!");
+				object.isFed();
+			}
+		}	
 	}
+	
+	// Put your scan and climb commands in here
+	public void climbObject(RoomObject object, Player player, Puzzle puzzle, String noun) 
+	{
+		int roomID = player.getRoom().getExit(object.getName());
+		
+		if (roomID != -1) {
+			player.setRoomID(roomID);	
+			
+			db.moveRooms(player, roomID);  // update roomID in database
+			
+			addOutput("You climbed the " + object.getName() + ".\n\n");
+			addOutput(db.getDescription(player.getRoomID()));	// grab room description from DB
+		} else {
+			addOutput("There is not an exit here!" + object.getName());
+		}
+	}
+	
+	public void scanItem(RoomObject object, Player player, Puzzle puzzle, String noun, String location) {
+
+		// pour(RoomObject object, Item item, Player player, Puzzle puzzle, String noun, String location)
+		// This transfers the object 
+		object.scanned(noun);
+		
+		Item toScan = player.getInventory().getItem(noun);
+		//db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
+	
+		setOutput("You scanned " + noun + " on the " + location + ".");
+		
+		if (toScan.consumeOnUse()) {
+			player.getInventory().removeItem(noun);	// update inventoryID in DB (make it something random so disappeared)
+			db.consumeItem(toScan);
+		}
+		
+		if (puzzle.getSolution().equals(object.getScanned())) {
+			RoomObject toUnlock = player.getRoom().getObject(puzzle.getUnlockObstacle());
+			
+			if (toUnlock.isLocked()) {
+				toUnlock.setLocked(false);
+				// What is this doing? because it should be unlocking the door
+				db.toggleLocks((UnlockableObject) toUnlock, false);	// db update lock status
+				
+				addOutput("\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open!");
+				object.isScanned();
+			}
+		}
+	}
+
 	
 	public boolean play(PlayableObject object, Item item, Player player, Puzzle puzzle, String noun, String location) {
 		object.getInventory().addItem(noun, item);
@@ -229,7 +312,12 @@ public class Game {
 			if (solutionObject.isLocked()) {
 				solutionObject.setLocked(false);	// update locked in DB
 				db.toggleLocks((UnlockableObject) solutionObject, false);	// db update lock status
-				addOutput("\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!");
+				
+				if (room.getRoomID() == 8) {
+					addOutput("\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open! Revealing a set of stairs going up!");
+				} else {	
+					addOutput("\nA " + solutionObject.getName() + " to the " + solutionObject.getDirection() + " swings open!");
+				}
 			}
 		}
 	}
@@ -246,8 +334,6 @@ public class Game {
 		item.setInInventory(true);
 		
 		db.addItemToInventory(player.getInventory(), item);	// update itemID in DB
-		
-		setOutput("You picked up " + noun + ".");	
 		
 		if (puzzle.getDescription().equals("weightPuzzle")) {
 			double weightSolution = Double.parseDouble(puzzle.getSolution());
@@ -302,8 +388,34 @@ public class Game {
 			addOutput("There is not an exit here!");
 		}
 	}
-	
+
 	public void npcDialogue(NPC npc, Node currentNode) {
 		db.npcDialogue(npc, npc.isTalkedTo(), currentNode.getNodeID(), npc.CanTalkTo());
+	}
+
+	public void reloadDatabaseForJUnit() {
+		db.deleteData(gameID);
+		db.loadInitialData(gameID);
+		
+		reloadData();
+	}
+	
+	public void movePlayerJUnit(int roomID) {
+		player = db.getPlayer(0);
+		player.setRoomID(roomID);
+		player.setGame(this);
+		room = db.getRoom(player.getRoomID());
+		output = "";
+	}
+	
+	public void reloadData() {
+		player = db.getPlayer(0);
+		player.setGame(this);
+		room = db.getRoom(player.getRoomID());
+		output = "";
+	}
+	
+	public IDatabase getDatabase() {
+		return db;
 	}
 }

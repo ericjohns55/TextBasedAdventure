@@ -46,6 +46,7 @@ public class Command {
 		commands.put("push", new PushCommand());
 		commands.put("play", new PlayCommand());
 		commands.put("cut", new CutCommand());
+		commands.put("slice", new CutCommand());
 		commands.put("pour", new PourCommand());
 		commands.put("hint", new HintCommand());
 		commands.put("talk", new TalkCommand());
@@ -53,6 +54,9 @@ public class Command {
 		commands.put("n", new NoCommand());
 		commands.put("give", new GiveCommand());
 		commands.put("option", new OptionsCommand());
+		commands.put("feed", new FeedCommand());
+		commands.put("scan", new ScanCommand());
+		commands.put("climb", new ClimbCommand());
 		parseCommands();
 	}
 	

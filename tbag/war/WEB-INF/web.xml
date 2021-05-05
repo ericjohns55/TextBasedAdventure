@@ -10,11 +10,19 @@
     <servlet-name>TBAGServlet</servlet-name>
     <servlet-class>servlet.TBAGServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>servlet.LoginServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
     <servlet-name>TBAGServlet</servlet-name>
-    <url-pattern>/tbag</url-pattern>
+    <url-pattern>/game</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
   </servlet-mapping>
 
 

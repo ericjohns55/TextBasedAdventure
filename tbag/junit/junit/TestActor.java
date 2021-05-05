@@ -14,7 +14,7 @@ public class TestActor {
 	
 	@Before
 	public void setUp() {
-		game = new Game();
+		game = new Game(1);
 		actor = new Actor(game, 1);
 	}
 	
@@ -32,7 +32,18 @@ public class TestActor {
 	public void testRoomID() {
 		actor.setRoomID(8);
 		assertEquals(8, actor.getRoomID());
-		
-//		assertEquals(game.getRoom(8).getDescription(), actor.getRoom().getDescription());
+	}
+	
+	@Test
+	public void testGettersSetters() {
+		actor.setRoomID(100);
+		actor.setInventoryID(100);
+		actor.setActorID(100);
+		actor.setGameID(100);
+
+		assertEquals(100, actor.getRoomID());
+		assertEquals(100, actor.getInventoryID());
+		assertEquals(100, actor.getActorID());
+		assertEquals(100, actor.getGameID());
 	}
 }

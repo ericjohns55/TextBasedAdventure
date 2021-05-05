@@ -1,8 +1,22 @@
-1|table|A table that can hold things!|north|0|0|0| |0|0|0|1|0|0|1|1011
-2|sensory pad|Triggers somethin by weight...|north|0|0|0| |0|0|0|1|0|0|2|1021
-3|dresser|Holds clothes.|south|1|1|1| |0|0|0|0|0|0|4|1041
-4|bed|Place to sleep.|east|1|1|1| |0|0|0|0|0|0|4|1042
-5|desk|Workspace|west|1|1|1| |0|0|0|0|0|0|4|1043
-6|table|A table that can hold things!|south|1|1|0| |0|0|1|1|0|0|6|1061
-7|table|A table that can hold things!|east|1|1|0| |0|0|0|1|0|0|7|1071
-8|pentagram|Altar to Satan|north|1|1|0| |0|0|0|0|1|0|8|1081
+1|table|A table that can hold things!|north|0|0|0| |0|0|0|1|0|0|0| |0| |1|1011
+2|sensory pad|Triggers somethin by weight...|north|0|0|0| |0|0|0|1|0|0|0| |0| |2|1021
+3|dresser|Holds clothes.|south|1|1|1| |0|0|0|0|0|0|0| |0| |4|1041
+4|bed|Place to sleep.|east|1|1|1| |0|0|0|0|0|0|0| |0| |4|1042
+5|desk|Workspace|west|1|1|1| |0|0|0|0|0|0|0| |0| |4|1043
+6|table|A table that can hold things!|south|1|1|0| |0|0|1|1|0|0|0| |0| |6|1061
+7|table|A table that can hold things!|east|1|1|0| |0|0|1|1|0|0|0| |0| |7|1071
+8|pentagram|Altar to Satan|north|1|1|0| |0|0|0|0|1|0|0| |0| |8|1081
+9|hellhound|Looks hungry for meat.|north|1|1|0| |0|0|0|0|0|0|1| |0| |9|1091
+10|desk|This desk is on the ceiling!|north|0|0|0| |0|0|0|0|0|0|0| |0| |10|1101
+11|bed|This bed is on the ceiling!|north|0|0|0| |0|0|0|0|0|0|0| |0| |10|1102
+12|table|A table that can hold things!|north|0|0|0| |0|0|0|1|0|0|0| |0| |11|1111
+13|nightstand|A common bedside table.|east|0|0|0| |0|0|0|1|0|0|0| |0| |12|1122
+14|bed|This is a place to sleep.|east|0|0|0| |0|0|0|1|0|0|0| |0| |12|1123
+15|scanner|This scanner can be used to scan room items.|south|0|0|0| |0|0|0|0|0|0|0| |1| |12|1124
+16|cadaver|A dead body, commonly used for forensic studies.|south|1|1|0| |0|0|0|1|0|0|0| |0| |14|1141
+17|counter|This counter can hold things.|east|0|0|0| |0|0|0|1|0|0|0| |0| |14|1142
+18|table|This table is used to hold the cadaver and the jar.|south|0|0|0| |0|0|0|1|0|0|0| |0| |14|1143
+19|jar|This jar might contain items.|south|0|0|0| |0|0|0|1|0|0|0| |0| |14|1144
+20|cabinet|This potion ingredient cabinet can hold potion ingredients.|north|0|0|0| |0|0|0|1|0|0|0| |0| |15|1151
+21|small table|This small table can hold things.|north|0|0|0| |0|0|0|1|0|0|0| |0| |15|1152
+22|witch's pot|This witch's pot can hold ingredients for making potions.|south|1|1|0| |0|0|0|1|0|0|0| |0| |15|1153

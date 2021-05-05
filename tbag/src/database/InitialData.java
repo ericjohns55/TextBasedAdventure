@@ -227,6 +227,10 @@ public class InitialData {
 				boolean canHoldItems = Integer.parseInt(iter.next()) == 1;
 				boolean coverable = Integer.parseInt(iter.next()) == 1;
 				boolean previouslyUnlocked = Integer.parseInt(iter.next()) == 1;
+				boolean canBeFed = Integer.parseInt(iter.next()) == 1;
+				String fed = iter.next();
+				boolean canBeScanned = Integer.parseInt(iter.next()) == 1;
+				String scanned = iter.next();
 				int roomID = Integer.parseInt(iter.next());
 				int inventoryID = Integer.parseInt(iter.next());
 				
@@ -238,6 +242,10 @@ public class InitialData {
 				roomObject.setCanHoldItems(canHoldItems);
 				roomObject.setCoverable(coverable);
 				roomObject.setPreviouslyUnlocked(previouslyUnlocked);
+				roomObject.setCanBeFed(canBeFed);
+				roomObject.feed(fed);
+				roomObject.setCanBeScanned(canBeScanned);
+				roomObject.scanned(scanned);
 				roomObject.setInventoryID(inventoryID);
 				roomObject.setObjectID(objectID);
 				
@@ -285,6 +293,8 @@ public class InitialData {
 				boolean isInstrument = Integer.parseInt(iter.next()) == 1;
 				String playedNotes = iter.next();
 				String requiredNotes = iter.next();
+				String fed = iter.next();
+				boolean canBeFed = Integer.parseInt(iter.next()) == 1;
 				
 				PlayableObject playableObject = new PlayableObject(name, description, direction, requiredNotes, isInstrument, roomID);
 				playableObject.cover(covered);
@@ -300,6 +310,8 @@ public class InitialData {
 				playableObject.setInventoryID(inventoryID);
 				playableObject.setObjectID(objectID);
 				playableObject.setPlayedNotes(playedNotes);
+				playableObject.feed(fed);
+				playableObject.setCanBeFed(canBeFed);
 				
 				playableObjectList.add(playableObject);
 			}
@@ -344,6 +356,10 @@ public class InitialData {
 				int roomID = Integer.parseInt(iter.next());
 				int inventoryID = Integer.parseInt(iter.next());
 				boolean consumeItem = Integer.parseInt(iter.next()) == 1;
+				String fed = iter.next();
+				boolean canBeFed = Integer.parseInt(iter.next()) == 1;
+				boolean canBeLookedAtNow = Integer.parseInt(iter.next()) == 1;
+				boolean canBeClimbed = Integer.parseInt(iter.next()) == 1;
 				int unlockItemID = Integer.parseInt(iter.next());
 				
 				Item unlockItem = null;
@@ -365,6 +381,10 @@ public class InitialData {
 				unlockableObject.setObjectID(objectID);
 				unlockableObject.setUnlockItemID(unlockItemID);
 				unlockableObject.setConsumeItem(consumeItem);
+				unlockableObject.feed(fed);
+				unlockableObject.setCanBeFed(canBeFed);	
+				unlockableObject.setCanBeLookedAtNow(canBeLookedAtNow);
+				unlockableObject.setCanBeClimbed(canBeClimbed);
 				
 				unlockableObjectsList.add(unlockableObject);
 			}
