@@ -9,7 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import actor.NPC;
 import actor.Player;
+import dialogue.Link;
+import dialogue.Node;
 import game.Game;
 import items.CompoundItem;
 import items.Inventory;
@@ -146,6 +149,9 @@ public class DerbyDatabase implements IDatabase {
 						
 						room.setConnections(getAllConnections(room.getRoomID()));
 						System.out.println("Added connections");
+						
+						room.addNpc(getNpc(roomID));
+						System.out.println("Added npc");
 					}
 					
 					
@@ -1188,6 +1194,192 @@ public class DerbyDatabase implements IDatabase {
 	}
 	
 	@Override
+	public List<Link> getAllLinks(int nodeID) {
+		return executeTransaction(new Transaction<List<Link>>()  {
+			@Override
+			public List<Link> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement("select links.* " +
+							"from links, nodes " +
+								"where nodes.nodeID = ? and links.previousNodeID = nodes.nodeID");
+					stmt.setInt(1, nodeID);
+					
+					resultSet = stmt.executeQuery();
+					
+					List<Link> options = new ArrayList<Link>();
+					
+					while (resultSet.next()) {
+						int index = 1;
+
+						int linkID = resultSet.getInt(index++);
+						int nextNodeID = resultSet.getInt(index++);
+						int previousNodeID = resultSet.getInt(index++);
+						boolean isAvailable = resultSet.getInt(index++) == 1;
+						String option = resultSet.getString(index++);
+						
+						Node nextNode = null;
+						Node previousNode = null;
+						Link link = new Link(linkID, nextNode, previousNode, isAvailable, option);
+						link.setNextNodeID(nextNodeID);
+						options.add(link);
+					}
+				
+					return options;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public List<Node> getAllNodes(int npcID) {
+		return executeTransaction(new Transaction<List<Node>>() {
+			@Override
+			public List<Node> execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select nodes.* " +
+								"from nodes, npcs " + 
+									"where nodes.npcID = ? and npcs.gameID = ?"
+					);	
+					
+					stmt.setInt(1, npcID);
+					stmt.setInt(2, gameID);
+					
+					resultSet = stmt.executeQuery();
+					
+					List<Node> nodes = new ArrayList<Node>();
+					
+					while (resultSet.next()) {
+						int index = 1;
+						
+						int npcID = resultSet.getInt(index++);
+						int nodeID = resultSet.getInt(index++);
+						String message = resultSet.getString(index++);
+						String type = resultSet.getString(index++);
+						
+						Node node = new Node(npcID, nodeID, message, type);
+						
+						if (node != null) {
+							List<Link> options = getAllLinks(nodeID);
+							
+							for (Link link : options) {
+								link.setPreviousNode(node);
+								node.addLink(link);
+							}
+						}
+						nodes.add(node);
+					}
+					
+					return nodes;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public NPC getNpc(int roomID) {
+		return executeTransaction(new Transaction<NPC>() {
+			@Override
+			public NPC execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				ResultSet resultSet = null;
+				
+				try {
+					stmt = conn.prepareStatement(
+							"select npcs.* " +
+								"from npcs " + 
+									"where npcs.roomID = ? and npcs.gameID = ?"
+					);	
+					
+					stmt.setInt(1, roomID);
+					stmt.setInt(2, gameID);
+					
+					resultSet = stmt.executeQuery();
+					
+					NPC npc = null;
+					
+					while (resultSet.next()) {
+						int index = 1;
+						
+						resultSet.getInt(index++);
+						int actorID = resultSet.getInt(index++);
+						int roomID = resultSet.getInt(index++);
+						int inventoryID = resultSet.getInt(index++);
+						String name = resultSet.getString(index++);
+						String description = resultSet.getString(index++);
+						int currentNodeID = resultSet.getInt(index++);
+						int previousNodeID = resultSet.getInt(index++);
+						int rootNodeID = resultSet.getInt(index++);
+						boolean talkedTo = resultSet.getInt(index++) == 1;
+						boolean canTalkTo = resultSet.getInt(index++) == 1;
+						boolean done = resultSet.getInt(index++) == 1;
+						int requiredItemID = resultSet.getInt(index++);
+						int unlockObstacleID = resultSet.getInt(index++);
+						Item requiredItem = null;
+						
+						if (requiredItemID != -1) {
+							requiredItem = getItemByID(requiredItemID);
+						}
+						
+						UnlockableObject unlockObstacle = null;
+						
+						if (unlockObstacleID != -1) {
+							unlockObstacle = getUnlockableObjectByID(unlockObstacleID);
+						}
+						
+						npc = new NPC(null, roomID, name, description, requiredItem, unlockObstacle);
+						npc.setActorID(actorID);
+						npc.setInventoryID(inventoryID);
+						npc.setInventory(getInventoryByID(inventoryID));
+						npc.setTalkedTo(talkedTo);
+						npc.setCanTalkTo(canTalkTo);
+						npc.setDone(done);
+						npc.setRequiredItemID(requiredItemID);
+						npc.setUnlockObstacleID(unlockObstacleID);
+						
+						if (npc != null) {
+							List<Node> nodes = getAllNodes(actorID);
+							
+							for (Node node : nodes) {
+								if(node.getNodeID() == currentNodeID) {
+									npc.setCurrentNode(node);
+								}
+								else if (node.getNodeID() == previousNodeID) {
+									npc.setPreviousNode(node);
+								}
+								else if (node.getNodeID() == rootNodeID) {
+									npc.setRootNode(node);
+								}
+								for (Link link : node.getOptions()) {
+									link.setNextNode(nodes.get(link.getNextNodeID()));
+								}
+							}
+							
+						}
+					}
+					
+					return npc;
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(resultSet);
+				}
+			}
+		});
+	}
+	
+	@Override
 	public Integer updateGameState(String output, int moves, Player player) {
 		return executeTransaction(new Transaction<Integer>() {
 			@Override
@@ -1496,6 +1688,48 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	public Integer npcDialogue(NPC npc, boolean talkedTo, int currentNodeID, boolean canTalkTo) {
+		return executeTransaction(new Transaction<Integer>() {
+			@Override
+			public Integer execute(Connection conn) throws SQLException {
+				PreparedStatement stmt = null;
+				PreparedStatement stmt2 = null;
+				PreparedStatement stmt3 = null;
+				
+				try {
+					stmt = conn.prepareStatement("update npcs set talkedTo = ? where npcs.actorID = ? and npcs.gameID = ?");
+					
+					stmt.setInt(1, talkedTo ? 1 : 0);
+					stmt.setInt(2, npc.getActorID());
+					stmt.setInt(3, gameID);
+					
+					stmt.executeUpdate();
+					
+					stmt2 = conn.prepareStatement("update npcs set currentNodeID = ? where npcs.actorID = ? and npcs.gameID = ?");
+					
+					stmt2.setInt(1, currentNodeID);
+					stmt2.setInt(2, npc.getActorID());
+					stmt2.setInt(3, gameID);
+					
+					stmt2.executeUpdate();
+					
+					stmt3 = conn.prepareStatement("update npcs set canTalkTo = ? where npcs.actorID = ? and npcs.gameID = ?");
+					
+					stmt3.setInt(1, canTalkTo ? 1 : 0);
+					stmt3.setInt(2, npc.getActorID());
+					stmt3.setInt(3, gameID);
+					
+					return stmt3.executeUpdate();
+				} finally {
+					DBUtil.closeQuietly(stmt);
+					DBUtil.closeQuietly(stmt2);
+					DBUtil.closeQuietly(stmt3);
+				}
+			}
+		});
+	}
+
+	
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
 			@Override
@@ -1509,7 +1743,10 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmtRmObjs = null;
 				PreparedStatement stmtRms = null;
 				PreparedStatement stmtUnlckbleObjs = null;	
-				PreparedStatement stmtCnnctns = null;	
+				PreparedStatement stmtCnnctns = null;		
+				PreparedStatement stmtNpcs = null;
+				PreparedStatement stmtNodes = null;
+				PreparedStatement stmtLinks = null;
 				PreparedStatement stmtUsers = null;
 			
 				try {
@@ -1732,7 +1969,55 @@ public class DerbyDatabase implements IDatabase {
 					);
 					stmtCnnctns.executeUpdate();
 					
-					System.out.println("unlockableObjects table created");		
+					System.out.println("unlockableObjects table created");	
+					
+					stmtNpcs = conn.prepareStatement(
+							"create table npcs (" +
+							"	gameID integer," +
+							"	actorID integer," +
+							"	roomID integer," +
+							"	inventoryID integer," +
+							"	name varchar(40)," +
+							"	description varchar(200)," +
+							"	currentNodeID integer," +
+							"	previousNodeID integer," +
+							"	rootNodeID integer," +
+							"	talkedTo integer," +
+							"	canTalkTo integer," +
+							"	done integer," +
+							"	requiredItemID integer," +
+							"	unlockObstacleID integer" +
+							")"
+						);	
+					stmtNpcs.executeUpdate();
+						
+					System.out.println("npcs table created");
+					
+					stmtNodes = conn.prepareStatement(
+							"create table nodes (" +
+							"	npcID integer," +
+							"	nodeID integer," +
+							"	message varchar(400)," +
+							"	type varchar(40)" +
+							")"
+						);	
+					stmtNodes.executeUpdate();
+						
+					System.out.println("nodes table created");
+					
+					stmtLinks = conn.prepareStatement(
+							"create table links (" +
+							"	linkID integer," +
+							"	nextNodeID integer," +
+							"	previousNodeID integer," +
+							"	isAvailable integer," +
+							"	message varchar(200)" +
+							")"
+						);	
+					stmtLinks.executeUpdate();
+						
+					System.out.println("links table created");
+						
 					return true;
 				} finally {
 					DBUtil.closeQuietly(stmtCmpdItms);
@@ -1745,6 +2030,9 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmtRms);
 					DBUtil.closeQuietly(stmtUnlckbleObjs);	
 					DBUtil.closeQuietly(stmtCnnctns);
+					DBUtil.closeQuietly(stmtNpcs);
+					DBUtil.closeQuietly(stmtNodes);
+					DBUtil.closeQuietly(stmtLinks);
 					DBUtil.closeQuietly(stmtUsers);
 				}
 			}
@@ -1834,6 +2122,9 @@ public class DerbyDatabase implements IDatabase {
 				List<Puzzle> puzzles;
 				List<ObjectPuzzle> objectPuzzles;
 				List<Connections> connections;
+				List<NPC> npcs;
+				List<Node> nodes;
+				List<Link> links;
 				
 				try {
 					items = InitialData.getAllItems();
@@ -1846,6 +2137,9 @@ public class DerbyDatabase implements IDatabase {
 					puzzles = InitialData.getAllPuzzles();
 					objectPuzzles = InitialData.getAllObjectPuzzles();
 					connections = InitialData.getAllConnections();
+					nodes = InitialData.getAllNodes();
+					npcs = InitialData.getAllNpcs();
+					links = InitialData.getAllLinks();
 				} catch (IOException e) {
 					throw new SQLException("Couldn't read initial data", e);
 				}
@@ -1860,6 +2154,9 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement insertPuzzles = null;
 				PreparedStatement insertObjectPuzzles = null;
 				PreparedStatement insertConnections = null;
+				PreparedStatement insertNpcs = null;
+				PreparedStatement insertNodes = null;
+				PreparedStatement insertLinks = null;
 				
 				try {
 					insertItems = conn.prepareStatement("insert into items (gameID, itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, inventoryID) " +
@@ -2089,6 +2386,58 @@ public class DerbyDatabase implements IDatabase {
 					
 					insertConnections.executeBatch();
 					
+					insertNpcs = conn.prepareStatement("insert into npcs (gameID, actorID, roomID, inventoryID, name, description, currentNodeID, previousNodeID, rootNodeID, talkedTo, canTalkTo, done, requiredItemID, unlockObstacleID) "
+							+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					
+					for (NPC npc : npcs) {
+						insertNpcs.setInt(1, gameID);
+						insertNpcs.setInt(2, npc.getActorID());
+						insertNpcs.setInt(3, npc.getRoomID());
+						insertNpcs.setInt(4, npc.getInventoryID());
+						insertNpcs.setString(5, npc.getName());
+						insertNpcs.setString(6, npc.getDescription());
+						insertNpcs.setInt(7, npc.getCurrentNode().getNodeID());
+						insertNpcs.setInt(8, npc.getPreviousNode().getNodeID());
+						insertNpcs.setInt(9, npc.getRootNode().getNodeID());
+						insertNpcs.setInt(10, npc.isTalkedTo() ? 1 : 0);
+						insertNpcs.setInt(11, npc.CanTalkTo() ? 1 : 0);
+						insertNpcs.setInt(12, npc.isDone() ? 1 : 0);
+						insertNpcs.setInt(13, npc.getRequiredItemID());
+						insertNpcs.setInt(14, npc.getUnlockObstacleID());
+						insertNpcs.addBatch();
+					}
+					
+					insertNpcs.executeBatch();
+					
+					insertNodes = conn.prepareStatement("insert into nodes (npcID, nodeID, message, type) "
+							+ "values (?, ?, ?, ?)");
+					
+					for (Node node : nodes) {
+						insertNodes.setInt(1, node.getNpcID());
+						insertNodes.setInt(2, node.getNodeID());
+						insertNodes.setString(3, node.getMessage());
+						insertNodes.setString(4, node.getType());
+						insertNodes.addBatch();
+					}
+					
+					insertNodes.executeBatch();
+					
+					insertLinks = conn.prepareStatement("insert into links (linkID, nextNodeID, previousNodeID, isAvailable, message) "
+							+ "values (?, ?, ?, ?, ?)");
+					
+					for (Link link : links) {
+						insertLinks.setInt(1, link.getLinkID());
+						insertLinks.setInt(2, link.getNextNode().getNodeID());
+						insertLinks.setInt(3, link.getPreviousNode().getNodeID());
+						insertLinks.setInt(4, link.isAvailable() ? 1 : 0);
+						insertLinks.setString(5, link.getOption());
+						insertLinks.addBatch();
+					}
+					
+					insertLinks.executeBatch();
+					
+					
+					
 					return true;
 				} finally {
 					DBUtil.closeQuietly(insertItems);
@@ -2101,6 +2450,9 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(insertPuzzles);
 					DBUtil.closeQuietly(insertObjectPuzzles);
 					DBUtil.closeQuietly(insertConnections);
+					DBUtil.closeQuietly(insertNpcs);
+					DBUtil.closeQuietly(insertNodes);
+					DBUtil.closeQuietly(insertLinks);
 				}
 			}
 		});

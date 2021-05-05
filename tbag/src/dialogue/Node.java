@@ -3,17 +3,17 @@ package dialogue;
 import java.util.ArrayList;
 
 public class Node{
+	private int npcID;
 	private int nodeID;
 	private String message;
 	private ArrayList<Link> options;
-	private boolean wrong;
 	private String type;
 	
-	public Node(int ID, String message, boolean wrong, String type) {
-		this.nodeID = ID;
+	public Node(int npcID, int nodeID, String message, String type) {
+		this.setNpcID(npcID);
+		this.nodeID = nodeID;
 		this.message = message;
 		options = new ArrayList<Link>();
-		this.wrong = wrong;
 		this.type = type;
 		
 	}
@@ -68,19 +68,22 @@ public class Node{
 	public void setOptions(ArrayList<Link> options) {
 		this.options = options;
 	}
-	public boolean isWrong() {
-		return wrong;
-	}
-	public void setWrong(boolean wrong) {
-		this.wrong = wrong;
-	}
+	
 	public String getType() {
 		return type;
 	}
+	
 	public void setType(String type) {
 		this.type = type;
 	}
 	
+	public int getNpcID() {
+		return npcID;
+	}
+	
+	public void setNpcID(int npcID) {
+		this.npcID = npcID;
+	}
 }
 
 

@@ -31,9 +31,12 @@ public class GiveCommand extends UserCommand {
 							game.setOutput("Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.");
 							toGive.setCanBePickedUp(false);
 							toGive.setInInventory(false);
-							npc.getInventory().addItem(noun, toGive);
 							inventory.removeItem(noun);
+							npc.getInventory().addItem(noun, toGive);
 							npc.setCanTalkTo(false);
+							game.give(npc, getPlayer(), toGive);
+							game.unlockObject(roomObject, false);
+							game.npcDialogue(npc, npc.getCurrentNode());
 						
 						}
 						else {

@@ -2,7 +2,10 @@ package database;
 
 import java.util.List;
 
+import actor.NPC;
 import actor.Player;
+import dialogue.Link;
+import dialogue.Node;
 import items.CompoundItem;
 import items.Inventory;
 import items.Item;
@@ -22,6 +25,9 @@ public interface IDatabase {
 	public Connections getAllConnections(int roomID);
 	public Puzzle getPuzzle(Room room);
 	public UnlockableObject getUnlockableObjectByID(int objectID);
+	public NPC getNpc(int roomID);
+	public List<Node> getAllNodes(int npcID);
+	public List<Link> getAllLinks(int NodeID);
 	
 	public Integer updateGameState(String output, int moves, Player player);
 	
@@ -42,7 +48,7 @@ public interface IDatabase {
 	public Integer destroyItem(Item item);
 	public Integer playNotes(PlayableObject playableObject, String notes);
 	public String getDescription(int roomID);
-	
+	public Integer npcDialogue(NPC npc, boolean talkedTo, int nextNodeID, boolean canTalkTo);
 	public void deleteData(int gameID);
 	public void loadInitialData(int gameID);
 }

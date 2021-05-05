@@ -1,0 +1,12 @@
+0|0|I am Zoltar and if you wish to continue you must answer my three riddles.|y/n
+0|1|First riddle. The person who built it sold it. The person who bought it never used it. The person who used it never saw it. What is it?|option
+0|2|Ok come back when you are ready.|y/n
+0|3|Second riddle. A man was shot to death while in his car. There were no powder marks on his clothing, which indicated that the gunman was outside the car. However, all the windows were up and the doors locked. After a close inspection was made, the only bullet holes discovered were on the man’s body.  How was he murdered?|option
+0|4|Last riddle. A murderer is condemned to death. He has to choose between three rooms. The first is full of raging fires, the second is full of assassins with loaded guns, and the third is full of lions that haven't eaten in 3 years. Which room is safest for him?|option
+0|5|Wrong.|option
+0|6|Wrong.|option
+0|7|Wrong.|option
+0|8|If you want you can take a fortuine card.|y/n
+0|9|Give me a penny.|gCommand
+0|10|Come back when you can pay me.|done
+0|11| | 

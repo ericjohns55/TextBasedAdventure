@@ -17,8 +17,8 @@ public class TestNode {
 	public void setUp() {
 		nodeID = 0;
 		message = "Game?";
-		n = new Node(nodeID, message, false, "y/n");
-		p = new Node(1, "Stop", false, "y/n");
+		n = new Node(0, nodeID, message, "y/n");
+		p = new Node(0, 1, "Stop", "y/n");
 	}
 	
 	@Test
@@ -33,8 +33,8 @@ public class TestNode {
 	
 	@Test
 	public void testOptions() {
-		Link l = new Link(n, p, true, message);
-		Link l2 = new Link(n, p, false, message);
+		Link l = new Link(0, n, p, true, message);
+		Link l2 = new Link(1, n, p, false, message);
 		n.addLink(l);
 		n.addLink(l2);
 		assertEquals(l,n.getAvailableLinks().get(0));

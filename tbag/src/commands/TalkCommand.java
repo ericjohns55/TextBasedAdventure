@@ -3,6 +3,7 @@ package commands;
 import game.Game;
 import map.Room;
 import actor.NPC;
+import dialogue.Link;
 
 public class TalkCommand extends UserCommand {
 	@Override
@@ -17,12 +18,34 @@ public class TalkCommand extends UserCommand {
 			if(location.equals(npc.getName())) {
 				if(npc.CanTalkTo()) {
 					if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
-						game.setOutput(npc.getCurrentNode().getMessage() + "\n" + npc.getCurrentNode().getAvailableLinks().get(0).getOption() + " Y/N \n");
+						String t = "";
+						int i = 1;
+						for(Link l : npc.getCurrentNode().getAvailableLinks()) {
+							t += l.getOption();
+							if (npc.getCurrentNode().getType().equals("option")) {
+								t += " option " + i + "\n";
+								i++;
+							}
+							else if (npc.getCurrentNode().getType().equals("y/n")) {
+								t += "\n";
+							}
+							else {
+								
+							}
+						}
+						game.setOutput(npc.getCurrentNode().getMessage() + "\n");
+						game.addOutput(t);
 						npc.setTalkedTo(true);
+						if(npc.getPreviousNode() == null) {
+							npc.setPreviousNode(npc.getRootNode());
+						}
+						System.out.println(npc + " " + npc.getCurrentNode()  + " " +  npc.getPreviousNode());
+						game.npcDialogue(npc, npc.getCurrentNode());
 					}
 					else {
 						game.setOutput(npc.getCurrentNode().getMessage());
 						npc.setTalkedTo(true);
+						game.npcDialogue(npc, npc.getCurrentNode());
 					}
 				}
 				else {

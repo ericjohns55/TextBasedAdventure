@@ -43,9 +43,9 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("moves", "Moves: " + player.getMoves());
 		req.setAttribute("duration", 900);
 		
-		String roomProgress = String.format("Room: %d/16 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 16.0 * 100);
+		String roomProgress = String.format("Room: %d/17 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 17.0 * 100);
 		
-		if (player.getRoomID() == 17) {
+		if (player.getRoomID() == 18) {
 			roomProgress = "YOU ESCAPED!";
 		}
 		
@@ -88,9 +88,9 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("duration", req.getParameter("duration"));
 		req.setAttribute("moves", "Moves: " + player.getMoves());
 		
-		String roomProgress = String.format("Room: %d/16 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 16.0 * 100);
+		String roomProgress = String.format("Room: %d/17 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 17.0 * 100);
 		
-		if (player.getRoomID() == 17) {
+		if (player.getRoomID() == 18) {
 			roomProgress = "YOU ESCAPED!";
 		}
 		
