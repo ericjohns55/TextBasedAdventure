@@ -1603,7 +1603,6 @@ public class DerbyDatabase implements IDatabase {
 						"	requiredNotes varchar(40)," +
 						"	fed varchar(40)," +
 						"	canBeFed integer" +
-						
 						")"
 					);	
 					stmtPlybleObjs.executeUpdate();
@@ -1747,6 +1746,74 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(stmtUnlckbleObjs);	
 					DBUtil.closeQuietly(stmtCnnctns);
 					DBUtil.closeQuietly(stmtUsers);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public void deleteData(int gameID) {	// KEEPS LOGIN IN FILE, MUST REGENERATE DEFAULT DATA TO USE; THIS SHOULD ONLY BE USED IN JUNITS
+		executeTransaction(new Transaction<Boolean>() {
+			@Override
+			public Boolean execute(Connection conn) throws SQLException {
+				PreparedStatement deleteItems = null;
+				PreparedStatement deleteCompoundItems = null;
+				PreparedStatement deletePlayers = null;
+				PreparedStatement deleteRooms = null;
+				PreparedStatement deleteRoomObjects = null;
+				PreparedStatement deletePlayableObjects = null;
+				PreparedStatement deleteUnlockableObjects = null;
+				PreparedStatement deletePuzzles = null;
+				PreparedStatement deleteObjectPuzzles = null;
+				
+				try {
+					deleteItems = conn.prepareStatement("delete from items where gameID = ?");
+					deleteItems.setInt(1, gameID);
+					deleteItems.executeUpdate();
+
+					deleteCompoundItems = conn.prepareStatement("delete from compoundItems where gameID = ?");
+					deleteCompoundItems.setInt(1, gameID);
+					deleteCompoundItems.executeUpdate();
+
+					deletePlayers = conn.prepareStatement("delete from players where gameID = ?");
+					deletePlayers.setInt(1, gameID);
+					deletePlayers.executeUpdate();
+
+					deleteRooms = conn.prepareStatement("delete from rooms where gameID = ?");
+					deleteRooms.setInt(1, gameID);
+					deleteRooms.executeUpdate();
+
+					deleteRoomObjects = conn.prepareStatement("delete from roomObjects where gameID = ?");
+					deleteRoomObjects.setInt(1, gameID);
+					deleteRoomObjects.executeUpdate();
+
+					deletePlayableObjects = conn.prepareStatement("delete from playableObjects where gameID = ?");
+					deletePlayableObjects.setInt(1, gameID);
+					deletePlayableObjects.executeUpdate();
+
+					deleteUnlockableObjects = conn.prepareStatement("delete from unlockableObjects where gameID = ?");
+					deleteUnlockableObjects.setInt(1, gameID);
+					deleteUnlockableObjects.executeUpdate();
+
+					deletePuzzles = conn.prepareStatement("delete from puzzles where gameID = ?");
+					deletePuzzles.setInt(1, gameID);
+					deletePuzzles.executeUpdate();
+
+					deleteObjectPuzzles = conn.prepareStatement("delete from objectPuzzles where gameID = ?");
+					deleteObjectPuzzles.setInt(1, gameID);
+					deleteObjectPuzzles.executeUpdate();
+					
+					return true;
+				} finally {
+					DBUtil.closeQuietly(deleteItems);
+					DBUtil.closeQuietly(deleteCompoundItems);
+					DBUtil.closeQuietly(deletePlayers);
+					DBUtil.closeQuietly(deleteRooms);
+					DBUtil.closeQuietly(deleteRoomObjects);
+					DBUtil.closeQuietly(deletePlayableObjects);
+					DBUtil.closeQuietly(deleteUnlockableObjects);
+					DBUtil.closeQuietly(deletePuzzles);
+					DBUtil.closeQuietly(deleteObjectPuzzles);
 				}
 			}
 		});

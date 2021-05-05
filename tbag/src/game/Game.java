@@ -224,7 +224,7 @@ public class Game {
 			
 			db.moveRooms(player, roomID);  // update roomID in database
 			
-			addOutput("You climbed the " + object.getName() + "\n\n");
+			addOutput("You climbed the " + object.getName() + ".\n\n");
 			addOutput(db.getDescription(player.getRoomID()));	// grab room description from DB
 		} else {
 			addOutput("There is not an exit here!" + object.getName());
@@ -380,5 +380,31 @@ public class Game {
 		} else {
 			addOutput("There is not an exit here!");
 		}
+	}
+
+	public void reloadDatabaseForJUnit() {
+		db.deleteData(gameID);
+		db.loadInitialData(gameID);
+		
+		reloadData();
+	}
+	
+	public void movePlayerJUnit(int roomID) {
+		player = db.getPlayer(0);
+		player.setRoomID(roomID);
+		player.setGame(this);
+		room = db.getRoom(player.getRoomID());
+		output = "";
+	}
+	
+	public void reloadData() {
+		player = db.getPlayer(0);
+		player.setGame(this);
+		room = db.getRoom(player.getRoomID());
+		output = "";
+	}
+	
+	public IDatabase getDatabase() {
+		return db;
 	}
 }

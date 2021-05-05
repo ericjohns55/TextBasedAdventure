@@ -185,4 +185,10 @@ public class FakeDatabase implements IDatabase {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void deleteData(int gameID) {
+		// TODO Auto-generated method stub
+		
+	}
 }

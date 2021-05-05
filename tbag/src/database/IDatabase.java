@@ -43,5 +43,6 @@ public interface IDatabase {
 	public Integer playNotes(PlayableObject playableObject, String notes);
 	public String getDescription(int roomID);
 	
+	public void deleteData(int gameID);
 	public void loadInitialData(int gameID);
 }
