@@ -265,6 +265,10 @@ public class Game {
 		}
 	}
 	
+	public void give(NPC npc, Player player, Item item) {
+		db.removeItemFromInventory(npc.getInventory(), item);
+	}
+
 	public void take(Room room, Item item, Player player, String noun) {
 		item.setInInventory(true);
 		player.getInventory().addItem(noun, item);
