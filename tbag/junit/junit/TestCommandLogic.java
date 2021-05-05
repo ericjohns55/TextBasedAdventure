@@ -386,4 +386,45 @@ public class TestCommandLogic {
 		
 		assertEquals(expectedOutput, commandOutput);
 	}
+	
+	@Test
+	public void testFeed() {
+		game = new Game(1);
+		game.movePlayerJUnit(9);
+		
+		game.runCommand("feed hellhound");
+		
+		String expectedOutput = "I am not sure what to feed that.";
+		String commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+
+		Item apple = game.getRoom(2).getItem("apple");
+		game.getPlayer().getInventory().addItem("apple", apple);
+		
+		game.runCommand("feed apple to hellhound");
+		expectedOutput = "The hellhound does not want to be fed apple.";
+		commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+		
+		game.getPlayer().getInventory().addItem("meat", game.getDatabase().getItemByID(16));
+		
+		game.runCommand("feed meat to hellhound");
+		
+		expectedOutput = "You fed meat to the hellhound.";
+		commandOutput = game.getOutput();
+		
+		assertTrue(commandOutput.contains(expectedOutput));
+	}
+	
+	@Test
+	public void testClimb() {
+		
+	}
+	
+	@Test
+	public void testScan() {
+		
+	}
 }

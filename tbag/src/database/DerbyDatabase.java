@@ -1603,7 +1603,6 @@ public class DerbyDatabase implements IDatabase {
 						"	requiredNotes varchar(40)," +
 						"	fed varchar(40)," +
 						"	canBeFed integer" +
-						
 						")"
 					);	
 					stmtPlybleObjs.executeUpdate();

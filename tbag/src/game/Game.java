@@ -403,4 +403,8 @@ public class Game {
 		room = db.getRoom(player.getRoomID());
 		output = "";
 	}
+	
+	public IDatabase getDatabase() {
+		return db;
+	}
 }
