@@ -58,7 +58,7 @@ public class ScanCommand extends UserCommand {
 
 			}
 		} else {
-			game.setOutput("Not sure what you want me to scan...");
+			game.setOutput("Not sure where you want me to scan...");
 		}
 	}
 }

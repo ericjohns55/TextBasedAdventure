@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import game.Game;
 import items.Item;
-import map.Room;
 import map.RoomObject;
 
 import static org.junit.Assert.*;
@@ -444,10 +443,44 @@ public class TestCommandLogic {
 		commandOutput = game.getOutput();
 		
 		assertEquals(expectedOutput, commandOutput);
+
+		game.getPlayer().getInventory().addItem("sticky gloves", game.getDatabase().getItemByID(43));
+		
+		game.runCommand("climb ladder");
+		expectedOutput = "You climbed the ladder.";
+		commandOutput = game.getOutput();
+		
+		assertTrue(commandOutput.contains(expectedOutput));
 	}
 	
 	@Test
 	public void testScan() {
+		game = new Game(1);
+		game.movePlayerJUnit(12);
 		
+		game.runCommand("scan apple");
+		
+		String expectedOutput = "Not sure where you want me to scan...";
+		String commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+
+		Item apple = game.getRoom(2).getItem("apple");
+		game.getPlayer().getInventory().addItem("apple", apple);
+		
+		game.runCommand("scan apple on scanner");
+		
+		expectedOutput = "The scanner can't scan that!";
+		commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+
+		game.getPlayer().getInventory().addItem("severed finger", game.getDatabase().getItemByID(30));
+		
+		game.runCommand("scan severed finger on scanner");
+		expectedOutput = "You scanned severed finger on the scanner.";
+		commandOutput = game.getOutput();
+		
+		assertTrue(commandOutput.contains(expectedOutput));
 	}
 }
