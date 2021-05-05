@@ -420,7 +420,30 @@ public class TestCommandLogic {
 	
 	@Test
 	public void testClimb() {
+		game = new Game(1);
+		game.movePlayerJUnit(16);
 		
+		game.runCommand("climb ladder");
+		
+		String expectedOutput = "You do not have what is needed to climb this ladder!";
+		String commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+		
+		RoomObject table = new RoomObject("Table", "A table that can hold things!", "south", true, true, false, 8);
+		game.getRoom().addObject("table", table);
+		
+		game.runCommand("climb table");
+		expectedOutput = "That can't be climbed!";
+		commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
+		
+		game.runCommand("climb potato");
+		expectedOutput = "A potato doesn't exist in this room!";
+		commandOutput = game.getOutput();
+		
+		assertEquals(expectedOutput, commandOutput);
 	}
 	
 	@Test
