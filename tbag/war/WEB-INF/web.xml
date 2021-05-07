@@ -14,6 +14,10 @@
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>servlet.LoginServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>GameOverServlet</servlet-name>
+    <servlet-class>servlet.GameOverServlet</servlet-class>
+  </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
@@ -23,6 +27,10 @@
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GameOverServlet</servlet-name>
+    <url-pattern>/gameOver</url-pattern>
   </servlet-mapping>
 
 

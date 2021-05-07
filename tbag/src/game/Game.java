@@ -30,6 +30,8 @@ public class Game {
 	
 	private int gameID;
 	
+
+	
 	public Game(int gameID) {
 		DatabaseProvider.setInstance(new DerbyDatabase(gameID));
 		db = DatabaseProvider.getInstance();	
@@ -39,6 +41,8 @@ public class Game {
 		this.room = db.getRoom(player.getRoomID());
 		this.output = "";
 		this.gameID = gameID;
+	
+		
 	}
 	
 	public void setOutput(String output) {
@@ -418,4 +422,6 @@ public class Game {
 	public IDatabase getDatabase() {
 		return db;
 	}
+	
+	
 }

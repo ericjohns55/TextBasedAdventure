@@ -43,10 +43,12 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("moves", "Moves: " + player.getMoves());
 		req.setAttribute("duration", 900);
 		
+		// Need to change this when adding more rooms
 		String roomProgress = String.format("Room: %d/17 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 17.0 * 100);
 		
 		if (player.getRoomID() == 18) {
 			roomProgress = "YOU ESCAPED!";
+			
 		}
 		
 		req.setAttribute("room", roomProgress);
@@ -76,7 +78,7 @@ public class TBAGServlet extends HttpServlet {
 		
 		if (story.length() >= 8000) {
 			story = story.substring(story.length() - 8000, story.length());
-		}
+		}		
 		
 		player.setLastOutput(story);
 		player.setMoves(player.getMoves() + 1);
@@ -88,10 +90,12 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("duration", req.getParameter("duration"));
 		req.setAttribute("moves", "Moves: " + player.getMoves());
 		
+		// Need to change this when adding more rooms
 		String roomProgress = String.format("Room: %d/17 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 17.0 * 100);
 		
 		if (player.getRoomID() == 18) {
-			roomProgress = "YOU ESCAPED!";
+			//roomProgress = "YOU ESCAPED!";
+			resp.sendRedirect(req.getContextPath() + "/gameOver");
 		}
 		
 		req.setAttribute("room", roomProgress);

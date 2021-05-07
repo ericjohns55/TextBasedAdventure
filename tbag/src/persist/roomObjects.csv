@@ -20,3 +20,4 @@
 20|cabinet|This potion ingredient cabinet can hold potion ingredients.|north|0|0|0| |0|0|0|1|0|0|0| |0| |15|1151
 21|small table|This small table can hold things.|north|0|0|0| |0|0|0|1|0|0|0| |0| |15|1152
 22|witch's pot|This witch's pot can hold ingredients for making potions.|south|1|1|0| |0|0|0|1|0|0|0| |0| |15|1153
+23|table|A table that can hold things!|east|0|0|0| |0|0|1|1|0|0|0| |0| |8|1082

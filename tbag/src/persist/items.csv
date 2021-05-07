@@ -15,7 +15,7 @@
 15|black key|This small black key seems to be able to unlock something...|0.1|0|1|0|0|0|0|0|0|10017
 16|meat|Could be used to eat or feed something?|1|0|1|0|0|0|0|0|0|10017
 18|note|That lamb heart looks like it has something in it...|0.1|0|1|0|0|0|0|1|0|1071
-19|blood vial|This vial contains blood.|0.2|0|1|0|0|0|0|0|1|108
+19|blood vial|This vial contains blood.|0.2|0|1|0|0|0|0|0|1|1082
 20|note|You may want to pour that vial on something.|0.1|0|1|0|0|0|0|1|0|108
 21|circular glass shard|This shard of glass is circular.|0.6|0|1|0|0|0|0|0|0|110
 22|rectangular glass shard|This shard of glass is rectangular.|0.6|0|1|0|0|0|0|0|0|110
@@ -41,13 +41,13 @@
 43|sticky gloves|These gloves are verrry sticky. They're probably able to hold onto/stick to anything.|1.5|0|1|0|0|0|0|0|0|1142
 44|broken beaker|This scientific beaker seems to be broken.|0.4|0|1|0|0|0|0|0|0|1142
 45|can of soda|This can is full of soda.|0.8|0|1|0|0|0|0|0|0|1142
-46|rat blood|This is blood from a rat.|0.5|0|1|0|0|0|0|0|0|1151
+46|lavender|This is a type of plant.|0.5|0|1|0|0|0|0|0|0|1151
 47|lemon juice|This is juice from a lemon.|0.3|0|1|0|0|0|0|0|0|1151
-48|bile|This is fluid from the gallbladder.|0.4|0|1|0|0|0|0|0|0|1151
-49|dog urine|This is urine from a dog.|1.2|0|1|0|0|0|0|0|0|1151
-50|horse semen|This is semen from a horse.|0.2|0|1|0|0|0|0|0|0|1151
+48|rose oil|This is oil from a rose.|0.4|0|1|0|0|0|0|0|0|1151
+49|frog legs|This are legs from a frog.|1.2|0|1|0|0|0|0|0|0|1151
+50|ear wax|This is wax from an ear.|0.2|0|1|0|0|0|0|0|0|1151
 51|pixie shavings|These are shavings from a pixie.|1.3|0|1|0|0|0|0|0|0|1151
-52|rabbit blood|This is blood from a rabbit.|0.9|0|1|0|0|0|0|0|0|1151
+52|graphite|This is a type of rock.|0.9|0|1|0|0|0|0|0|0|1151
 53|salt|This is a mineral from seawater.|0.1|0|1|0|0|0|0|0|0|1151
 54|note|Three ingredients in the pot is all it will take to continue your journey and meet your fate.|0.1|0|1|0|0|0|0|1|0|1152
 55|penny|penny.|0.1|0|1|0|0|0|0|0|0|117

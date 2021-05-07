@@ -57,6 +57,8 @@ public class Command {
 		commands.put("feed", new FeedCommand());
 		commands.put("scan", new ScanCommand());
 		commands.put("climb", new ClimbCommand());
+		commands.put("pop", new PopCommand());
+		
 		parseCommands();
 	}
 	
