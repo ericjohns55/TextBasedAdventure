@@ -103,9 +103,9 @@ public class Game {
 		setOutput("You break apart the " + noun + " and dump the contents on the " + location + ".");
 	}
 	
-	public void breakItem(Room room, CompoundItem item, String noun) {
-		db.breakItem(item, room.getInventory());
-		setOutput("You break apart the " + noun + " and dumb the contents on the floor.");
+	public void breakItem(Inventory inventory, CompoundItem item, String noun, String output) {
+		db.breakItem(item, inventory);
+		setOutput("You break apart the " + noun + " and dump the contents " + output);
 	}
 	
 	public void dropItem(RoomObject container, String item, Player player, Puzzle puzzle, String location) {
@@ -350,16 +350,16 @@ public class Game {
 			}
 		}
 	}
-	
-	public void give(NPC npc, Player player, Item item) {
-		db.removeItemFromInventory(npc.getInventory(), item);
-	}
 
 	public void take(Room room, Item item, Player player, String noun) {
 		item.setInInventory(true);
 		player.getInventory().addItem(noun, item);
 		room.removeItem(noun);
 		db.addItemToInventory(player.getInventory(), item);	// update item inventoryID in DB
+	}
+	
+	public void give(NPC npc, Player player, Item item) {
+		db.removeItemFromInventory(npc.getInventory(), item);
 	}
 	
 	public void type(Puzzle puzzle, RoomObject object, String noun) {

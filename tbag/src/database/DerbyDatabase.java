@@ -1424,7 +1424,12 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ? and items.gameID = ?");
+					if (item instanceof CompoundItem) {
+						System.out.println("========================================================================");
+						stmt = conn.prepareStatement("update compoundItems set locationID = ? where compoundItems.itemID = ? and compoundItems.gameID = ?");
+					} else {
+						stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ? and items.gameID = ?");
+					}
 
 					stmt.setInt(1, inventory.getInventoryID());
 					stmt.setInt(2, item.getItemID());

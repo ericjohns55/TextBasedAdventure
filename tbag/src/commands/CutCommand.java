@@ -50,7 +50,21 @@ public class CutCommand extends UserCommand {
 					
 					if (item.isBreakable()) {
 						if (inventory.contains(item.getBreakItem())) {
-							game.breakItem(room, item, noun);
+							game.breakItem(room.getInventory(), item, noun, "on the floor.");
+						} else {
+							game.setOutput("You do not possess the needed item to cut this.");
+						}
+					} else {
+						game.setOutput("You cannot cut this item.");
+					}
+				}
+			} else if (inventory.contains(noun)) {
+				if (inventory.getItem(noun) instanceof CompoundItem) {
+					CompoundItem item = (CompoundItem) inventory.getItem(noun);
+					
+					if (item.isBreakable()) {
+						if (inventory.contains(item.getBreakItem())) {
+							game.breakItem(inventory, item, noun, "into your inventory.");
 						} else {
 							game.setOutput("You do not possess the needed item to cut this.");
 						}
@@ -63,5 +77,4 @@ public class CutCommand extends UserCommand {
 			}
 		}
 	}
-
 }
