@@ -44,6 +44,8 @@ public class Item {
 		this("Item");
 	}
 	
+	// lots of getters and setters
+	
 	public int getItemID() {
 		return itemID;
 	}
@@ -139,7 +141,7 @@ public class Item {
 		
 		Item compareItem = (Item) compare;
 		
-		return compareItem.getName().equals(getName())
+		return compareItem.getName().equals(getName())	// compare item properties (not exhaustive - should be)
 				&& compareItem.getWeight() == getWeight()
 				&& compareItem.isInteractable() == isInteractable()
 				&& compareItem.canBePickedUp() == canBePickedUp();

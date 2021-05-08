@@ -13,21 +13,25 @@ public class OptionsCommand extends UserCommand {
 
 		Game game = getGame();
 
-
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
-			if (!npc.isDone() && npc.getCurrentNode().getType().equals("option")) {
-				if(npc.isTalkedTo()) {
+			
+			if (!npc.isDone() && npc.getCurrentNode().getType().equals("option")) {	// make sure the dialogue type is option
+				if(npc.isTalkedTo()) {	// can not run an option command without talking first
 					if(npc.getCurrentNode().getType().equals("option")) {
-						if(noun != null && noun.matches("[1-3.]+")) {
+						if(noun != null && noun.matches("[1-3.]+")) {	// confirm that a number 1-3 is specified as noun
 							npc.setPreviousNode(npc.getCurrentNode());
-							if(Integer.valueOf(noun) <= npc.getCurrentNode().getOptions().size()) {
+							
+							if(Integer.valueOf(noun) <= npc.getCurrentNode().getOptions().size()) {	// make sure number is in range
 								npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(Integer.valueOf(noun) - 1).getNextNode());
-								if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {
+								
+								if (!npc.getCurrentNode().getAvailableLinks().isEmpty()) {	// make sure dialogue can continue
 									String t = "";
 									int i = 1;
-									for(Link l : npc.getCurrentNode().getAvailableLinks()) {
+									
+									for(Link l : npc.getCurrentNode().getAvailableLinks()) {	// loop through links add output
 										t += l.getOption();
+										
 										if (npc.getCurrentNode().getType().equals("option")) {
 											t += " option " + i + "\n";
 											i++;
@@ -36,17 +40,20 @@ public class OptionsCommand extends UserCommand {
 											t += "\n";
 										}
 										else if (npc.getCurrentNode().getType().equals("gCommand")) {
-											game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());
+											game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());	// force give command if applicable
 										}
 									}
+									
+									// set output and update DB
 									game.setOutput(npc.getCurrentNode().getMessage() + "\n" + t);
 									game.npcDialogue(npc, npc.getCurrentNode());
-								}
-								else {
+								} else {
 									game.setOutput(npc.getCurrentNode().getMessage() + "\n");
-									if (npc.getCurrentNode().getType().equals("gCommand")) {
+									
+									if (npc.getCurrentNode().getType().equals("gCommand")) {	// force run give command if on last node
 										game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());
 									}
+									
 									game.npcDialogue(npc, npc.getCurrentNode());
 								}
 							}
@@ -74,5 +81,4 @@ public class OptionsCommand extends UserCommand {
 			game.setOutput("I don't understand that command.");
 		}
 	}
-
 }

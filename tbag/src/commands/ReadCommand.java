@@ -14,10 +14,10 @@ public class ReadCommand extends UserCommand {
 		Inventory inventory = getInventory();
 		
 		if (inventory.contains(noun)) {
-			Item toRead = inventory.getItem(noun);
+			Item toRead = inventory.getItem(noun);	// grab item from inventory
 			
-			if (toRead.isReadable()) {
-				game.setOutput("This " + noun + " says \"" + toRead.getDescription() + "\"");
+			if (toRead.isReadable()) {	// check if readable
+				game.setOutput("This " + noun + " says \"" + toRead.getDescription() + "\"");	// set output to item's text
 			} else {
 				game.setOutput("Cannot read this item.");
 			}

@@ -20,8 +20,8 @@ public abstract class UserCommand {
 	private Puzzle puzzle;
 	private NPC npc;
 
+	// load in game state and important command parts for reference in child classes
 	public void loadInputandGame(Game game, String verb, String noun, String location) {
-
 		this.game = game;
 
 		this.verb = verb;
@@ -35,8 +35,10 @@ public abstract class UserCommand {
 		this.npc = room.getNpc();
 	}
 
-	public abstract void execute();
+	public abstract void execute();	// every class must contain this method, will be called in the commands class
 
+	// getters and setters for everything, will be referenced by commands
+	
 	public Game getGame() {
 		return game;
 	}

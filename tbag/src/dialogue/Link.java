@@ -16,6 +16,8 @@ public class Link{
 		this.option = option;
 	}
 	
+	// getters and setters, nodes connect through this class
+	
 	public Node getNextNode() {
 		return nextNode;
 	}

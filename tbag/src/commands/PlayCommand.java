@@ -19,31 +19,33 @@ public class PlayCommand extends UserCommand {
 		Puzzle puzzle = getPuzzle();
 		Game game = getGame();
 		
-		if (location != null) {
+		if (location != null) {	// confirm a location is specified
 			if (room.hasObject(location)) {
-				if (room.getObject(location) instanceof PlayableObject) {
+				if (room.getObject(location) instanceof PlayableObject) {	// make sure the object is playable
 					PlayableObject object = (PlayableObject) room.getObject(location);
 					
-					game.setOutput("You played " + noun + " on the " + location + ".");
+					game.setOutput("You played " + noun + " on the " + location + ".");	// play the noun on the object
 					
-					boolean unlock = false;
+					boolean unlock = false;	// check if something needs to be unlocked
 					
 					if (object.isInstrument()) {						
-						unlock = game.play(object, noun, puzzle);
+						unlock = game.play(object, noun, puzzle);	// if instrument, update DB with notes played
 					} else {
-						if (inventory.contains(noun)) {
+						if (inventory.contains(noun)) {	// if object contains an item
 							Item toDrop = inventory.removeItem(noun);
 							
+							// update DB and add item to object inventory
 							unlock = game.play(object, toDrop, getPlayer(), puzzle, noun, location);
 						} else {
-							game.setOutput("You do not have that item!");
+							game.setOutput("You do not have that item!");	// item doesnt exist, overwrite output
 						}
 					}
 					
-					if (unlock) {
+					if (unlock) {	
+						// if something needs to be unlocked, grab the unlockable object from the puzzle
 						RoomObject toUnlock = room.getObject(puzzle.getUnlockObstacle());
 						
-						if (toUnlock.isLocked()) {
+						if (toUnlock.isLocked()) {	// if still locked, unlock object
 							game.unlockObject(toUnlock, false);
 							game.addOutput("\nA " + toUnlock.getName() + " to the " + toUnlock.getDirection() + " swings open.");
 						}

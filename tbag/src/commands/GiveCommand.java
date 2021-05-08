@@ -19,13 +19,13 @@ public class GiveCommand extends UserCommand {
 		
 		Game game = getGame();
 		
-		if (room.hasNpc()) {
-			if (location.equals(npc.getName())) {
-				if (inventory.contains(noun)) {
+		if (room.hasNpc()) {	// check that there is an NPC
+			if (location.equals(npc.getName())) {	// check that NPC was specified
+				if (inventory.contains(noun)) {	// make sure the item to give exists
 					Item toGive = inventory.getItem(noun);
 				
-					if (toGive != null) {
-						if (toGive.equals(npc.getRequiredItem())) {
+					if (toGive != null) {	// make sure the item to give exists again apparently?
+						if (toGive.equals(npc.getRequiredItem())) {	// confirm the NPC actually wants this item
 							RoomObject roomObject = npc.getUnlockObstacle();
 							roomObject.setLocked(false);
 							game.setOutput("Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.");
@@ -34,29 +34,24 @@ public class GiveCommand extends UserCommand {
 							inventory.removeItem(noun);
 							npc.getInventory().addItem(noun, toGive);
 							npc.setCanTalkTo(false);
-							game.give(npc, getPlayer(), toGive);
-							game.unlockObject(roomObject, false);
-							game.npcDialogue(npc, npc.getCurrentNode());
-						
-						}
-						else {
+							game.give(npc, getPlayer(), toGive);	// update DB with NPC's new item
+							game.unlockObject(roomObject, false);	// unlock the obstacle the NPC wants to solve for you
+							game.npcDialogue(npc, npc.getCurrentNode());	// update the dialogue tree
+						} else {
 							game.setOutput(npc.getName() + " doesn't want that item.");
 						}
 					} else {
 						game.setOutput("You don't have that item.");
 					}
-				}
-				else if (noun == null) {
+				} else if (noun == null) {	// noun not specified
 					game.setOutput("Please specify an item.");
-				} else {
+				} else {	// player doesnt have the item
 					game.setOutput("You don't have that item.");
 				}
-			}
-			else {
+			} else {
 				game.setOutput("There is no one named " + location + " in this room.");
 			}
-		}
-		else {
+		} else {
 			game.setOutput("There is no one else in the room with you.");
 		}
 	}

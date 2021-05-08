@@ -12,13 +12,14 @@ public class OpenCommand extends UserCommand {
 		Inventory inventory = getInventory();
 		Game game = getGame();
 		
-		if (noun.equals("inventory")) {
+		if (noun.equals("inventory")) {	// print out inventory description
 			game.setOutput(inventory.openInventory());
-		} else if (room.hasObject(noun)) {
-			if (room.getObject(noun).isLocked()) {
+		} else if (room.hasObject(noun)) {	// check if the object exists
+			if (room.getObject(noun).isLocked()) {	
+				// most likely a chest here, but check if it is locked and do not print out if so
 				game.setOutput("This " + room.getObject(noun).getName() + " is locked.");
 			} else {
-				game.setOutput(room.getObject(noun).getInventory().listItems(noun));
+				game.setOutput(room.getObject(noun).getInventory().listItems(noun));	// list items otherwise
 			}
 		} else {
 			game.setOutput("Could not find " + noun + "to open.");
