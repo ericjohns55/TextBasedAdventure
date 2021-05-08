@@ -16,7 +16,7 @@ public class OptionsCommand extends UserCommand {
 
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
-			if (!npc.isDone() && npc.getCurrentNode().getType().equals("option")) {
+			if (npc.getCurrentNode().getType().equals("option")) {
 				if(npc.isTalkedTo()) {
 					if(npc.getCurrentNode().getType().equals("option")) {
 						if(noun != null && noun.matches("[1-3.]+")) {
@@ -43,6 +43,7 @@ public class OptionsCommand extends UserCommand {
 									game.npcDialogue(npc, npc.getCurrentNode());
 								}
 								else {
+									npc.setDone(true);
 									game.setOutput(npc.getCurrentNode().getMessage() + "\n");
 									if (npc.getCurrentNode().getType().equals("gCommand")) {
 										game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());

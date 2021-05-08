@@ -390,7 +390,7 @@ public class Game {
 	}
 
 	public void npcDialogue(NPC npc, Node currentNode) {
-		db.npcDialogue(npc, npc.isTalkedTo(), currentNode.getNodeID(), npc.CanTalkTo());
+		db.npcDialogue(npc, npc.isTalkedTo(), currentNode.getNodeID(), npc.CanTalkTo(), npc.isDone());
 	}
 
 	public void reloadDatabaseForJUnit() {

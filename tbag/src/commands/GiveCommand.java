@@ -26,18 +26,22 @@ public class GiveCommand extends UserCommand {
 				
 					if (toGive != null) {
 						if (toGive.equals(npc.getRequiredItem())) {
-							RoomObject roomObject = npc.getUnlockObstacle();
-							roomObject.setLocked(false);
-							game.setOutput("Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.");
-							toGive.setCanBePickedUp(false);
-							toGive.setInInventory(false);
-							inventory.removeItem(noun);
-							npc.getInventory().addItem(noun, toGive);
-							npc.setCanTalkTo(false);
-							game.give(npc, getPlayer(), toGive);
-							game.unlockObject(roomObject, false);
-							game.npcDialogue(npc, npc.getCurrentNode());
-						
+							if(npc.isDone()) {
+								RoomObject roomObject = npc.getUnlockObstacle();
+								roomObject.setLocked(false);
+								game.setOutput("Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.");
+								toGive.setCanBePickedUp(false);
+								toGive.setInInventory(false);
+								inventory.removeItem(noun);
+								npc.getInventory().addItem(noun, toGive);
+								npc.setCanTalkTo(false);
+								game.give(npc, getPlayer(), toGive);
+								game.unlockObject(roomObject, false);
+								game.npcDialogue(npc, npc.getCurrentNode());
+							}
+							else {
+								game.setOutput("You should finish talking to " + npc.getName() + ".");
+							}
 						}
 						else {
 							game.setOutput(npc.getName() + " doesn't want that item.");

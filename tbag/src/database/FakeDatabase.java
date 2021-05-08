@@ -197,7 +197,7 @@ public class FakeDatabase implements IDatabase {
 	}
 
 	@Override
-	public Integer npcDialogue(NPC npc, boolean talkedTo, int nextNodeID, boolean canTalkTo) {
+	public Integer npcDialogue(NPC npc, boolean talkedTo, int nextNodeID, boolean canTalkTo, boolean isDone) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -14,7 +14,7 @@ public class NoCommand extends UserCommand {
 		
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
-			if (!npc.isDone() && npc.getCurrentNode().getType().equals("y/n")) {
+			if (npc.getCurrentNode().getType().equals("y/n")) {
 				if(npc.isTalkedTo()) {
 					npc.setPreviousNode(npc.getCurrentNode());
 					npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(1).getNextNode());
@@ -38,6 +38,7 @@ public class NoCommand extends UserCommand {
 						game.npcDialogue(npc, npc.getCurrentNode());
 					}
 					else {
+						npc.setDone(true);
 						game.setOutput(npc.getCurrentNode().getMessage() + "\n");
 						if (npc.getCurrentNode().getType().equals("gCommand")) {
 							game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());

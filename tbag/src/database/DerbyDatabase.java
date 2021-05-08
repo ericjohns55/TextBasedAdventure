@@ -1688,13 +1688,14 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
-	public Integer npcDialogue(NPC npc, boolean talkedTo, int currentNodeID, boolean canTalkTo) {
+	public Integer npcDialogue(NPC npc, boolean talkedTo, int currentNodeID, boolean canTalkTo, boolean isDone) {
 		return executeTransaction(new Transaction<Integer>() {
 			@Override
 			public Integer execute(Connection conn) throws SQLException {
 				PreparedStatement stmt = null;
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
+				PreparedStatement stmt4 = null;
 				
 				try {
 					stmt = conn.prepareStatement("update npcs set talkedTo = ? where npcs.actorID = ? and npcs.gameID = ?");
@@ -1719,11 +1720,20 @@ public class DerbyDatabase implements IDatabase {
 					stmt3.setInt(2, npc.getActorID());
 					stmt3.setInt(3, gameID);
 					
-					return stmt3.executeUpdate();
+					stmt3.executeUpdate();
+					
+					stmt4 = conn.prepareStatement("update npcs set done = ? where npcs.actorID = ? and npcs.gameID = ?");
+					
+					stmt4.setInt(1, isDone ? 1 : 0);
+					stmt4.setInt(2, npc.getActorID());
+					stmt4.setInt(3, gameID);
+					
+					return stmt4.executeUpdate();
 				} finally {
 					DBUtil.closeQuietly(stmt);
 					DBUtil.closeQuietly(stmt2);
 					DBUtil.closeQuietly(stmt3);
+					DBUtil.closeQuietly(stmt4);
 				}
 			}
 		});

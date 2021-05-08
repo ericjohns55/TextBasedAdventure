@@ -694,14 +694,4 @@ public class InitialData {
 		
 		return null;
 	}
-	
-	private static Node getNodeByID(int nodeID) {
-		for (Node node : nodes) {
-			if (node.getNodeID() == nodeID) {
-				return node;
-			}
-		}
-		
-		return null;
-	}
 }
