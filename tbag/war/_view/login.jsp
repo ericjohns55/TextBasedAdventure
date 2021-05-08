@@ -29,7 +29,6 @@
 				color: white;
 			}
 			
-			
 			.error {
 				font-size: 16px;
 				font-family: Arial;

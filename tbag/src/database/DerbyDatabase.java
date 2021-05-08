@@ -786,8 +786,10 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement("select connections.* " +
 							"from connections, rooms " +
-								"where rooms.roomID = ? and connections.locationID = rooms.roomID");
+								"where rooms.roomID = ? and connections.locationID = rooms.roomID and connections.gameID = ?");
+					
 					stmt.setInt(1, roomID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -796,6 +798,7 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet.next()) {
 						int index = 1;
 
+						resultSet.getInt(index++);	// consume gameID
 						resultSet.getInt(index++);	// consume locationID
 						int destinationID = resultSet.getInt(index++);
 						String direction = resultSet.getString(index++);
@@ -1962,6 +1965,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtCnnctns = conn.prepareStatement(
 						"create table connections (" +
+						"	gameID integer," +
 						"	locationID integer," +
 						"	destinationID integer," +
 						"	direction varchar(40)" +
@@ -2053,6 +2057,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement deleteUnlockableObjects = null;
 				PreparedStatement deletePuzzles = null;
 				PreparedStatement deleteObjectPuzzles = null;
+				PreparedStatement deleteConnections = null;
 				
 				try {
 					deleteItems = conn.prepareStatement("delete from items where gameID = ?");
@@ -2090,6 +2095,10 @@ public class DerbyDatabase implements IDatabase {
 					deleteObjectPuzzles = conn.prepareStatement("delete from objectPuzzles where gameID = ?");
 					deleteObjectPuzzles.setInt(1, gameID);
 					deleteObjectPuzzles.executeUpdate();
+
+					deleteConnections = conn.prepareStatement("delete from connections where gameID = ?");
+					deleteConnections.setInt(1, gameID);
+					deleteConnections.executeUpdate();
 					
 					return true;
 				} finally {
@@ -2375,12 +2384,13 @@ public class DerbyDatabase implements IDatabase {
 					insertObjectPuzzles.executeBatch();
 					
 					
-					insertConnections = conn.prepareStatement("insert into connections (locationID, destinationID, direction) values (?, ?, ?)");
+					insertConnections = conn.prepareStatement("insert into connections (gameID, locationID, destinationID, direction) values (?, ?, ?, ?)");
 					
 					for (Connections connection : connections) {
-						insertConnections.setInt(1, connection.getConnectionID());
-						insertConnections.setInt(2, connection.getDestinationID());
-						insertConnections.setString(3, connection.getDirection());
+						insertConnections.setInt(1, gameID);
+						insertConnections.setInt(2, connection.getConnectionID());
+						insertConnections.setInt(3, connection.getDestinationID());
+						insertConnections.setString(4, connection.getDirection());
 						insertConnections.addBatch();
 					}
 					
