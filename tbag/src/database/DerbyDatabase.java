@@ -785,8 +785,8 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement("select connections.* " +
-							"from connections, rooms " +
-								"where rooms.roomID = ? and connections.locationID = rooms.roomID and connections.gameID = ?");
+							"from connections " +
+								"where connections.locationID = ? and connections.gameID = ?");
 					
 					stmt.setInt(1, roomID);
 					stmt.setInt(2, gameID);
@@ -1207,8 +1207,10 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement("select links.* " +
 							"from links, nodes " +
-								"where nodes.nodeID = ? and links.previousNodeID = nodes.nodeID");
+								"where nodes.nodeID = ? and links.previousNodeID = nodes.nodeID and links.gameID = ? and links.gameID = nodes.gameID");
+					
 					stmt.setInt(1, nodeID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -1217,6 +1219,7 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet.next()) {
 						int index = 1;
 
+						resultSet.getInt(index++);	// consume gameID
 						int linkID = resultSet.getInt(index++);
 						int nextNodeID = resultSet.getInt(index++);
 						int previousNodeID = resultSet.getInt(index++);
@@ -1251,7 +1254,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"select nodes.* " +
 								"from nodes, npcs " + 
-									"where nodes.npcID = ? and npcs.gameID = ?"
+									"where nodes.npcID = ? and npcs.gameID = ? and nodes.gameID = npcs.gameID"
 					);	
 					
 					stmt.setInt(1, npcID);
@@ -1263,7 +1266,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					while (resultSet.next()) {
 						int index = 1;
-						
+
+						resultSet.getInt(index++);	// consume gameID
 						int npcID = resultSet.getInt(index++);
 						int nodeID = resultSet.getInt(index++);
 						String message = resultSet.getString(index++);
@@ -1999,6 +2003,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtNodes = conn.prepareStatement(
 							"create table nodes (" +
+							"	gameID integer," +
 							"	npcID integer," +
 							"	nodeID integer," +
 							"	message varchar(400)," +
@@ -2012,6 +2017,7 @@ public class DerbyDatabase implements IDatabase {
 					stmtLinks = conn.prepareStatement(
 							"create table links (" +
 							"	linkID integer," +
+							"	gameID integer," +
 							"	nextNodeID integer," +
 							"	previousNodeID integer," +
 							"	isAvailable integer," +
@@ -2419,28 +2425,30 @@ public class DerbyDatabase implements IDatabase {
 					
 					insertNpcs.executeBatch();
 					
-					insertNodes = conn.prepareStatement("insert into nodes (npcID, nodeID, message, type) "
-							+ "values (?, ?, ?, ?)");
+					insertNodes = conn.prepareStatement("insert into nodes (gameID, npcID, nodeID, message, type) "
+							+ "values (?, ?, ?, ?, ?)");
 					
 					for (Node node : nodes) {
-						insertNodes.setInt(1, node.getNpcID());
-						insertNodes.setInt(2, node.getNodeID());
-						insertNodes.setString(3, node.getMessage());
-						insertNodes.setString(4, node.getType());
+						insertNodes.setInt(1, gameID);
+						insertNodes.setInt(2, node.getNpcID());
+						insertNodes.setInt(3, node.getNodeID());
+						insertNodes.setString(4, node.getMessage());
+						insertNodes.setString(5, node.getType());
 						insertNodes.addBatch();
 					}
 					
 					insertNodes.executeBatch();
 					
-					insertLinks = conn.prepareStatement("insert into links (linkID, nextNodeID, previousNodeID, isAvailable, message) "
-							+ "values (?, ?, ?, ?, ?)");
+					insertLinks = conn.prepareStatement("insert into links (gameID, linkID, nextNodeID, previousNodeID, isAvailable, message) "
+							+ "values (?, ?, ?, ?, ?, ?)");
 					
 					for (Link link : links) {
-						insertLinks.setInt(1, link.getLinkID());
-						insertLinks.setInt(2, link.getNextNode().getNodeID());
-						insertLinks.setInt(3, link.getPreviousNode().getNodeID());
-						insertLinks.setInt(4, link.isAvailable() ? 1 : 0);
-						insertLinks.setString(5, link.getOption());
+						insertLinks.setInt(1, gameID);
+						insertLinks.setInt(2, link.getLinkID());
+						insertLinks.setInt(3, link.getNextNode().getNodeID());
+						insertLinks.setInt(4, link.getPreviousNode().getNodeID());
+						insertLinks.setInt(5, link.isAvailable() ? 1 : 0);
+						insertLinks.setString(6, link.getOption());
 						insertLinks.addBatch();
 					}
 					
