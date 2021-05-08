@@ -883,6 +883,7 @@ public class DerbyDatabase implements IDatabase {
 						int inventoryID = resultSet2.getInt(index++);
 						int breakID = resultSet2.getInt(index++);
 						boolean breakable = resultSet2.getInt(index++) == 1;
+						boolean poppable = resultSet2.getInt(index++) == 1;
 						
 						Item breakItem = getItemByID(breakID);
 						
@@ -901,6 +902,7 @@ public class DerbyDatabase implements IDatabase {
 						item.setBreakItem(breakItem);
 						item.setInventory(getInventoryByID(inventoryID));
 						item.setInventoryID(inventoryID);
+						item.setPoppable(poppable);
 						
 						inventory.addItem(name, item);
 					}
@@ -1768,7 +1770,8 @@ public class DerbyDatabase implements IDatabase {
 						"	locationID integer," +
 						"	inventoryID integer," +
 						"	breakItemID integer," +
-						"	breakable integer" +
+						"	breakable integer," +
+						"	poppable integer" +
 						")"
 					);	
 					stmtCmpdItms.executeUpdate();
@@ -2183,8 +2186,8 @@ public class DerbyDatabase implements IDatabase {
 					insertItems.executeBatch();
 					
 					
-					insertCompoundItems = conn.prepareStatement("insert into compoundItems (gameID, itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, locationID, inventoryID, breakItemID, breakable) " +
-							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
+					insertCompoundItems = conn.prepareStatement("insert into compoundItems (gameID, itemID, name, description, weight, isInteractable, canBePickedUp, consumeOnUse, inInventory, isEquipped, equippable, readable, pourable, locationID, inventoryID, breakItemID, breakable, poppable) " +
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");	
 					
 					for (CompoundItem compoundItem : compoundItems) {
 						insertCompoundItems.setInt(1, gameID);
@@ -2204,6 +2207,7 @@ public class DerbyDatabase implements IDatabase {
 						insertCompoundItems.setInt(15, compoundItem.getInventoryID());
 						insertCompoundItems.setInt(16, compoundItem.getBreakItem().getItemID());
 						insertCompoundItems.setInt(17, compoundItem.isBreakable() ? 1 : 0);
+						insertCompoundItems.setInt(18, compoundItem.isPoppable() ? 1 : 0);
 						insertCompoundItems.addBatch();
 					}
 					

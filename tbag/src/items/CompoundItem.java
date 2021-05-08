@@ -7,6 +7,7 @@ public class CompoundItem extends Item {
 	private Item breakItem;
 	private boolean breakable;
 	
+	private boolean poppable;
 	private int inventoryID;
 	
 	public CompoundItem(String name, double weight, boolean breakable, Item breakItem) {
@@ -14,6 +15,7 @@ public class CompoundItem extends Item {
 		this.inventory = new Inventory();
 		this.breakable = breakable;
 		this.breakItem = breakItem;
+		this.poppable = false;
 	}
 	
 	public Inventory getInventory() {
@@ -51,4 +53,14 @@ public class CompoundItem extends Item {
 	public void setInventoryID(int inventoryID) {
 		this.inventoryID = inventoryID;
 	}
+	
+	
+	public boolean isPoppable() {
+		return poppable;
+	}
+
+	public void setPoppable(boolean poppable) {
+		this.poppable = poppable;
+	}
+
 }

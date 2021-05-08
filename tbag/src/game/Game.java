@@ -109,7 +109,38 @@ public class Game {
 	
 	public void breakItem(Room room, CompoundItem item, String noun) {
 		db.breakItem(item, room.getInventory());
-		setOutput("You break apart the " + noun + " and dumb the contents on the floor.");
+		setOutput("You break apart the " + noun + " and dump the contents on the floor.");
+	}
+	
+	// Added these 2 next methods
+	public void popItem(RoomObject container, CompoundItem item, String noun, String location) {
+		
+		if (item.getItems().size() == 0)
+		{	
+			setOutput("You pop the " + noun + ", but there is nothing inside.");
+		}
+		
+		else
+		{	
+			setOutput("You pop the " + noun + " and dump the contents on the " + location + ".");
+		}
+		db.breakItem(item, container.getInventory());		
+		
+	}
+	
+	public void popItem(Room room, CompoundItem item, String noun) {
+		
+		if (item.getItems().size() == 0)
+		{	
+			setOutput("You pop the " + noun + ", but there is nothing inside.");
+		}
+		
+		else
+		{	
+			setOutput("You pop the " + noun + " and dump the contents on the floor!");
+		}	
+		db.breakItem(item, room.getInventory());
+		
 	}
 	
 	public void dropItem(RoomObject container, String item, Player player, Puzzle puzzle, String location) {

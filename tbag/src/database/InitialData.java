@@ -103,6 +103,7 @@ public class InitialData {
 				int inventoryID = Integer.parseInt(iter.next());
 				int breakItemID = Integer.parseInt(iter.next());
 				boolean breakable = Integer.parseInt(iter.next()) == 1;
+				boolean poppable = Integer.parseInt(iter.next()) == 1;
 				
 				CompoundItem item = new CompoundItem(name, weight, breakable, null);
 				item.setItemID(itemID);
@@ -119,6 +120,7 @@ public class InitialData {
 				item.setInventoryID(inventoryID);
 				item.setBreakItem(getItemByID(breakItemID));
 				item.setBreakable(breakable);
+				item.setPoppable(poppable);
 				
 				compoundItemList.add(item);
 			}

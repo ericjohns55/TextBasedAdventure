@@ -1,61 +1,72 @@
 package commands;
-import actor.Player;
+
 import game.Game;
+import items.CompoundItem;
 import items.Inventory;
 import map.Room;
 import map.RoomObject;
-import map.UnlockableObject;
-import puzzle.Puzzle;
 
 public class PopCommand extends UserCommand {
 	@Override
-	public void execute() {
+	public void execute() {		
 		String noun = getNoun();
+		String location = getLocation();
 		
 		Room room = getRoom();
 		Inventory inventory = getInventory();
-		Puzzle puzzle = getPuzzle();
-		Game game = getGame();
-		Player player = getPlayer();
 		
-		if (noun != null) {
-			// So its looking for up ladder in the noun
-			// It is going in and checking roomObjects instead of unlockableObjects I believe 
-			if (room.hasObject(noun)) {
-				RoomObject roomObject = room.getObject(noun);
+		Game game = getGame();
+		
+		if (location != null) {
+			if (room.hasObject(location)) {
+				RoomObject object = room.getObject(location);
 				
-				if (roomObject instanceof UnlockableObject) {
-					UnlockableObject object = (UnlockableObject) roomObject;		
-			
-					
-					/*
-					
-					if (object.canBePopped()) {
-							if (inventory.contains(puzzle.getSolution())) {	
-								game.popObject(object, player, puzzle, noun);	
-							} else {	
-								game.setOutput("You do not have a sharp enough item to pop this " + room.getObject(noun).getName() + "!");
+				if (object.getInventory().contains(noun)) {
+					if (object.getInventory().getItem(noun) instanceof CompoundItem) {
+						CompoundItem item = (CompoundItem) object.getInventory().getItem(noun);
+						
+						if (item.isPoppable()) {
+							if (inventory.contains(item.getBreakItem().getItemID())) {
+								// game.breakItem(object, item, noun, location);
+								game.popItem(object, item, noun, location);
+
+							} else {
+								game.setOutput("You do not possess the needed item to pop this.");
 							}
-					} else {									
-						game.setOutput("That can't be popped!");
+						} else {
+							game.setOutput("You cannot pop this item.");
+						}
+					} else {
+						game.setOutput("Cannot pop this item.");
 					}
-					
-					
-					*/
-					
-					
-					
-					
-					
-					
 				} else {
-					game.setOutput("That can't be popped!");
+					game.setOutput("That " + location + " does not countain a " + noun + ".");
 				}
 			} else {
-				game.setOutput("A " + noun + " doesn't exist in this room!");
-			}	
+				game.setOutput("That location does not exist.");
+			}
 		} else {
-			game.setOutput("Not sure what you want me to pop...");
+			if (room.hasItem(noun)) {
+				if (room.getItem(noun) instanceof CompoundItem) {
+					CompoundItem item = (CompoundItem) room.getItem(noun);
+					
+					if (item.isPoppable()) {
+						if (inventory.contains(item.getBreakItem())) {
+							//game.breakItem(room, item, noun);
+							game.popItem(room, item, noun);
+							
+							
+						} else {
+							game.setOutput("You do not possess the needed item to pop this.");
+						}
+					} else {
+						game.setOutput("You cannot pop this item.");
+					}
+				}
+			} else {
+				game.setOutput("The " + noun + " item does not exist.");
+			}
 		}
 	}
+
 }
