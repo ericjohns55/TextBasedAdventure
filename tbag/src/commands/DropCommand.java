@@ -29,10 +29,7 @@ public class DropCommand extends UserCommand {
 					if (!inventory.isEmpty()) {	// confirm inventory is not empty
 						HashMap<String, Item> items = inventory.getAllItems();
 						
-						for (String identifier : items.keySet()) {	// loop through items and drop
-							game.addOutput("You dropped " + identifier + " on the floor.\n");
-							game.dropItem(room, identifier, getPlayer(), puzzle);
-						}
+						game.dropAll(room.getInventory(), items, puzzle, "floor");
 					} else {
 						game.setOutput("You possess nothing to drop.");
 					}					
@@ -50,10 +47,7 @@ public class DropCommand extends UserCommand {
 							if (!inventory.isEmpty()) {
 								HashMap<String, Item> items = inventory.getAllItems();
 								
-								// drop all items on the room object instead of the ground
-								for (String identifier : items.keySet()) {
-									game.dropItem(roomObject, identifier, getPlayer(), puzzle, location);
-								}
+								game.dropAll(roomObject.getInventory(), items, puzzle, noun);
 							} else {
 								game.setOutput("You possess nothing to drop.");
 							}

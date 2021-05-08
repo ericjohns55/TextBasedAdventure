@@ -7,6 +7,8 @@ import map.UnlockableObject;
 import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
+import java.util.HashMap;
+
 import actor.NPC;
 import actor.Player;
 import database.DatabaseProvider;
@@ -165,6 +167,31 @@ public class Game {
 			double weightSolution = Double.parseDouble(puzzle.getSolution());
 			
 			if (objectInventory.getCurrentWeight() >= weightSolution) {	// check that weight requirement has been hit
+				RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
+				
+				if (obstacle.isLocked()) {	// unlock door and update DB if puzzle has been solved
+					obstacle.setLocked(false);
+					obstacle.setPreviouslyUnlocked(true);
+					db.toggleLocks((UnlockableObject) obstacle, false); // update obstacle locked and previously unlocked
+					addOutput("\nA " + obstacle.getName() + " to the " + obstacle.getDirection() + " swings open.");
+				}
+			}
+		}
+	}
+	
+	public void dropAll(Inventory destination, HashMap<String, Item> items, Puzzle puzzle, String location) {
+		for (String identifier : items.keySet()) {
+			destination.addItem(identifier, items.get(identifier));
+			db.removeItemFromInventory(destination, items.get(identifier));
+			addOutput("You dropped " + identifier + " on the " + location + ".\n");
+		}
+		
+		// weight puzzle edge case
+		// wish i had time to clean this up considering the upper method
+		if (puzzle.getDescription().equals("weightPuzzle")) {	// weight puzzle edge case (generalized)
+			double weightSolution = Double.parseDouble(puzzle.getSolution());
+			
+			if (destination.getCurrentWeight() >= weightSolution) {	// check that weight requirement has been hit
 				RoomObject obstacle = player.getRoom().getObject(puzzle.getUnlockObstacle());	
 				
 				if (obstacle.isLocked()) {	// unlock door and update DB if puzzle has been solved
