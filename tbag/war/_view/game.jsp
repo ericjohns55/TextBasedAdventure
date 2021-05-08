@@ -10,14 +10,14 @@
 			}
 			p.title {
 				font-size: 28px;
-				font-family: Arial;
+				font-family: Broadway;
 				font-weight: bold;
 				color: white;
 			}
 			
 			#extrainfo {
 				font-size: 18px;
-				font-family: Arial;
+				font-family: Broadway;
 				margin-left: 50px;
 				margin-right: 50px;
 				color: white;
@@ -34,6 +34,8 @@
 			#storyText {
 				background-color: #101010;
 				color: green;
+				overflow: hidden;
+				overflow-y: scroll;
 			}
 			
 			#commandText {
@@ -52,10 +54,15 @@
 				width: 150px;
 				height: 25px;
 			}
-			#time{
+			
+			#time {
 				font-size: 24px;
-				font-family: Arial;
+				font-family: Broadway;
 				color: white;
+			}
+			
+			::-webkit-scrollbar {
+    			display:none;
 			}
 		</style>
 		
@@ -63,43 +70,8 @@
 			function autoScroll() {
     			var textarea = document.getElementById("storyText");
     			textarea.scrollTop = textarea.scrollHeight;
-    			if(textarea.selectionStart == textarea.selectionEnd) {
-    				 
- 				 }
 			}
-			
-			
-			/*
-			function startTimer(duration, display) {
-    			var timer = duration, minutes, seconds;
-   				setInterval(function () {
-        			minutes = parseInt(timer / 60, 10);
-        			seconds = parseInt(timer % 60, 10);
-
-        			//minutes = minutes < 10 ? "0" + minutes : minutes;
-        			//seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        			rem = document.getElementById("timeRem");
-    				rem.value = minutes*60 + seconds;
-
-       				display.textContent = minutes + ":" + seconds;
-       				display.value = minutes + ":" + seconds;
-
-        			if (--timer < 0) {
-            			timer = duration;
-        			}
-    			}, 1000);
-			}
-
-			function start() {
-    			
-    			display = document.getElementById("time");
-    			console.log("${duration} aa");
-    			startTimer(${duration}, display);
-			}; */
 		</script>
-		
-		
 	</head>
 
 	<body onload="autoScroll();" >
@@ -112,8 +84,6 @@
 					<input id="text" type="text" name="userInput" size="140" value="${userInput}" autofocus/>
 				</div>
 				
-				
-					
 				<table>
 					<tr>
 						<td>
