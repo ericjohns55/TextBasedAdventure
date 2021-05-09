@@ -357,7 +357,7 @@ public class TestCommandLogic {
 		
 		assertEquals(expectedOutput, commandOutput);
 		
-		game.runCommand("grab blood vial");
+		game.runCommand("grab blood vial from table");
 		
 		game.runCommand("pour blood vial on pentagram");
 		expectedOutput = "You poured the blood vial on the pentagram.";

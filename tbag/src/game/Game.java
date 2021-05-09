@@ -461,6 +461,4 @@ public class Game {
 	public IDatabase getDatabase() {
 		return db;
 	}
-	
-	
 }

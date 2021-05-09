@@ -47,7 +47,7 @@ public class DropCommand extends UserCommand {
 							if (!inventory.isEmpty()) {
 								HashMap<String, Item> items = inventory.getAllItems();
 								
-								game.dropAll(roomObject.getInventory(), items, puzzle, noun);
+								game.dropAll(roomObject.getInventory(), items, puzzle, location);
 							} else {
 								game.setOutput("You possess nothing to drop.");
 							}
