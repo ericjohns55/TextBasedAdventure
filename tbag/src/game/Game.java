@@ -110,35 +110,26 @@ public class Game {
 		setOutput("You break apart the " + noun + " and dump the contents on the " + location + ".");
 	}
 	
-	
 	// Added these 2 next methods
 	public void popItem(RoomObject container, CompoundItem item, String noun, String location) {
-		
-		if (item.getItems().size() == 0)
-		{	
+		if (item.getItems().size() == 0) {	// check if empty
 			setOutput("You pop the " + noun + ", but there is nothing inside.");
-		}
-		
-		else
-		{	
+		} else {	
 			setOutput("You pop the " + noun + " and dump the contents on the " + location + ".");
 		}
-		db.breakItem(item, container.getInventory());		
 		
+		db.breakItem(item, container.getInventory());		// break item
 	}
 	
 	public void popItem(Room room, CompoundItem item, String noun) {
-		
-		if (item.getItems().size() == 0)
-		{	
+		if (item.getItems().size() == 0) {	// check empty
 			setOutput("You pop the " + noun + ", but there is nothing inside.");
-		}
-		
-		else
-		{	
+		} else {	
 			setOutput("You pop the " + noun + " and dump the contents on the floor!");
 		}	
-		db.breakItem(item, room.getInventory());
+		
+		db.breakItem(item, room.getInventory());		// break item
+	}
 		
 	public void breakItem(Inventory inventory, CompoundItem item, String noun, String output) {
 		db.breakItem(item, inventory);	// break item into the inventory

@@ -10,14 +10,14 @@
 			}
 			p.title {
 				font-size: 28px;
-				font-family: Arial;
+				font-family: Broadway;
 				font-weight: bold;
 				color: white;
 			}
 			
 			#extrainfo {
 				font-size: 25px;
-				font-family: Arial;
+				font-family: Broadway;
 				margin-left: 5px;
 				color: white;
 			} 
@@ -48,7 +48,7 @@
 			}
 			#time{
 				font-size: 24px;
-				font-family: Arial;
+				font-family: Broadway;
 				color: white;
 			}
 		</style>
@@ -61,36 +61,6 @@
     				 
  				 }
 			}
-			
-			
-			/*
-			function startTimer(duration, display) {
-    			var timer = duration, minutes, seconds;
-   				setInterval(function () {
-        			minutes = parseInt(timer / 60, 10);
-        			seconds = parseInt(timer % 60, 10);
-
-        			//minutes = minutes < 10 ? "0" + minutes : minutes;
-        			//seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        			rem = document.getElementById("timeRem");
-    				rem.value = minutes*60 + seconds;
-
-       				display.textContent = minutes + ":" + seconds;
-       				display.value = minutes + ":" + seconds;
-
-        			if (--timer < 0) {
-            			timer = duration;
-        			}
-    			}, 1000);
-			}
-
-			function start() {
-    			
-    			display = document.getElementById("time");
-    			console.log("${duration} aa");
-    			startTimer(${duration}, display);
-			}; */
 		</script>
 		
 		
@@ -115,7 +85,6 @@
 				</table>
 				
 				<input type="Submit" name="home" value="Home">
-				
 			</center>
 		</form>
 	</body>

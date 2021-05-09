@@ -91,8 +91,8 @@ public class TBAGServlet extends HttpServlet {
 		String roomProgress = String.format("Room: %d/18 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 18.0 * 100);
 		
 		if (player.getRoomID() == 19) {
-			//roomProgress = "YOU ESCAPED!";
 			resp.sendRedirect(req.getContextPath() + "/gameOver");
+			return;
 		}
 		
 		req.setAttribute("room", roomProgress);	// set room progress to be visible

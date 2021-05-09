@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import actor.Player;
 import game.Game;
 
-public class GameOverServlet extends HttpServlet 
-{
+public class GameOverServlet extends HttpServlet  {
 	private static final long serialVersionUID = 1L;
 	
 	@Override
@@ -21,17 +20,10 @@ public class GameOverServlet extends HttpServlet
 		
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
-		//	controller = new GameOverController();
-		
 		// If home button is pressed, the go back to login screen
-		if (req.getParameter("home") != null) 	
-		{	
+		if (req.getParameter("home") != null)  {	
 			resp.sendRedirect(req.getContextPath() + "/login");
-		}
-		
-		else
-		{	
+		} else {	
 			req.getRequestDispatcher("/_view/gameOver.jsp").forward(req, resp);
 		}
 	}

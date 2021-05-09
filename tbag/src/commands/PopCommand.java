@@ -17,19 +17,17 @@ public class PopCommand extends UserCommand {
 		
 		Game game = getGame();
 		
-		if (location != null) {
+		if (location != null) {	// check location
 			if (room.hasObject(location)) {
 				RoomObject object = room.getObject(location);
 				
 				if (object.getInventory().contains(noun)) {
-					if (object.getInventory().getItem(noun) instanceof CompoundItem) {
+					if (object.getInventory().getItem(noun) instanceof CompoundItem) {	// make sure the noun is a compound item
 						CompoundItem item = (CompoundItem) object.getInventory().getItem(noun);
 						
 						if (item.isPoppable()) {
 							if (inventory.contains(item.getBreakItem().getItemID())) {
-								// game.breakItem(object, item, noun, location);
-								game.popItem(object, item, noun, location);
-
+								game.popItem(object, item, noun, location);	// pop item if the correct break identifier is in inventory
 							} else {
 								game.setOutput("You do not possess the needed item to pop this.");
 							}
@@ -46,16 +44,13 @@ public class PopCommand extends UserCommand {
 				game.setOutput("That location does not exist.");
 			}
 		} else {
-			if (room.hasItem(noun)) {
+			if (room.hasItem(noun)) {	// in room 
 				if (room.getItem(noun) instanceof CompoundItem) {
 					CompoundItem item = (CompoundItem) room.getItem(noun);
 					
 					if (item.isPoppable()) {
-						if (inventory.contains(item.getBreakItem())) {
-							//game.breakItem(room, item, noun);
+						if (inventory.contains(item.getBreakItem())) {	// pop item if correct break identifier is in inventory
 							game.popItem(room, item, noun);
-							
-							
 						} else {
 							game.setOutput("You do not possess the needed item to pop this.");
 						}
@@ -68,5 +63,4 @@ public class PopCommand extends UserCommand {
 			}
 		}
 	}
-
 }
