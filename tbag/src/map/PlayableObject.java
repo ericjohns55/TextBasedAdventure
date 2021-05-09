@@ -40,9 +40,9 @@ public class PlayableObject extends RoomObject {
 	public boolean playedPassage() {
 		boolean playedPassage = true;
 		
-		for (int i = 0; i < requiredNotes.length; i++) {
-			if (!playedNotes.toUpperCase().contains(Character.toString(requiredNotes[i]))) {
-				return false;
+		for (int i = 0; i < requiredNotes.length; i++) {	// loop through all required notes
+			if (!playedNotes.toUpperCase().contains(Character.toString(requiredNotes[i]))) {	// check if played notes contains a required note
+				return false;	// return false if one not played is found
 			}
 		}
 		
@@ -53,12 +53,12 @@ public class PlayableObject extends RoomObject {
 		char[] split = entry.toUpperCase().toCharArray();
 		
 		for (char character : split) {
-			if (character > 71 || character < 65) {
-				return false;
+			if (character > 71 || character < 65) {	// verify a note is A-G
+				return false;	// return false if invalid
 			}
 		}
 		
-		playedNotes += entry;
+		playedNotes += entry;	// add to played notes
 		
 		return true;
 	}

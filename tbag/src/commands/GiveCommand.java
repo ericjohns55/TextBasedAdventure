@@ -19,9 +19,9 @@ public class GiveCommand extends UserCommand {
 		
 		Game game = getGame();
 		
-		if (room.hasNpc()) {
-			if (location.equals(npc.getName())) {
-				if (inventory.contains(noun)) {
+		if (room.hasNpc()) {	// check that there is an NPC
+			if (location.equals(npc.getName())) {	// check that NPC was specified
+				if (inventory.contains(noun)) {	// make sure the item to give exists
 					Item toGive = inventory.getItem(noun);
 				
 					if (toGive != null) {
@@ -49,18 +49,15 @@ public class GiveCommand extends UserCommand {
 					} else {
 						game.setOutput("You don't have that item.");
 					}
-				}
-				else if (noun == null) {
+				} else if (noun == null) {	// noun not specified
 					game.setOutput("Please specify an item.");
-				} else {
+				} else {	// player doesnt have the item
 					game.setOutput("You don't have that item.");
 				}
-			}
-			else {
+			} else {
 				game.setOutput("There is no one named " + location + " in this room.");
 			}
-		}
-		else {
+		} else {
 			game.setOutput("There is no one else in the room with you.");
 		}
 	}

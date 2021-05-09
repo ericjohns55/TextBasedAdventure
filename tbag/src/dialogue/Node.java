@@ -15,8 +15,10 @@ public class Node{
 		this.message = message;
 		options = new ArrayList<Link>();
 		this.type = type;
-		
 	}
+	
+	// getters and setters
+	
 	public int getNodeID() {
 		return nodeID;
 	}
@@ -45,6 +47,7 @@ public class Node{
 		return options;
 	}
 	
+	// get all the links that this node has
 	public ArrayList<Link> getAvailableLinks() {
 		ArrayList<Link> availableLinks = new ArrayList<>();
         for(Link l : options) {
@@ -55,6 +58,7 @@ public class Node{
         return availableLinks;
 	}
 	
+	// grab all the links that are not connected
 	public ArrayList<Link> getUnavailableLinks() {
 		ArrayList<Link> unavailableLinks = new ArrayList<>();
         for(Link l : options) {

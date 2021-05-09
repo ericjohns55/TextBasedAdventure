@@ -8,7 +8,7 @@ public class LoginController {
 	private IDatabase database;
 	
 	public LoginController() {
-		DatabaseProvider.setInstance(new DerbyDatabase(0));
+		DatabaseProvider.setInstance(new DerbyDatabase(0));	// game ID in parameter does not really matter here
 		database = DatabaseProvider.getInstance();	
 	}
 	
@@ -17,18 +17,16 @@ public class LoginController {
 	}
 	
 	public int createAccount(String username, String password) {
-		database.addUser(username, password);
+		database.addUser(username, password);	// add user to database
 		
-		System.out.println("CREATING ACCOUNT !---------------------------------------------------------");
+		int gameID = getGameID(username, password);	// grab new game ID	
 		
-		int gameID = getGameID(username, password);
-		
-		database.loadInitialData(gameID);
+		database.loadInitialData(gameID);	// load data for game ID
 		
 		return gameID;
 	}
 	
 	public int getGameID(String username, String password) {
-		return database.getGameID(username, password);
+		return database.getGameID(username, password);	// grab game ID from database
 	}
 }

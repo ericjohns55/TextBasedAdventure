@@ -37,6 +37,8 @@ public class NPC extends Actor {
 		
 	}
 
+	// getters and setters to store NPC state
+	
 	public String getDescription() {
 		return description;
 	}

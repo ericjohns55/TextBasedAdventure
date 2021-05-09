@@ -20,33 +20,34 @@ public class TBAGServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String success = (String) req.getSession().getAttribute("success");
+		String success = (String) req.getSession().getAttribute("success");	// grab game ID from login page
 		
 		if (success != null) {
-//			loggedIn = true;
-			gameID = Integer.parseInt(success); 			
-			System.out.println("--- GRABBED LOG IN INFO --- GAME ID: " + success);
+			gameID = Integer.parseInt(success); 	// grab game ID		
 		} else {
-			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
+			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);	// push them back to login because it is not there
 			return;
 		}
 		
-		Game game = new Game(gameID);
+		Game game = new Game(gameID);	// create a new game class from game ID
 		Player player = game.getPlayer();
 		
 		if (firstRun) {
 			firstRun = !firstRun;
-			player.setLastOutput(player.getLastOutput() + "\n");
+			player.setLastOutput(player.getLastOutput() + "\n");	// on first run set the game output to what was stored in the player's user
 		}
 		
 		req.setAttribute("story", player.getLastOutput());
-		req.setAttribute("moves", "Moves: " + player.getMoves());
+		req.setAttribute("moves", "Moves: " + player.getMoves());	// update the moves
 		req.setAttribute("duration", 900);
 		
-		String roomProgress = String.format("Room: %d/17 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 17.0 * 100);
+		// Need to change this when adding more rooms
+		String roomProgress = String.format("Room: %d/18 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 18.0 * 100);
 		
-		if (player.getRoomID() == 18) {
-			roomProgress = "YOU ESCAPED!";
+		if (player.getRoomID() == 19) {
+			//roomProgress = "YOU ESCAPED!";
+			resp.sendRedirect(req.getContextPath() + "/gameOver");
+      return;
 		}
 		
 		req.setAttribute("room", roomProgress);
@@ -56,45 +57,45 @@ public class TBAGServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
-		Game game = new Game(gameID);
+		Game game = new Game(gameID);	// create new game
 		Player player = game.getPlayer();
 		
 		String text = req.getParameter("userInput");
 		String story = req.getParameter("story");
 		
-		System.out.println("========== REQ STATUS: " + (String) req.getSession().getAttribute("success"));
-		
-		if (text.length() != 0) {
+		if (text.length() != 0) {	// print out command as it is inputted
 			pastInputs += text + "\n";
-			story += " > " + text + "\n";
+			story += "\n > " + text + "\n";
 			
 			game.runCommand(text);
 			
-			story += game.getOutput() + "\n";
+			story += game.getOutput() + "\n";	// append new output
 			
 		}
 		
 		if (story.length() >= 8000) {
-			story = story.substring(story.length() - 8000, story.length());
+			story = story.substring(story.length() - 8000, story.length());	// crop output once it exceeds 8000 (db max)
 		}
 		
 		player.setLastOutput(story);
-		player.setMoves(player.getMoves() + 1);
+		player.setMoves(player.getMoves() + 1);	
 		
-		game.updateGameState(story, player.getMoves());
+		game.updateGameState(story, player.getMoves());	// update players table with moves and output
 		
-		req.setAttribute("story", story);
+		req.setAttribute("story", story);	// make sure all fields carry through post method
 		req.setAttribute("pastInputs", pastInputs + "\n");
 		req.setAttribute("duration", req.getParameter("duration"));
 		req.setAttribute("moves", "Moves: " + player.getMoves());
 		
-		String roomProgress = String.format("Room: %d/17 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 17.0 * 100);
+		// fun room progress screen
+		String roomProgress = String.format("Room: %d/18 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 18.0 * 100);
 		
-		if (player.getRoomID() == 18) {
-			roomProgress = "YOU ESCAPED!";
+		if (player.getRoomID() == 19) {
+			resp.sendRedirect(req.getContextPath() + "/gameOver");
+			return;
 		}
 		
-		req.setAttribute("room", roomProgress);
+		req.setAttribute("room", roomProgress);	// set room progress to be visible
 
 		req.getRequestDispatcher("/_view/game.jsp").forward(req, resp);
 	}

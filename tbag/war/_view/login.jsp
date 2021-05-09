@@ -10,14 +10,14 @@
 			}
 			p.title {
 				font-size: 28px;
-				font-family: Arial;
+				font-family: Broadway;
 				font-weight: bold;
 				color: white;
 			}
 			
 			#extrainfo {
 				font-size: 18px;
-				font-family: Arial;
+				font-family: Broadway;
 				margin-left: 50px;
 				margin-right: 50px;
 				color: white;
@@ -25,14 +25,13 @@
 			
 			#infolabel {
 				font-size: 18px;
-				font-family: Arial;
+				font-family: Broadway;
 				color: white;
 			}
 			
-			
 			.error {
 				font-size: 16px;
-				font-family: Arial;
+				font-family: Broadway;
 				font-weight: bold;
 				color: red;
 			}

@@ -19,11 +19,11 @@ public class ObjectPuzzle extends Puzzle {
 	}
 	
 	public boolean isSolved() {
-		return object.getInventory().contains(requiredItem);
+		return object.getInventory().contains(requiredItem);	// check that the object inventory contains the required item
 	}
 	
 	public boolean isSolved(int proposedID) {
-		return itemID == proposedID;
+		return itemID == proposedID;	// check that the required item ID is equal to the proposed one (overload message)
 	}
 
 	public int getObjectID() {

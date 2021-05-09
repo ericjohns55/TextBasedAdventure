@@ -14,13 +14,12 @@ public class TypeCommand extends UserCommand {
 		Room room = getRoom();
 		Game game = getGame();
 		
-		if (puzzle.isWrittenSolution()) {
-			if (!puzzle.isSolved()) {
-				if (puzzle.getSolution().equals(noun)) {
-					System.out.println(puzzle.getUnlockObstacle());
+		if (puzzle.isWrittenSolution()) {	// check that puzzle is written
+			if (!puzzle.isSolved()) {	// make sure the puzzle is not already solved
+				if (puzzle.getSolution().equals(noun)) {	// check solution
 					RoomObject obstacle = room.getObject(puzzle.getUnlockObstacle());
 					
-					game.type(puzzle, obstacle, noun);
+					game.type(puzzle, obstacle, noun);	// solve and update DB
 				} else {
 					game.setOutput(noun + " is not correct.");
 				}

@@ -17,6 +17,7 @@ import map.UnlockableObject;
 import puzzle.Puzzle;
 
 public interface IDatabase {
+	// grab object queries	
 	public Item getItemByID(int itemID);
 	public RoomObject getRoomObjectByID(int objectID);
 	public Inventory getInventoryByID(int id);
@@ -29,14 +30,19 @@ public interface IDatabase {
 	public List<Node> getAllNodes(int npcID);
 	public List<Link> getAllLinks(int NodeID);
 	
+	// update game state in players table query
 	public Integer updateGameState(String output, int moves, Player player);
 	
+	// login screen queries
 	public boolean validateLogin(String username, String password);
 	public Integer addUser(String username, String password);
 	public Integer getGameID(String username, String password);
 	
+	// assembling room queries
 	public Room getRoom(int roomID);
 	public Player getPlayer(int playerID);
+
+	// actually updating the DB queries
 	public Integer addItemToInventory(Inventory destinationInventory, Item item);
 	public Integer removeItemFromInventory(Inventory inventory, Item item);
 	public Integer toggleLocks(UnlockableObject object, boolean locked);
@@ -49,6 +55,8 @@ public interface IDatabase {
 	public Integer playNotes(PlayableObject playableObject, String notes);
 	public String getDescription(int roomID);
 	public Integer npcDialogue(NPC npc, boolean talkedTo, int nextNodeID, boolean canTalkTo, boolean isDoneS);
+
+	// testing purposes queries
 	public void deleteData(int gameID);
 	public void loadInitialData(int gameID);
 }

@@ -22,6 +22,8 @@ public class Puzzle {
 		this.puzzleID = roomID;
 	}
 	
+	// another class that is just getters and setters!
+	
 	public int getRoomID() {
 		return roomID;
 	}

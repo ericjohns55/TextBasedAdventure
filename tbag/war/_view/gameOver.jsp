@@ -2,7 +2,7 @@
 
 <html>
 	<head>
-		<title>Text Based Adventure</title>
+		<title>Text Based Adventure End</title>
 		
 		<style>
 			body {
@@ -16,10 +16,9 @@
 			}
 			
 			#extrainfo {
-				font-size: 18px;
+				font-size: 25px;
 				font-family: Broadway;
-				margin-left: 50px;
-				margin-right: 50px;
+				margin-left: 5px;
 				color: white;
 			} 
 			
@@ -32,13 +31,6 @@
 			}
 			
 			#storyText {
-				background-color: #101010;
-				color: green;
-				overflow: hidden;
-				overflow-y: scroll;
-			}
-			
-			#commandText {
 				background-color: #101010;
 				color: green;
 			}
@@ -54,15 +46,10 @@
 				width: 150px;
 				height: 25px;
 			}
-			
-			#time {
+			#time{
 				font-size: 24px;
 				font-family: Broadway;
 				color: white;
-			}
-			
-			::-webkit-scrollbar {
-    			display:none;
 			}
 		</style>
 		
@@ -70,30 +57,34 @@
 			function autoScroll() {
     			var textarea = document.getElementById("storyText");
     			textarea.scrollTop = textarea.scrollHeight;
+    			if(textarea.selectionStart == textarea.selectionEnd) {
+    				 
+ 				 }
 			}
 		</script>
+		
+		
 	</head>
 
 	<body onload="autoScroll();" >
-		<form action="${pageContext.servletContext.contextPath}/game" method="post">			
+		<form action="${pageContext.servletContext.contextPath}/gameOver" method="post">			
 			<center>
 				<p class="title">Welcome to the Text Based Adventure Game</p>
 
 				<div>	
-					<textarea readonly id="storyText" name="story" rows="16" cols="140">${story}</textarea>
-					<input id="text" type="text" name="userInput" size="140" value="${userInput}" autofocus/>
+					<textarea readonly id="storyText" name="story" rows="16" cols="140">You walk out of the door and into a wooded area, you take a sigh of relief as you realize your nightmare is now over.</textarea>
 				</div>
 				
+
 				<table>
 					<tr>
 						<td>
-							<span id="extrainfo">${moves}</span>
-						</td>
-						<td>
-							<span id="extrainfo">${room}</span>
+							<span id="extrainfo">100% complete</span>
 						</td>
 					</tr>
 				</table>
+				
+				<input type="Submit" name="home" value="Home">
 			</center>
 		</form>
 	</body>
