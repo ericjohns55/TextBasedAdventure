@@ -239,7 +239,7 @@ public class Game {
 		object.feed(noun);
 		
 		Item toDrop = player.getInventory().getItem(noun);
-		//db.removeItemFromInventory(room.getInventory(), toDrop); // update DB inventory ID
+		db.removeItemFromInventory(object.getInventory(), toDrop); // update DB inventory ID
 	
 		setOutput("You fed " + noun + " to the " + location + ".");
 		
