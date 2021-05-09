@@ -6,6 +6,7 @@ import java.io.Reader;
 /**
  * Read the text of SQL statements from a Reader.
  * Each SQL statement must be terminated by a semicolon.
+ * TAKEN FROM LIBRARY EXAMPLE
  */
 public class StatementReader {
 	private Reader reader;

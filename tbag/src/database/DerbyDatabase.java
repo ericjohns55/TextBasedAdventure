@@ -43,7 +43,7 @@ public class DerbyDatabase implements IDatabase {
 	private int gameID;
 
 	public DerbyDatabase(int gameID) {
-		this.gameID = gameID;
+		this.gameID = gameID;	// store game ID in instance for filling in later
 	}
 	
 	// wrapper SQL transaction function that calls actual transaction function (which has retries)
@@ -121,7 +121,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					Room room = null;
 					
-					while (resultSet.next()) {
+					while (resultSet.next()) {	// grab room from DB with room ID
 						int index = 1;
 						
 						resultSet.getInt(index++);	// CONSUME GAME ID
@@ -130,7 +130,7 @@ public class DerbyDatabase implements IDatabase {
 						int inventoryID = resultSet.getInt(index++);
 												
 						room = new Room(description, roomID);
-						room.setInventoryID(inventoryID);
+						room.setInventoryID(inventoryID);	// load inventory
 						room.setInventory(getInventoryByID(inventoryID));
 						System.out.println("Loaded room " + roomID);
 						System.out.println("Created room inventory (" + inventoryID + ")");
@@ -139,21 +139,20 @@ public class DerbyDatabase implements IDatabase {
 					if (room != null) {
 						List<RoomObject> objects = findAllObjects(room);
 						
-						for (RoomObject object : objects) {
+						for (RoomObject object : objects) {	// loop through room objects and add them to room
 							System.out.println("Added " + object.getName() + " with ID " + object.getObjectID());
 							room.addObject(object.getName(), object);
 						}
 						
-						room.setPuzzle(getPuzzle(room));
+						room.setPuzzle(getPuzzle(room));	// load puzzle
 						System.out.println("Added puzzle");
 						
-						room.setConnections(getAllConnections(room.getRoomID()));
+						room.setConnections(getAllConnections(room.getRoomID())); // load connections map
 						System.out.println("Added connections");
 						
-						room.addNpc(getNpc(roomID));
+						room.addNpc(getNpc(roomID));	// add NPC if needed
 						System.out.println("Added npc");
 					}
-					
 					
 					return room;
 				} finally {
@@ -163,6 +162,8 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// loads all player fields from DB (then returns it)
 	
 	@Override
 	public Player getPlayer(int playerID) {
@@ -210,6 +211,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// grabs item using its ID from the database
+	
 	@Override
 	public Item getItemByID(int itemID) {
 		return executeTransaction(new Transaction<Item>() {
@@ -225,7 +228,7 @@ public class DerbyDatabase implements IDatabase {
 									"where items.itemID = ? and items.gameID = ?");	
 					
 					stmt.setInt(1, itemID);
-					stmt.setInt(2, gameID);
+					stmt.setInt(2, gameID);	// confirm pulling from the right game ID
 					
 					Item item = null;
 					
@@ -282,6 +285,9 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// grab room object by ID
+	// there is inheritence here in room objects, so we will have 3 queries (playable, regular, unlockable)
+	
 	@Override
 	public RoomObject getRoomObjectByID(int objectID) {
 		return executeTransaction(new Transaction<RoomObject>() {
@@ -308,7 +314,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					boolean found = false;
 					
-					while (resultSet.next()) {
+					while (resultSet.next()) {	// regular room object
 						found = true;
 						
 						int index = 1;
@@ -367,7 +373,7 @@ public class DerbyDatabase implements IDatabase {
 						
 						resultSet2 = stmt2.executeQuery();
 						
-						while (resultSet2.next()) {
+						while (resultSet2.next()) {	// unlockable object
 							found = true;
 							int index = 1;
 
@@ -398,7 +404,7 @@ public class DerbyDatabase implements IDatabase {
 							Item unlockItem = null;
 							
 							if (unlockItemID != -1) {
-								unlockItem = getItemByID(unlockItemID);
+								unlockItem = getItemByID(unlockItemID);	// grab the unlock object from its ID, then load it into the object
 							}
 							
 							UnlockableObject object = new UnlockableObject(name, description, direction, blockingExit, unlockItem, roomID);
@@ -438,7 +444,7 @@ public class DerbyDatabase implements IDatabase {
 						
 						resultSet3 = stmt3.executeQuery();
 						
-						while (resultSet3.next()) {
+						while (resultSet3.next()) {	// playable objects
 							found = true;
 							int index = 1;
 
@@ -488,12 +494,9 @@ public class DerbyDatabase implements IDatabase {
 						}
 					}
 					
-					
 					if (!found) {
 						System.out.println("Could not find any room objects.");
 					}
-					
-					// TODO: OBJECT PUZZLES
 					
 					return null;
 				} finally {
@@ -508,6 +511,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	// basically return whether the login exists in the database or not
+	
 	@Override
 	public boolean validateLogin(String username, String password) {
 		return executeTransaction(new Transaction<Boolean>() {
@@ -547,6 +552,9 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	// add a new user to the database using a username and password
+	// autogenerates a game ID by nature of table
+	
 	@Override
 	public Integer addUser(String username, String password) {
 		return executeTransaction(new Transaction<Integer>() {
@@ -568,6 +576,9 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// grab a game ID from the users table assuming the username and password exists
+	// return 0 if does not exist
 	
 	@Override
 	public Integer getGameID(String username, String password) {
@@ -599,6 +610,9 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// grab an unlockable object by ID
+	// same as get object by ID but just checks unlockable objects
 	
 	@Override
 	public UnlockableObject getUnlockableObjectByID(int objectID) {
@@ -652,7 +666,7 @@ public class DerbyDatabase implements IDatabase {
 						Item unlockItem = null;
 						
 						if (unlockItemID != -1) {
-							unlockItem = getItemByID(unlockItemID);
+							unlockItem = getItemByID(unlockItemID);	// grabs unlock item using the get item by id method earlier
 						}
 						
 						object = new UnlockableObject(name, description, direction, blockingExit, unlockItem, roomID);
@@ -683,6 +697,8 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// grabs the puzzle and all of its fields from the database
 	
 	@Override
 	public Puzzle getPuzzle(Room room) {
@@ -728,7 +744,7 @@ public class DerbyDatabase implements IDatabase {
 						puzzle.setPuzzleID(puzzleID);
 					}
 					
-					if (puzzle == null) {
+					if (puzzle == null) {	// if a puzzle was not found, it must be an object puzzle; load all fields
 						stmt2 = conn.prepareStatement("select objectPuzzles.* " +
 								"from objectPuzzles " + 
 									"where objectPuzzles.roomID = ? and objectPuzzles.gameID = ?"
@@ -754,8 +770,8 @@ public class DerbyDatabase implements IDatabase {
 							int objectID = resultSet2.getInt(index++);
 							int itemID = resultSet2.getInt(index++);
 							
-							RoomObject object = getUnlockableObjectByID(unlockObstacle);
-							String unlockName = object != null ? object.getName() : null;
+							RoomObject object = getUnlockableObjectByID(unlockObstacle);	// find the unlockable object from the ID
+							String unlockName = object != null ? object.getName() : null;	// if this is not found then something went wrong (or not required)
 							
 							puzzle = new ObjectPuzzle(description, solution, hint, getRoomObjectByID(objectID), getItemByID(itemID), unlockName, roomID);
 							puzzle.setSolved(solved);
@@ -775,6 +791,8 @@ public class DerbyDatabase implements IDatabase {
 		}); 
 	}
 	
+	// generate the connections map for the room
+	
 	@Override
 	public Connections getAllConnections(int roomID) {
 		return executeTransaction(new Transaction<Connections>() {
@@ -785,9 +803,11 @@ public class DerbyDatabase implements IDatabase {
 				
 				try {
 					stmt = conn.prepareStatement("select connections.* " +
-							"from connections, rooms " +
-								"where rooms.roomID = ? and connections.locationID = rooms.roomID");
+							"from connections " +
+								"where connections.locationID = ? and connections.gameID = ?");
+					
 					stmt.setInt(1, roomID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -796,11 +816,12 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet.next()) {
 						int index = 1;
 
+						resultSet.getInt(index++);	// consume gameID
 						resultSet.getInt(index++);	// consume locationID
 						int destinationID = resultSet.getInt(index++);
 						String direction = resultSet.getString(index++);
 						
-						roomConnections.addConnection(direction, destinationID);
+						roomConnections.addConnection(direction, destinationID);	// add connection to map for each room
 					}
 					
 					return roomConnections;
@@ -812,6 +833,10 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	// generates an inventory using its ID
+	// loop through all items and checks that the inventory and game ID match, then adds it to an inventory object
+	// grabs both compound and regular items
+	
 	@Override
 	public Inventory getInventoryByID(int id) {
 		return executeTransaction(new Transaction<Inventory>() {
@@ -861,7 +886,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					resultSet2 = stmt2.executeQuery();
 					
-					while (resultSet2.next()) {	
+					while (resultSet2.next()) {	// compound items query
 						int index = 1;
 						
 						found = true;
@@ -921,11 +946,11 @@ public class DerbyDatabase implements IDatabase {
 	}
 
 	@Override
-	public List<RoomObject> findAllObjects(Room room) {
+	public List<RoomObject> findAllObjects(Room room) {	// get ALL room objects
 		return executeTransaction(new Transaction<List<RoomObject>>() {
 			@Override
 			public List<RoomObject> execute(Connection conn) throws SQLException {
-				PreparedStatement stmt = null;
+				PreparedStatement stmt = null;	// 3 queries for each room object type
 				PreparedStatement stmt2 = null;
 				PreparedStatement stmt3 = null;
 				ResultSet resultSet = null;
@@ -948,7 +973,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					boolean found = false;
 					
-					while (resultSet.next()) {
+					while (resultSet.next()) {	// regular room object
 						found = true;
 						
 						int index = 1;
@@ -1005,7 +1030,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					resultSet2 = stmt2.executeQuery();
 					
-					while (resultSet2.next()) {
+					while (resultSet2.next()) {	// unlockable object type
 						int index = 1;
 						
 						found = true;
@@ -1036,7 +1061,7 @@ public class DerbyDatabase implements IDatabase {
 							
 						Item unlockItem = null;
 						
-						if (unlockItemID != -1) {
+						if (unlockItemID != -1) {	// get item from unlock ID and load into room object
 							unlockItem = getItemByID(unlockItemID);
 						}
 						
@@ -1077,7 +1102,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					resultSet3 = stmt3.executeQuery();
 					
-					while (resultSet3.next()) {
+					while (resultSet3.next()) {	// playable objects
 						int index = 1;
 						
 						found = true;
@@ -1143,6 +1168,10 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// grabs all players from players table
+	// returns a list of all them
+	// simple enough
 
 	@Override
 	public List<Player> getAllPlayers() {
@@ -1195,6 +1224,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// grab all links for the NPC
+	
 	@Override
 	public List<Link> getAllLinks(int nodeID) {
 		return executeTransaction(new Transaction<List<Link>>()  {
@@ -1206,8 +1237,10 @@ public class DerbyDatabase implements IDatabase {
 				try {
 					stmt = conn.prepareStatement("select links.* " +
 							"from links, nodes " +
-								"where nodes.nodeID = ? and links.previousNodeID = nodes.nodeID");
+								"where nodes.nodeID = ? and links.previousNodeID = nodes.nodeID and links.gameID = ? and links.gameID = nodes.gameID");
+					
 					stmt.setInt(1, nodeID);
+					stmt.setInt(2, gameID);
 					
 					resultSet = stmt.executeQuery();
 					
@@ -1216,9 +1249,10 @@ public class DerbyDatabase implements IDatabase {
 					while (resultSet.next()) {
 						int index = 1;
 
+						resultSet.getInt(index++);	// consume gameID
 						int linkID = resultSet.getInt(index++);
 						int nextNodeID = resultSet.getInt(index++);
-						int previousNodeID = resultSet.getInt(index++);
+						resultSet.getInt(index++);	// consume previous node ID (not sure why this isnt used - ask Josh)
 						boolean isAvailable = resultSet.getInt(index++) == 1;
 						String option = resultSet.getString(index++);
 						
@@ -1238,6 +1272,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// grab all nodes for the links 
+	
 	@Override
 	public List<Node> getAllNodes(int npcID) {
 		return executeTransaction(new Transaction<List<Node>>() {
@@ -1250,7 +1286,7 @@ public class DerbyDatabase implements IDatabase {
 					stmt = conn.prepareStatement(
 							"select nodes.* " +
 								"from nodes, npcs " + 
-									"where nodes.npcID = ? and npcs.gameID = ?"
+									"where nodes.npcID = ? and npcs.gameID = ? and nodes.gameID = npcs.gameID"
 					);	
 					
 					stmt.setInt(1, npcID);
@@ -1262,7 +1298,8 @@ public class DerbyDatabase implements IDatabase {
 					
 					while (resultSet.next()) {
 						int index = 1;
-						
+
+						resultSet.getInt(index++);	// consume gameID
 						int npcID = resultSet.getInt(index++);
 						int nodeID = resultSet.getInt(index++);
 						String message = resultSet.getString(index++);
@@ -1273,8 +1310,8 @@ public class DerbyDatabase implements IDatabase {
 						if (node != null) {
 							List<Link> options = getAllLinks(nodeID);
 							
-							for (Link link : options) {
-								link.setPreviousNode(node);
+							for (Link link : options) {	// grab all the links and iterate
+								link.setPreviousNode(node);	// load the nodes into the links in the correct spot
 								node.addLink(link);
 							}
 						}
@@ -1289,6 +1326,8 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// generate the room NPC
 	
 	@Override
 	public NPC getNpc(int roomID) {
@@ -1332,12 +1371,12 @@ public class DerbyDatabase implements IDatabase {
 						Item requiredItem = null;
 						
 						if (requiredItemID != -1) {
-							requiredItem = getItemByID(requiredItemID);
+							requiredItem = getItemByID(requiredItemID);	// grab required item
 						}
 						
 						UnlockableObject unlockObstacle = null;
 						
-						if (unlockObstacleID != -1) {
+						if (unlockObstacleID != -1) {	// grab item that will be unlocked eventually
 							unlockObstacle = getUnlockableObjectByID(unlockObstacleID);
 						}
 						
@@ -1351,7 +1390,7 @@ public class DerbyDatabase implements IDatabase {
 						npc.setRequiredItemID(requiredItemID);
 						npc.setUnlockObstacleID(unlockObstacleID);
 						
-						if (npc != null) {
+						if (npc != null) {	// load the links and nodes simultaneously
 							List<Node> nodes = getAllNodes(actorID);
 							
 							for (Node node : nodes) {
@@ -1380,6 +1419,9 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// updates game status
+	// moves and output
 	
 	@Override
 	public Integer updateGameState(String output, int moves, Player player) {
@@ -1410,6 +1452,9 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// add an item to the specified inventory
+	// updates inventory ID of said item in database
 
 	@Override
 	public Integer addItemToInventory(Inventory inventory, Item item) {
@@ -1419,7 +1464,11 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ? and items.gameID = ?");
+					if (item instanceof CompoundItem) {
+						stmt = conn.prepareStatement("update compoundItems set locationID = ? where compoundItems.itemID = ? and compoundItems.gameID = ?");
+					} else {
+						stmt = conn.prepareStatement("update items set inventoryID = ? where items.itemID = ? and items.gameID = ?");
+					}
 
 					stmt.setInt(1, inventory.getInventoryID());
 					stmt.setInt(2, item.getItemID());
@@ -1433,6 +1482,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	// remove an item from an inventory, by putting it into a new one
+	
 	@Override
 	public Integer removeItemFromInventory(Inventory destinationInventory, Item item) {
 		return executeTransaction(new Transaction<Integer>() {
@@ -1454,6 +1505,9 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// toggles the locks on an unlockable object
+	// updates lock status and previously unlocked status
 
 	@Override
 	public Integer toggleLocks(UnlockableObject object, boolean locked) {
@@ -1486,6 +1540,9 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// move the player into a new room
+	// basically updates the player room ID so a new room is generated on next command
 
 	@Override
 	public Integer moveRooms(Player player, int roomID) {
@@ -1508,6 +1565,8 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// push object by updating its direction
 
 	@Override
 	public Integer pushObject(RoomObject object, String direction) {
@@ -1517,7 +1576,7 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement stmt = null;
 				
 				try {
-					if (object instanceof PlayableObject) {
+					if (object instanceof PlayableObject) {	// check the object types and replace the query with what is needed
 						stmt = conn.prepareStatement("update playableObjects set direction = ? where playableObjects.objectID = ? and playableObjects.gameID = ?");
 					} else if (object instanceof UnlockableObject) {
 						stmt = conn.prepareStatement("update unlockableObjects set direction = ? where unlockableObjects.objectID = ? and unlockableObjects.gameID = ?");
@@ -1537,6 +1596,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	// breaks an item and dumps its contents into the destination inventory
+	
 	@Override
 	public Integer breakItem(CompoundItem compoundItem, Inventory destinationInventory) {
 		return executeTransaction(new Transaction<Integer>() {
@@ -1554,14 +1615,14 @@ public class DerbyDatabase implements IDatabase {
 						stmt.setInt(3, item.getItemID());
 						stmt.setInt(4, gameID);
 						stmt.addBatch();
-					}
+					}	// update all items in DB by looping through what is inside
 
 					stmt.executeBatch();
 					
 					stmt2 = conn.prepareStatement("update compoundItems set locationID = ? where compoundItems.itemID = ? and compoundItems.gameID = ?");
 					
 					stmt2.setInt(1, -9999);
-					stmt2.setInt(2, compoundItem.getItemID());
+					stmt2.setInt(2, compoundItem.getItemID());	// nuke compound item basically
 					stmt2.setInt(3, gameID);
 					
 					return stmt2.executeUpdate();
@@ -1571,6 +1632,8 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// consume item by setting its inventory ID to be a number that will never be used
 	
 	@Override
 	public Integer consumeItem(Item item) {
@@ -1594,6 +1657,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	// same thing as consume item, but it is a compound item instead 
+	
 	@Override
 	public Integer destroyCompoundItem(CompoundItem item) {
 		return executeTransaction(new Transaction<Integer>() {
@@ -1615,6 +1680,9 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// same as consume item
+	// this stuff should probably be combined but we are too close to the deadline
 
 	@Override
 	public Integer destroyItem(Item item) {
@@ -1636,7 +1704,9 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
-
+	
+	// play notes on a playable object, then update the played notes in the table
+	
 	@Override
 	public Integer playNotes(PlayableObject playableObject, String notes) {
 		return executeTransaction(new Transaction<Integer>() {
@@ -1659,6 +1729,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	// get description from room ID
+	
 	@Override
 	public String getDescription(int roomID) {
 		return executeTransaction(new Transaction<String>() {
@@ -1689,6 +1761,8 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// update the NPC node and talked to status when talked to
 	
 	public Integer npcDialogue(NPC npc, boolean talkedTo, int currentNodeID, boolean canTalkTo) {
 		return executeTransaction(new Transaction<Integer>() {
@@ -1731,6 +1805,7 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 
+	// create tables for everything in the project
 	
 	public void createTables() {
 		executeTransaction(new Transaction<Boolean>() {
@@ -1965,6 +2040,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtCnnctns = conn.prepareStatement(
 						"create table connections (" +
+						"	gameID integer," +
 						"	locationID integer," +
 						"	destinationID integer," +
 						"	direction varchar(40)" +
@@ -1998,6 +2074,7 @@ public class DerbyDatabase implements IDatabase {
 					
 					stmtNodes = conn.prepareStatement(
 							"create table nodes (" +
+							"	gameID integer," +
 							"	npcID integer," +
 							"	nodeID integer," +
 							"	message varchar(400)," +
@@ -2011,6 +2088,7 @@ public class DerbyDatabase implements IDatabase {
 					stmtLinks = conn.prepareStatement(
 							"create table links (" +
 							"	linkID integer," +
+							"	gameID integer," +
 							"	nextNodeID integer," +
 							"	previousNodeID integer," +
 							"	isAvailable integer," +
@@ -2042,6 +2120,8 @@ public class DerbyDatabase implements IDatabase {
 		});
 	}
 	
+	// delete data for everything in the project
+	
 	@Override
 	public void deleteData(int gameID) {	// KEEPS LOGIN IN FILE, MUST REGENERATE DEFAULT DATA TO USE; THIS SHOULD ONLY BE USED IN JUNITS
 		executeTransaction(new Transaction<Boolean>() {
@@ -2056,6 +2136,10 @@ public class DerbyDatabase implements IDatabase {
 				PreparedStatement deleteUnlockableObjects = null;
 				PreparedStatement deletePuzzles = null;
 				PreparedStatement deleteObjectPuzzles = null;
+				PreparedStatement deleteConnections = null;
+				PreparedStatement deleteNodes = null;
+				PreparedStatement deleteLinks = null;
+				PreparedStatement deleteNPCs = null;
 				
 				try {
 					deleteItems = conn.prepareStatement("delete from items where gameID = ?");
@@ -2093,6 +2177,22 @@ public class DerbyDatabase implements IDatabase {
 					deleteObjectPuzzles = conn.prepareStatement("delete from objectPuzzles where gameID = ?");
 					deleteObjectPuzzles.setInt(1, gameID);
 					deleteObjectPuzzles.executeUpdate();
+
+					deleteConnections = conn.prepareStatement("delete from connections where gameID = ?");
+					deleteConnections.setInt(1, gameID);
+					deleteConnections.executeUpdate();
+
+					deleteNodes = conn.prepareStatement("delete from nodes where gameID = ?");
+					deleteNodes.setInt(1, gameID);
+					deleteNodes.executeUpdate();
+
+					deleteLinks = conn.prepareStatement("delete from links where gameID = ?");
+					deleteLinks.setInt(1, gameID);
+					deleteLinks.executeUpdate();
+
+					deleteNPCs = conn.prepareStatement("delete from npcs where gameID = ?");
+					deleteNPCs.setInt(1, gameID);
+					deleteNPCs.executeUpdate();
 					
 					return true;
 				} finally {
@@ -2105,10 +2205,16 @@ public class DerbyDatabase implements IDatabase {
 					DBUtil.closeQuietly(deleteUnlockableObjects);
 					DBUtil.closeQuietly(deletePuzzles);
 					DBUtil.closeQuietly(deleteObjectPuzzles);
+					DBUtil.closeQuietly(deleteConnections);
+					DBUtil.closeQuietly(deleteNodes);
+					DBUtil.closeQuietly(deleteLinks);
+					DBUtil.closeQuietly(deleteNPCs);
 				}
 			}
 		});
 	}
+	
+	// load data into the tables for a specified game ID (auto filled in using parameter)
 	
 	@Override
 	public void loadInitialData(int gameID) {
@@ -2379,12 +2485,13 @@ public class DerbyDatabase implements IDatabase {
 					insertObjectPuzzles.executeBatch();
 					
 					
-					insertConnections = conn.prepareStatement("insert into connections (locationID, destinationID, direction) values (?, ?, ?)");
+					insertConnections = conn.prepareStatement("insert into connections (gameID, locationID, destinationID, direction) values (?, ?, ?, ?)");
 					
 					for (Connections connection : connections) {
-						insertConnections.setInt(1, connection.getConnectionID());
-						insertConnections.setInt(2, connection.getDestinationID());
-						insertConnections.setString(3, connection.getDirection());
+						insertConnections.setInt(1, gameID);
+						insertConnections.setInt(2, connection.getConnectionID());
+						insertConnections.setInt(3, connection.getDestinationID());
+						insertConnections.setString(4, connection.getDirection());
 						insertConnections.addBatch();
 					}
 					
@@ -2413,34 +2520,34 @@ public class DerbyDatabase implements IDatabase {
 					
 					insertNpcs.executeBatch();
 					
-					insertNodes = conn.prepareStatement("insert into nodes (npcID, nodeID, message, type) "
-							+ "values (?, ?, ?, ?)");
+					insertNodes = conn.prepareStatement("insert into nodes (gameID, npcID, nodeID, message, type) "
+							+ "values (?, ?, ?, ?, ?)");
 					
 					for (Node node : nodes) {
-						insertNodes.setInt(1, node.getNpcID());
-						insertNodes.setInt(2, node.getNodeID());
-						insertNodes.setString(3, node.getMessage());
-						insertNodes.setString(4, node.getType());
+						insertNodes.setInt(1, gameID);
+						insertNodes.setInt(2, node.getNpcID());
+						insertNodes.setInt(3, node.getNodeID());
+						insertNodes.setString(4, node.getMessage());
+						insertNodes.setString(5, node.getType());
 						insertNodes.addBatch();
 					}
 					
 					insertNodes.executeBatch();
 					
-					insertLinks = conn.prepareStatement("insert into links (linkID, nextNodeID, previousNodeID, isAvailable, message) "
-							+ "values (?, ?, ?, ?, ?)");
+					insertLinks = conn.prepareStatement("insert into links (gameID, linkID, nextNodeID, previousNodeID, isAvailable, message) "
+							+ "values (?, ?, ?, ?, ?, ?)");
 					
 					for (Link link : links) {
-						insertLinks.setInt(1, link.getLinkID());
-						insertLinks.setInt(2, link.getNextNode().getNodeID());
-						insertLinks.setInt(3, link.getPreviousNode().getNodeID());
-						insertLinks.setInt(4, link.isAvailable() ? 1 : 0);
-						insertLinks.setString(5, link.getOption());
+						insertLinks.setInt(1, gameID);
+						insertLinks.setInt(2, link.getLinkID());
+						insertLinks.setInt(3, link.getNextNode().getNodeID());
+						insertLinks.setInt(4, link.getPreviousNode().getNodeID());
+						insertLinks.setInt(5, link.isAvailable() ? 1 : 0);
+						insertLinks.setString(6, link.getOption());
 						insertLinks.addBatch();
 					}
 					
 					insertLinks.executeBatch();
-					
-					
 					
 					return true;
 				} finally {
@@ -2461,6 +2568,8 @@ public class DerbyDatabase implements IDatabase {
 			}
 		});
 	}
+	
+	// create a test user by default everytime the project is run
 	
 	public Integer createTestUser() {
 		return executeTransaction(new Transaction<Integer>() {
@@ -2493,7 +2602,7 @@ public class DerbyDatabase implements IDatabase {
 		
 		System.out.println("\nLoading initial data...");
 		db.loadInitialData(1);
-		db.createTestUser();
+		db.createTestUser();	// add in one default user
 		
 		System.out.println("\nText Based Adventure Game DB successfully initialized!");
 	}

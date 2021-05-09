@@ -19,6 +19,8 @@ public class UnlockableObject extends RoomObject {
 		this.canBeClimbed = false;
 	}
 	
+	// this class is also pretty much just getters and setters
+	
 	public Item getUnlockItem() {
 		return unlockItem;
 	}

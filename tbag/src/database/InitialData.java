@@ -20,7 +20,8 @@ import puzzle.ObjectPuzzle;
 import puzzle.Puzzle;
 
 public class InitialData {
-	private static List<Item> items = null;
+	// some methods require this stuff to be referenced, so we store it after it is assembled
+	private static List<Item> items = null;	
 	private static List<UnlockableObject> unlockableObjects = null;
 	private static List<PlayableObject> playableObjects = null;
 	private static List<Node> nodes = null;
@@ -365,7 +366,7 @@ public class InitialData {
 				int unlockItemID = Integer.parseInt(iter.next());
 				
 				Item unlockItem = null;
-				if (items.size() >= unlockItemID) {
+				if (items.size() >= unlockItemID) {	// grab unlock item from the ID
 					unlockItem = items.get(unlockItemID);
 				}
 				
@@ -466,7 +467,7 @@ public class InitialData {
 				int objectID = Integer.parseInt(iter.next());
 				int itemID = Integer.parseInt(iter.next());
 
-				UnlockableObject unlockObstacle = getUnlockableObjectByID(unlockObstacleID);
+				UnlockableObject unlockObstacle = getUnlockableObjectByID(unlockObstacleID);	// grab the unlock obstacle from the ID
 				String unlockObstacleName = unlockObstacle != null ? unlockObstacle.getName() : "";
 
 				ObjectPuzzle puzzle = new ObjectPuzzle(description, solution, hint, getObjectByID(objectID), getItemByID(itemID), unlockObstacleName, roomID);
@@ -578,9 +579,10 @@ public class InitialData {
 				int requiredItemID = Integer.parseInt(iter.next());
 				int unlockObstacleID = Integer.parseInt(iter.next());
 				
+				// grab some objects from previous tables to assemble the NPC
 				Item requiredItem = null;
 				if (items.size() >= requiredItemID) {
-					requiredItem = items.get(requiredItemID);
+					requiredItem = items.get(requiredItemID);	
 				}
 				
 				RoomObject unlockObstacle = null;
@@ -647,7 +649,7 @@ public class InitialData {
 				
 				Node nextNode = null;
 				if (nodes.size() >= nextNodeID) {
-					nextNode = nodes.get(nextNodeID);
+					nextNode = nodes.get(nextNodeID);	// load nodes to assemble links
 				}
 				
 				Node previousNode = null;
@@ -691,16 +693,6 @@ public class InitialData {
 		for (PlayableObject object : playableObjects) {
 			if (object.getObjectID() == objectID) {
 				return object;
-			}
-		}
-		
-		return null;
-	}
-	
-	private static Node getNodeByID(int nodeID) {
-		for (Node node : nodes) {
-			if (node.getNodeID() == nodeID) {
-				return node;
 			}
 		}
 		

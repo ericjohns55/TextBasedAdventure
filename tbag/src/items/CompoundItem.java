@@ -10,6 +10,8 @@ public class CompoundItem extends Item {
 	private boolean poppable;
 	private int inventoryID;
 	
+	// holds an inventory of items
+	
 	public CompoundItem(String name, double weight, boolean breakable, Item breakItem) {
 		super(name, weight);
 		this.inventory = new Inventory();
@@ -17,6 +19,9 @@ public class CompoundItem extends Item {
 		this.breakItem = breakItem;
 		this.poppable = false;
 	}
+	
+	// getters and setters
+	// inherits from items so not much extra
 	
 	public Inventory getInventory() {
 		return inventory;
@@ -43,7 +48,7 @@ public class CompoundItem extends Item {
 	}
 	
 	public HashMap<String, Item> getItems() {
-		return inventory.getAllItems();
+		return inventory.getAllItems();	// return the list of all items (for DB purposes)
 	}
 
 	public int getInventoryID() {

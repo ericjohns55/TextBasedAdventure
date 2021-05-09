@@ -2,7 +2,6 @@ package actor;
 
 import game.Game;
 import items.Inventory;
-import items.Item;
 import map.Room;
 
 public class Actor {
@@ -22,27 +21,12 @@ public class Actor {
 		this.game = game;
 	}
 	
+	// instantiates game to null: can be filled in later
 	public Actor(int roomID) {
 		this(null, roomID);
 	}
 	
-	public void equipItem(String identifier, Item toAdd) {
-		if (toAdd.inInventory() && toAdd.isEquippable()) {
-			inventory.removeItem(identifier);
-			equippedItems.addItem(identifier, toAdd);
-		}
-	}
-	
-	public void unEquipItem(String identifier, Item toRemove) {
-		if (toRemove.isEquipped() && inventory.canAddItem(toRemove)) {
-			equippedItems.removeItem(identifier);
-			inventory.addItem(identifier, toRemove);
-		}
-		else if (toRemove.isEquipped() && !inventory.canAddItem(toRemove)) {
-			equippedItems.removeItem(identifier);
-			game.getRoom(roomID).addItem(identifier, toRemove);
-		}
-	}
+	// mostly getters and setters to store state of the actor
 	
 	public Inventory getInventory() {
 		return inventory;

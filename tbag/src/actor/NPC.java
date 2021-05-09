@@ -3,7 +3,6 @@ package actor;
 import java.util.ArrayList;
 import java.util.List;
 
-import dialogue.Link;
 import dialogue.Node;
 import game.Game;
 import items.Item;
@@ -38,6 +37,8 @@ public class NPC extends Actor {
 		
 	}
 
+	// getters and setters to store NPC state
+	
 	public String getDescription() {
 		return description;
 	}

@@ -16,12 +16,12 @@ public class PushCommand extends UserCommand {
 		if (room.hasObject(noun)) {
 			RoomObject object = room.getObject(noun);
 			
-			if (object.isMoveable()) {
-				if (location != null) {
+			if (object.isMoveable()) {	// confirm object is moveable
+				if (location != null) {	// if location, push to location
 					game.push(object, location);
-					game.setOutput("Pushed " + object.getName() + " " + location);
-				} else {					
-					game.push(object, object.getDirection() + "-left");
+					game.setOutput("Pushed " + object.getName() + " " + location);	// update DB
+				} else {	// push out of the way if no location
+					game.push(object, object.getDirection() + "-left");		// update DB
 					game.setOutput("Moved " + object.getName() + " out of the way.");
 				}
 			} else {
