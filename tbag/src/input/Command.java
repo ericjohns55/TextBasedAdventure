@@ -28,6 +28,7 @@ public class Command {
 		this.input = replaceSynonyms(input);
 		this.game = game;
 		
+		// load commands into hash map
 		commands = new HashMap<String, UserCommand>();
 		commands.put("examine", new LookCommand());
 		commands.put("look", new LookCommand());
@@ -69,16 +70,16 @@ public class Command {
 		
 		for (String word : individualWords) {
 			if (!ARTICLES.contains(word.toLowerCase())) {
-				breakdown.add(word.toLowerCase());
+				breakdown.add(word.toLowerCase());	// add anything that is not an article
 			} else {	// MUSIC EDGE CASE RIGHT HERE !!!
 				if (word.toLowerCase().equals("a") && breakdown.get(0).equals("play")) {
-					breakdown.add(word.toLowerCase());
+					breakdown.add(word.toLowerCase());	// skip A if it is in the scenario of doing a note
 				}
 			}
 		}
 		
 		if (breakdown.size() > 1) {
-			verb = breakdown.get(0);
+			verb = breakdown.get(0);	// make sure more than one word is left after removing articles
 			
 			String fullNoun = "";
 			String fullLocation = "";
@@ -86,29 +87,29 @@ public class Command {
 			boolean addLocation = false;
 
 			for (int i = 1; i < breakdown.size(); i++) {					
-				if (PREPOSITIONS.contains(breakdown.get(i))) {
+				if (PREPOSITIONS.contains(breakdown.get(i))) {	// create split after a preposition for location
 					addLocation = true;
 				} else {
-					if (addLocation) {
+					if (addLocation) {	// if location, add to location
 						fullLocation += breakdown.get(i) + " ";
-					} else {
+					} else {	// no location, add words to noun
 						fullNoun += breakdown.get(i) + " ";
 					}
 				}
 			}
 			
-			noun = fullNoun.trim();
+			noun = fullNoun.trim();	// trip the noun
 			
 			if (fullLocation != "") {
-				location = fullLocation.trim();
+				location = fullLocation.trim();	// trim location to remove whitespace
 			}
 		} else if (breakdown.size() == 1) {
-			verb = breakdown.get(0);
+			verb = breakdown.get(0);	// just a one word command
 		}
 	}
 	
 	private String replaceSynonyms(String input) {
-		String replace = input.replace("left", "east");
+		String replace = input.replace("left", "east");	// simple directional synonyms
 		replace = replace.replace("right", "west");
 		replace = replace.replace("up", "north");
 		replace = replace.replace("down", "south");
@@ -116,15 +117,15 @@ public class Command {
 	}
 	
 	public void execute() {
-		System.err.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);
+		System.err.println("VERB: " + verb + " | NOUN: " + noun + " | LOCATION: " + location);	// debugging purposes
 		
 		// eat chocolate
 		if (verb != null) {
-			if (commands.containsKey(verb)) {
+			if (commands.containsKey(verb)) {	// make sure command exists in the table
 				if (noun != null || SINGLE_WORD_COMMANDS.contains(verb)) {
-					UserCommand command = commands.get(verb);
-					command.loadInputandGame(game, verb, noun, location);
-					command.execute();
+					UserCommand command = commands.get(verb);		// grab command
+					command.loadInputandGame(game, verb, noun, location);	// load game data
+					command.execute();	// execute command
 				} else {
 					game.setOutput("Missing argument for command \"" + verb + "\"");
 				}
@@ -136,13 +137,13 @@ public class Command {
 		}
 		
 		if (game.getOutput() == "") {
-			game.setOutput(invalidCommand);
+			game.setOutput(invalidCommand);	// no output was generated, must have been invalid
 		} else {
-			game.setOutput(game.getOutput().trim());
+			game.setOutput(game.getOutput().trim());	// set output to what was executed
 		}
 	}
 	
-	public String getBreakdown() {
+	public String getBreakdown() {	// generate breakdown for JUnit tests
 		String breakdown = "";
 		
 		if (verb != null) {

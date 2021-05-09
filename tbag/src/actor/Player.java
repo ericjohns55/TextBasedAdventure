@@ -6,6 +6,7 @@ public class Player extends Actor {
 	private String lastOutput;
 	private int moves;
 	
+	// constructor with Game that can be filled in later
 	public Player(Game game, int roomID) {
 		super(game, roomID);
 		
@@ -16,6 +17,8 @@ public class Player extends Actor {
 	public Player(int roomID) {
 		super(roomID);
 	}
+	
+	// these values are stored in the csvs for persistence in logins
 
 	public String getLastOutput() {
 		return lastOutput;

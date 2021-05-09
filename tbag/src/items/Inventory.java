@@ -24,11 +24,15 @@ public class Inventory {
 		this.inventoryID = inventoryID;
 	}
 	
+	// add item with identifier to hash map
+	
 	public void addItem(String identifier, Item toAdd) {
 		if (canAddItem(toAdd)) {
 			items.put(identifier.toLowerCase(), toAdd);
 		}
 	}
+	
+	// check that item exists then remove with identifier
 	
 	public Item removeItem(String identifier) {
 		if (contains(identifier)) {
@@ -38,20 +42,24 @@ public class Inventory {
 		}
 	}
 	
+	// you would be surprised (DB purposes)
 	@SuppressWarnings("unlikely-arg-type")
 	public void removeItem(Item item) {
 		items.remove(item);
 	}
 	
+	// grab item using identifier
 	public Item getItem(String identifier) {
 		identifier = identifier.toLowerCase();
 		return items.containsKey(identifier) ? items.get(identifier) : emptyItem;
 	}
 	
+	// make sure it fits into max weight
 	public boolean canAddItem(Item toAdd) {
 		return getCurrentWeight() + toAdd.getWeight() <= MAX_WEIGHT && toAdd.canBePickedUp();
 	}
 	
+	// calculate the current weight by looping through items and summing them
 	public double getCurrentWeight() {
 		double weight = 0;
 		
@@ -62,15 +70,18 @@ public class Inventory {
 		return weight;
 	}
 	
+	// check if empty
 	public boolean isEmpty() {
 		return items.size() == 0;
 	}
 	
+	// check if inventory contains an identifier (case insensitive)
 	public boolean contains(String identifier) {
 		identifier = identifier.toLowerCase();
 		return items.containsKey(identifier);
 	}
 	
+	// check if item ID is in inventory (used for puzzles involving specific items)
 	public boolean contains(int id) {
 		for (Item item : items.values()) {
 			if (item.getItemID() == id) {
@@ -81,10 +92,12 @@ public class Inventory {
 		return false;
 	}
 	
+	// return size of inventory
 	public int getInventorySize() {
 		return items.size();
 	}
 	
+	// delete all items from inventory
 	public void emptyInventory() {
 		items.clear();
 	}
@@ -92,8 +105,7 @@ public class Inventory {
 	public String openInventory() {
 		String inventory = "";
 		
-		for (String key : items.keySet())
-        {
+		for (String key : items.keySet()) {	// loop through all items and format them to print out nicely
             String item = key;
             double weight = items.get(key).getWeight();
 
@@ -101,15 +113,16 @@ public class Inventory {
         }		
 		
 		if (!items.isEmpty()) {
+			// length -2 removes the extra ", " at the end
 			inventory = "You have " + inventory.substring(0, inventory.length() - 2);
 		} else {
 			inventory = "Your inventory is empty!";
 		}
 		
-		// length -2 removes the extra ", " at the end
 		return inventory;
 	}
 	
+	// list all items; loop through them and add to a list
 	public String listItems() {
 		String itemList = "";
 		
@@ -118,7 +131,7 @@ public class Inventory {
 		}
 		
 		if (!itemList.isEmpty()) {
-			itemList = "This object has a " + itemList.substring(0, itemList.length() - 2);
+			itemList = "This object has a " + itemList.substring(0, itemList.length() - 2);	// remove extra ", " at end
 		} else {
 			itemList = "This does not contain any items.";
 		}
@@ -126,6 +139,7 @@ public class Inventory {
 		return itemList;
 	}
 	
+	// same as list items, but list the items in an object (noun)
 	public String listItems(String noun) {
 		String itemList = "";
 		
@@ -142,26 +156,23 @@ public class Inventory {
 		return itemList;
 	}
 
+	// consume an item by removing it from the inventory
 	public void consumeItem(String identifier){
 		identifier = identifier.toLowerCase();
 		if (items.containsKey(identifier)) {
 			items.remove(identifier);
-			//add in what it does later
-		}
-		else {
+		} else {
 			System.out.println("I don't got that in my bag.");
 		}
 	}
 	
+	// check if item exists
 	public boolean contains(Item item) {
 		return items.values().contains(item);
 	}
 	
+	// return map for grab/drop all purposes
 	public HashMap<String, Item> getAllItems() {
 		return items;
-	}
-	
-	public int getSize() {
-		return items.size();
 	}
 }

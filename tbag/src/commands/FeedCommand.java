@@ -21,16 +21,19 @@ public class FeedCommand extends UserCommand {
 		Player player = getPlayer();
 
 		if (location != null) {
-			if (room.hasObject(location)) {
+			if (room.hasObject(location)) {	// check that location exists
 				if (inventory.contains(noun)) {
 					RoomObject object = room.getObject(location);
+					
+					// check that the noun specified is required to solve the puzzle
 					if (noun.equals(puzzle.getSolution())) {
-						if (!object.isFed()) {						
+						if (!object.isFed()) {		// feed the object the required solution if it has not been solved yet	
 							game.feedItem(object, player, puzzle, noun, location);														
 						} else {
 							game.setOutput("This object is already fed.");
 						}
 					} else {
+						// if not the specific noun we dont want it
 						game.setOutput("The " + location + " does not want to be fed " + noun + ".");
 					}
 				} else {

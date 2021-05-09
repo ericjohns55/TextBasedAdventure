@@ -18,7 +18,7 @@ public class LoginServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {	
-		String username = req.getParameter("username");
+		String username = req.getParameter("username");	// grab username and password field
 		String password = req.getParameter("password");
 		String errorMessage = null;
 		
@@ -27,23 +27,23 @@ public class LoginServlet extends HttpServlet {
 		int gameID = 0;
 		
 		if (username == null || password == null || username.equals("") || password.equals("")) {
-			errorMessage = "Please input both a username and password.";
+			errorMessage = "Please input both a username and password.";	// yell at invalid data
 		} else {
 			controller = new LoginController();
 			
 			if (req.getParameter("login") != null) {
-				validLogin = controller.attemptLogin(username, password);
+				validLogin = controller.attemptLogin(username, password);	// check that login exists
 				
-				if (!validLogin) {
+				if (!validLogin) {	// they messed up: call them stupid
 					errorMessage = "You entered an invalid username or password!";
 				} else {
-					gameID = controller.getGameID(username, password);
+					gameID = controller.getGameID(username, password);	// grab game ID
 				}
 			} else if (req.getParameter("create") != null) {
-				if (controller.attemptLogin(username, password)) {
+				if (controller.attemptLogin(username, password)) {	// make sure account does not already exist
 					errorMessage = "This account already exists.";
 				} else {
-					gameID = controller.createAccount(username, password);
+					gameID = controller.createAccount(username, password);	// create new account and grab gameID
 									
 					validLogin = true;
 				}
@@ -54,11 +54,11 @@ public class LoginServlet extends HttpServlet {
 		req.setAttribute("password", req.getParameter("password"));
 		req.setAttribute("errorMessage", errorMessage);
 		
-		if (validLogin) {
-			req.getSession().setAttribute("success", "" + gameID);
+		if (validLogin) {	// check valid login
+			req.getSession().setAttribute("success", "" + gameID);	// store game ID in page, to be grabbed in the game servlet
 			resp.sendRedirect(req.getContextPath() + "/game");
 		} else {
-			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);
+			req.getRequestDispatcher("/_view/login.jsp").forward(req, resp);	// they were not valid, refresh page
 		}		
 	}
 }

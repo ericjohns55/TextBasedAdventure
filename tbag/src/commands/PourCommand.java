@@ -18,17 +18,17 @@ public class PourCommand extends UserCommand {
 		Puzzle puzzle = getPuzzle();
 		Game game = getGame();
 		
-		if (location != null) {
+		if (location != null) {	// check location
 			if (room.hasObject(location)) {
 				if (inventory.contains(noun)) {
-					RoomObject object = room.getObject(location);
+					RoomObject object = room.getObject(location);	// grab location and item from command
 					Item item = inventory.getItem(noun);
 					
-					if (item.isPourable()) {
+					if (item.isPourable()) {	// confirm item is pourable and item is coverable
 						if (object.isCoverable()) {
-							if (!object.isCovered()) {						
+							if (!object.isCovered()) {		// if not covered, cover and update DB
 								game.pour(object, item, getPlayer(), puzzle, noun, location);														
-							} else {
+							} else {	// objects cannot be covered twice
 								game.setOutput("This object is already covered.");
 							}
 						} else {

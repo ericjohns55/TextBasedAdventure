@@ -13,6 +13,7 @@ public class Connections {
 		this.connectionID = roomID;
 	}
 	
+	// add connection to map
 	public void addConnection(String direction, int destination) {
 		connectionsMap.put(direction, destination);
 		
@@ -21,12 +22,12 @@ public class Connections {
 	}
 	
 	public boolean hasConnection(String direction) {
-		return connectionsMap.containsKey(direction);
+		return connectionsMap.containsKey(direction);	// check if it exists
 	}
 	
 	public int getConnection(String direction) {
 		if (hasConnection(direction)) {
-			return connectionsMap.get(direction);
+			return connectionsMap.get(direction);	// return the connection if it exists, -1 if not
 		} else {
 			return -1;
 		}
@@ -34,7 +35,7 @@ public class Connections {
 	
 	public boolean removeConnection(String direction) {
 		if (hasConnection(direction)) {
-			connectionsMap.remove(direction);
+			connectionsMap.remove(direction);	// take connection out of the map
 			return true;
 		}
 		

@@ -55,6 +55,8 @@ public class RoomObject {
 		this.roomID = roomID;
 	}
 	
+	// yeah this entire class is basically getters and setters
+	
 	public int getRoomID() {
 		return roomID;
 	}
@@ -83,7 +85,7 @@ public class RoomObject {
 		String desc = description;
 		
 		if (!inventory.isEmpty()) { 
-			desc += "\n" + inventory.listItems();
+			desc += "\n" + inventory.listItems();	// list items if inventory is not empty
 		}
 		
 		return desc;
