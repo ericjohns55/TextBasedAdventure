@@ -10,9 +10,10 @@
 22|painting|862451|north|0|1|0| |1|1|0|1|0|0|10|1101|1| |0|0|0|23
 23|door|Probably leads to another room...|east|0|1|0| |1|1|0|0|0|0|10|1102|1| |0|1|0|9999
 24|door|Probably leads to another room...|east|0|1|0| |1|1|0|0|0|0|11|1111|1| |0|1|0|9999
-25|door|Probably leads to another room...|south|0|1|0| |1|1|0|0|0|0|12|1123|1| |0|1|0|9999
+25|door|Probably leads to another room...|south|0|1|0| |1|1|0|0|0|0|12|1124|1| |0|1|0|9999
 26|door|Probably leads to another room...|south|0|1|0| |1|1|0|0|0|0|13|1131|1| |0|1|0|9999
 27|door|Probably leads to another room...|west|0|1|0| |1|1|0|0|0|0|14|1145|1| |0|1|0|9999
 28|door|Probably leads to another room...|west|0|1|0| |1|1|0|0|0|0|15|9999|1| |0|1|0|9999
 29|ladder|Might just but your ticket out of here but you might need something for your hands...|ladder|0|1|0| |1|1|0|0|0|0|16|1161|1| |0|1|1|41
 30|door|Probably leads to another room...|west|0|1|0| |1|1|0|0|0|0|17|1171|0| |0|1|0|9999
+31|door|Probably leads to another room...|south|0|1|0| |1|1|0|0|0|0|18|1182|1| |0|1|0|56

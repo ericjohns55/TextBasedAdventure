@@ -31,6 +31,8 @@ public class Game {
 	
 	private int gameID;
 	
+
+	
 	public Game(int gameID) {
 		DatabaseProvider.setInstance(new DerbyDatabase(gameID));
 		db = DatabaseProvider.getInstance();	// instantiate DB
@@ -40,6 +42,8 @@ public class Game {
 		this.room = db.getRoom(player.getRoomID());
 		this.output = "";
 		this.gameID = gameID;
+	
+		
 	}
 	
 	public void setOutput(String output) {
@@ -106,6 +110,36 @@ public class Game {
 		setOutput("You break apart the " + noun + " and dump the contents on the " + location + ".");
 	}
 	
+	
+	// Added these 2 next methods
+	public void popItem(RoomObject container, CompoundItem item, String noun, String location) {
+		
+		if (item.getItems().size() == 0)
+		{	
+			setOutput("You pop the " + noun + ", but there is nothing inside.");
+		}
+		
+		else
+		{	
+			setOutput("You pop the " + noun + " and dump the contents on the " + location + ".");
+		}
+		db.breakItem(item, container.getInventory());		
+		
+	}
+	
+	public void popItem(Room room, CompoundItem item, String noun) {
+		
+		if (item.getItems().size() == 0)
+		{	
+			setOutput("You pop the " + noun + ", but there is nothing inside.");
+		}
+		
+		else
+		{	
+			setOutput("You pop the " + noun + " and dump the contents on the floor!");
+		}	
+		db.breakItem(item, room.getInventory());
+		
 	public void breakItem(Inventory inventory, CompoundItem item, String noun, String output) {
 		db.breakItem(item, inventory);	// break item into the inventory
 		setOutput("You break apart the " + noun + " and dump the contents " + output);
@@ -436,4 +470,6 @@ public class Game {
 	public IDatabase getDatabase() {
 		return db;
 	}
+	
+	
 }

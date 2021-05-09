@@ -41,11 +41,13 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("moves", "Moves: " + player.getMoves());	// update the moves
 		req.setAttribute("duration", 900);
 		
-		// print room progress
-		String roomProgress = String.format("Room: %d/17 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 17.0 * 100);
+		// Need to change this when adding more rooms
+		String roomProgress = String.format("Room: %d/18 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 18.0 * 100);
 		
-		if (player.getRoomID() == 18) {
-			roomProgress = "YOU ESCAPED!";	// special escape method
+		if (player.getRoomID() == 19) {
+			//roomProgress = "YOU ESCAPED!";
+			resp.sendRedirect(req.getContextPath() + "/gameOver");
+      return;
 		}
 		
 		req.setAttribute("room", roomProgress);
@@ -86,10 +88,11 @@ public class TBAGServlet extends HttpServlet {
 		req.setAttribute("moves", "Moves: " + player.getMoves());
 		
 		// fun room progress screen
-		String roomProgress = String.format("Room: %d/17 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 17.0 * 100);
+		String roomProgress = String.format("Room: %d/18 (%.2f%%)", player.getRoomID(), (player.getRoomID() - 1) / 18.0 * 100);
 		
-		if (player.getRoomID() == 18) {
-			roomProgress = "YOU ESCAPED!";
+		if (player.getRoomID() == 19) {
+			//roomProgress = "YOU ESCAPED!";
+			resp.sendRedirect(req.getContextPath() + "/gameOver");
 		}
 		
 		req.setAttribute("room", roomProgress);	// set room progress to be visible

@@ -7,6 +7,7 @@ public class CompoundItem extends Item {
 	private Item breakItem;
 	private boolean breakable;
 	
+	private boolean poppable;
 	private int inventoryID;
 	
 	// holds an inventory of items
@@ -16,6 +17,7 @@ public class CompoundItem extends Item {
 		this.inventory = new Inventory();
 		this.breakable = breakable;
 		this.breakItem = breakItem;
+		this.poppable = false;
 	}
 	
 	// getters and setters
@@ -56,4 +58,14 @@ public class CompoundItem extends Item {
 	public void setInventoryID(int inventoryID) {
 		this.inventoryID = inventoryID;
 	}
+	
+	
+	public boolean isPoppable() {
+		return poppable;
+	}
+
+	public void setPoppable(boolean poppable) {
+		this.poppable = poppable;
+	}
+
 }
