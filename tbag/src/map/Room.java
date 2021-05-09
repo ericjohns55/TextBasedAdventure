@@ -48,8 +48,7 @@ public class Room {
 		return objects.get(name); 
 	}
 
-	public void addItem(String identifier, Item item)
-	{
+	public void addItem(String identifier, Item item) {
 		inventory.addItem(identifier, item);
 	}
 

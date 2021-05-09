@@ -59,7 +59,6 @@ public class CompoundItem extends Item {
 		this.inventoryID = inventoryID;
 	}
 	
-	
 	public boolean isPoppable() {
 		return poppable;
 	}
@@ -67,5 +66,4 @@ public class CompoundItem extends Item {
 	public void setPoppable(boolean poppable) {
 		this.poppable = poppable;
 	}
-
 }

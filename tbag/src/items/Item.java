@@ -16,6 +16,7 @@ public class Item {
 	private boolean lightable;
 	private boolean isLit;
 	private boolean producesFire;
+	
 	private int itemID;
 	private int locationID;
 	
