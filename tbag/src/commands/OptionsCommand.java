@@ -15,9 +15,9 @@ public class OptionsCommand extends UserCommand {
 
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
-			
-			if (!npc.isDone() && npc.getCurrentNode().getType().equals("option")) {	// make sure the dialogue type is option
-				if(npc.isTalkedTo()) {	// can not run an option command without talking first
+
+			if (npc.getCurrentNode().getType().equals("option")) {	// make sure the dialogue type is option
+				if(npc.isTalkedTo()) { // can not run an option command without talking first
 					if(npc.getCurrentNode().getType().equals("option")) {
 						if(noun != null && noun.matches("[1-3.]+")) {	// confirm that a number 1-3 is specified as noun
 							npc.setPreviousNode(npc.getCurrentNode());
@@ -48,6 +48,7 @@ public class OptionsCommand extends UserCommand {
 									game.setOutput(npc.getCurrentNode().getMessage() + "\n" + t);
 									game.npcDialogue(npc, npc.getCurrentNode());
 								} else {
+									npc.setDone(true);
 									game.setOutput(npc.getCurrentNode().getMessage() + "\n");
 									
 									if (npc.getCurrentNode().getType().equals("gCommand")) {	// force run give command if on last node

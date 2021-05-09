@@ -14,8 +14,8 @@ public class NoCommand extends UserCommand {
 		
 		if (room.hasNpc()) {	// check that NPC exists
 			NPC npc = room.getNpc();
-			
-			if (!npc.isDone() && npc.getCurrentNode().getType().equals("y/n")) {	// check that NPC is not done talking
+
+			if (npc.getCurrentNode().getType().equals("y/n")) {
 				if(npc.isTalkedTo()) {
 					npc.setPreviousNode(npc.getCurrentNode());	// move through the dialogue tree
 					npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(1).getNextNode());
@@ -41,7 +41,10 @@ public class NoCommand extends UserCommand {
 						
 						game.setOutput(npc.getCurrentNode().getMessage() + "\n" + t);	// set output and update dialogue position
 						game.npcDialogue(npc, npc.getCurrentNode());
-					} else {	// on last node, must be give command
+					}
+					else {
+						npc.setDone(true);
+
 						game.setOutput(npc.getCurrentNode().getMessage() + "\n");
 						
 						if (npc.getCurrentNode().getType().equals("gCommand")) {

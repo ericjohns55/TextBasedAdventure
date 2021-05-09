@@ -433,7 +433,7 @@ public class Game {
 	}
 
 	public void npcDialogue(NPC npc, Node currentNode) {
-		db.npcDialogue(npc, npc.isTalkedTo(), currentNode.getNodeID(), npc.CanTalkTo());	// update dialogue tree in DB
+		db.npcDialogue(npc, npc.isTalkedTo(), currentNode.getNodeID(), npc.CanTalkTo(), npc.isDone());	// update dialogue tree in DB
 	}
 
 	public void reloadDatabaseForJUnit() {

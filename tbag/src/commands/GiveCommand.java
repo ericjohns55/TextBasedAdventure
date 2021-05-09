@@ -24,20 +24,26 @@ public class GiveCommand extends UserCommand {
 				if (inventory.contains(noun)) {	// make sure the item to give exists
 					Item toGive = inventory.getItem(noun);
 				
-					if (toGive != null) {	// make sure the item to give exists again apparently?
-						if (toGive.equals(npc.getRequiredItem())) {	// confirm the NPC actually wants this item
-							RoomObject roomObject = npc.getUnlockObstacle();
-							roomObject.setLocked(false);
-							game.setOutput("Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.");
-							toGive.setCanBePickedUp(false);
-							toGive.setInInventory(false);
-							inventory.removeItem(noun);
-							npc.getInventory().addItem(noun, toGive);
-							npc.setCanTalkTo(false);
-							game.give(npc, getPlayer(), toGive);	// update DB with NPC's new item
-							game.unlockObject(roomObject, false);	// unlock the obstacle the NPC wants to solve for you
-							game.npcDialogue(npc, npc.getCurrentNode());	// update the dialogue tree
-						} else {
+					if (toGive != null) {
+						if (toGive.equals(npc.getRequiredItem())) {
+							if(npc.isDone()) {
+								RoomObject roomObject = npc.getUnlockObstacle();
+								roomObject.setLocked(false);
+								game.setOutput("Thanks for the " + noun + ". The " + roomObject.getName() + " is unlocked now.");
+								toGive.setCanBePickedUp(false);
+								toGive.setInInventory(false);
+								inventory.removeItem(noun);
+								npc.getInventory().addItem(noun, toGive);
+								npc.setCanTalkTo(false);
+								game.give(npc, getPlayer(), toGive);
+								game.unlockObject(roomObject, false);
+								game.npcDialogue(npc, npc.getCurrentNode());
+							}
+							else {
+								game.setOutput("You should finish talking to " + npc.getName() + ".");
+							}
+						}
+						else {
 							game.setOutput(npc.getName() + " doesn't want that item.");
 						}
 					} else {

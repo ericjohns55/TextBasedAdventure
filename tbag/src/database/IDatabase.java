@@ -54,8 +54,8 @@ public interface IDatabase {
 	public Integer destroyItem(Item item);
 	public Integer playNotes(PlayableObject playableObject, String notes);
 	public String getDescription(int roomID);
-	public Integer npcDialogue(NPC npc, boolean talkedTo, int nextNodeID, boolean canTalkTo);
-	
+	public Integer npcDialogue(NPC npc, boolean talkedTo, int nextNodeID, boolean canTalkTo, boolean isDoneS);
+
 	// testing purposes queries
 	public void deleteData(int gameID);
 	public void loadInitialData(int gameID);

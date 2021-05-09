@@ -15,7 +15,7 @@ public class YesCommand extends UserCommand {
 		if (room.hasNpc()) {
 			NPC npc = room.getNpc();
 			
-			if (!npc.isDone() && npc.getCurrentNode().getType().equals("y/n")) {	// make sure NPC can still talk	
+			if (npc.getCurrentNode().getType().equals("y/n")) {	// make sure NPC can still talk	
 				if(npc.isTalkedTo()) {
 					npc.setPreviousNode(npc.getCurrentNode());
 					npc.setCurrentNode(npc.getCurrentNode().getAvailableLinks().get(0).getNextNode());
@@ -34,10 +34,12 @@ public class YesCommand extends UserCommand {
 								game.runCommand("give " + npc.getRequiredItem().getName() + " to " + npc.getName());
 							}
 						}
-						
-						game.setOutput(npc.getCurrentNode().getMessage() + "\n" + t);	// set output with new options
-						game.npcDialogue(npc, npc.getCurrentNode());	// update dialogue tree in DB
-					} else {
+
+						game.setOutput(npc.getCurrentNode().getMessage() + "\n" + t);// set output with new options
+						game.npcDialogue(npc, npc.getCurrentNode());// update dialogue tree in DB
+					}
+					else {
+						npc.setDone(true);
 						game.setOutput(npc.getCurrentNode().getMessage() + "\n");
 						
 						if (npc.getCurrentNode().getType().equals("gCommand")) {	// force give command to run if necessary
