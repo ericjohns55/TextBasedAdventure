@@ -8,6 +8,7 @@ import map.RoomObject;
 
 import static org.junit.Assert.*;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 
 public class TestCommandLogic {
@@ -22,6 +23,7 @@ public class TestCommandLogic {
 	@Test
 	public void testExamineLook() {
 		game = new Game(1);
+		game.movePlayerJUnit(1);
 		
 		game.runCommand("look");
 		String expectedOutput = game.getRoom(1).getDescription().trim();
@@ -35,6 +37,7 @@ public class TestCommandLogic {
 	@Test
 	public void testOpen() {
 		game = new Game(1);
+		game.movePlayerJUnit(1);
 		
 		game.runCommand("open inventory");
 		String expectedOutput = "Your inventory is empty!";
@@ -53,6 +56,7 @@ public class TestCommandLogic {
 	@Test
 	public void testListRoom() {
 		game = new Game(1);
+		game.movePlayerJUnit(1);
 		
 		game.runCommand("list table");
 		String expectedOutput = "This does not contain any items.";
@@ -88,6 +92,7 @@ public class TestCommandLogic {
 	@Test
 	public void testGrabTake() {
 		game = new Game(1);
+		game.movePlayerJUnit(1);
 		
 		game.runCommand("grab key");
 		String expectedOutput = "You picked up key.";
@@ -119,6 +124,7 @@ public class TestCommandLogic {
 	@Test
 	public void testDropPlace() {
 		game = new Game(1);
+		game.movePlayerJUnit(1);
 
 		game.runCommand("grab key");
 		
@@ -146,6 +152,8 @@ public class TestCommandLogic {
 	@Test
 	public void testMoveWalk() {
 		game = new Game(1);
+		game.movePlayerJUnit(1);
+		
 		game.runCommand("grab key");
 		
 		game.runCommand("move EEE");
@@ -184,6 +192,7 @@ public class TestCommandLogic {
 	@Test
 	public void testUnlock() {
 		game = new Game(1);
+		game.movePlayerJUnit(1);
 		
 		game.runCommand("unlock door");
 		String expectedOutput = "You do not have the required item to unlock this door.";
@@ -378,6 +387,7 @@ public class TestCommandLogic {
 	@Test
 	public void testHint() {
 		game = new Game(1);
+		game.movePlayerJUnit(1);
 		
 		game.runCommand("hint");
 		String expectedOutput = game.getRoom(1).getPuzzle().getHint();
@@ -482,5 +492,11 @@ public class TestCommandLogic {
 		commandOutput = game.getOutput();
 		
 		assertTrue(commandOutput.contains(expectedOutput));
+	}
+	
+	@AfterClass
+	public static void testFinish() {
+		Game newGame = new Game(1);
+		newGame.reloadDatabaseForJUnit();
 	}
 }

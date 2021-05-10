@@ -344,6 +344,8 @@ public class Game {
 			player.getInventory().removeItem(noun);	// update inventoryID in DB (make it something random so disappeared)
 			db.consumeItem(item);	// consume item if required
 		}
+		
+		db.removeItemFromInventory(object.getInventory(), item);	// remove item from inventory
 
 		if (puzzle.getSolution().equals(object.getCovering())) {	// check if the solution equals what it has been covered in
 			RoomObject solutionObject = player.getRoom().getObject(puzzle.getUnlockObstacle());
